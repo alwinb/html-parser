@@ -1,0 +1,6 @@
+
+[ parser.js ]
+TM_RUN_TARGET = "${TM_PROJECT_DIRECTORY}/test/parser-test.js"
+
+[ lexer.js ]
+TM_RUN_TARGET = "${TM_PROJECT_DIRECTORY}/test/lexer-test.js"

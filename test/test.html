@@ -1,0 +1,161 @@
+<link rel="stylesheet" type="text/css" href="./style/tokens.css">
+<!-- -->
+<script>//</script>
+<!-- -->
+<script src="../dist/html.min.js">//</script>
+</head>
+<bgsound>
+
+<h1>Another Html Parser</h1>
+<p>
+
+  This shows the code of this page (before the execution of scripts),
+  as analysed by the lexer. 
+</p>
+
+<ul style=display:none>
+  
+  <select><optgroup>a<optgroup>b<option>c</tr>d  
+  <li>a<div>b<p>c<div>f
+  <li>d
+    
+  <dl>
+    <dd><div>a<p>b<dt>c
+    
+  <li/b>
+  <a> text </a>
+  <li a = = b /> >
+  <li 1 = 2 = 3 "4">
+  data< notag
+  data</ notag! >
+  <b  at0 = 0 at1= 1  at2=  "fo" at3=\'tes"tt\'> foo </b>
+  <li///>
+  <li fo//=bar///>
+  <li///fo=bar///>
+  <li///fo='bar'///>
+  <li///fo=`bar`///>
+  <li///fo=///>
+  <li///fo///>
+  <li///fo ///>
+  <li///fo// />
+  <br// />
+  <span a=1 b="2" =3>`
+</span></li></notag></ul>
+
+<ul style=display:none>
+  <li>charref: special <input value=asda&not(></input>
+  <li>charref: special <input value=asda&not-></input>
+  <li>charref: special <input value=asda&not*=c></input>
+  <li>charref: special <input value=asda&not=c></input>
+  <li>charref: special <input value="asda&notit; I tell you"></input>
+  <li>charref: non-special <input value=asda&notin*=c></input>
+  <li>charref: non-special <input value=asda&notin=c></input>
+  <li>charref: non-special <input value=asda&notin;=c></input>
+  <li>charref: special &not(
+  <li>charref: special &not-
+  <li>charref: special &not*=c in data
+  <li>charref: special &not=c in data
+  <li>charref: special &notit; I tell you, in data
+  <li>charref: special &notin; I tell you, in data
+  <li>charref: non-special &notin*=c in data
+  <li>charref: non-special &notin=c in data
+  <li>charref: non-special &notin;=c in data
+  <li>charref: named <input value="you &amp; me"/> in attribute
+  <li>charref: named <input value='you &amp; me'/> in attribute
+  <li>charref: named <input value=you&#12me /> in attribute
+  <li>charref: named <input value=&amp;me /> in attribute
+  <li>charref: named <input value=&amp attr=val /> in attribute
+  <li>charref: named <input value=&ampo attr=val /> in attribute
+  <li>charref: bogus <input value="you &# am me"/> in attribute
+  <li>charref: bogus <input value='you &# amp me'/> in attribute
+  <li>charref: bogus <input value=you&x ampme /> in attribute
+  <li>charref: ampHash &amp;# such
+  <li>comment 1 <!> and data
+  <li>comment 2 <?> and data
+  <li>comment 3 </> and data
+  <li>comment 4 <!-> and data
+  <li>comment 5 <?-> and data
+  <li>comment 6 <!-> and data
+  <li>comment 7 <!--> and data
+  <li>comment 8 <?--> and data
+  <li>comment 9  <!--> and data
+  <li>comment 10  <!--!> comment -->
+  <li>comment 11  <!--> and data
+  <li>comment 12 <!-> and data
+  <li>comment 13  <!---!> this is also comment data -->
+  <li>comment 14  <!----!> and data
+  <li>comment 15  <!-- with -> within --> and data
+  <li>comment 16  <!-- with bogus end -> comment data --> data
+  <li>comment 17  <!-- Comment with -- double dash within --> and data
+  <li>comment 18  <!-- Comment with --!- weird stuff within --> and data
+  <li>comment 19  <!-- Comment with strange end --!> and data >
+  <li>bogus comment 20 <! with end !@> and data
+  <li>bogus comment 21 </ with end !@> and data
+  <li>bogus comment 22 <? with end !@> and data
+  <li>bogus comment 23 <!- with end -> and data
+  <li>comment 24 <!weird markup declaration> and data
+  <li>bogus 25 comment </ with end !@> and data
+</ul>
+
+<div>
+  <pre id=inspector style=white-space:unset>
+    Inspect the output by clicking on it, below
+  </pre>
+  <pre id=colors></pre>
+</div>
+
+<script>
+  const log = console.log.bind (console)
+  const doc = document
+    log (modules.html)
+  const tinyhtml = modules.html
+  
+  const pre = doc.getElementById ('colors')
+  const pre2 = doc.getElementById ('inspector')
+  const objectKey = Symbol ()
+
+  function inspect (...args) {
+    pre2.innerHTML = ''
+    for (let x of args)
+      pre2.append (JSON.stringify (x, null, 2), doc.createElement ('BR'))
+  }
+
+  function show (data) {
+    const stream = tinyhtml.chunks (data)
+    let stateBefore = tinyhtml.printState(stream.state), stateAfter
+    for (let chunk of stream) {
+      stateAfter = tinyhtml.printState(stream.state)
+      const el = renderChunk (chunk)
+      pre.append (el)
+      el [objectKey] = { type:chunk[0], stateBefore, stateAfter }
+      stateBefore = stateAfter
+    }
+  }
+
+  function renderChunk ([type, value]) {
+    const e = doc.createElement ('SPAN')
+      e.title = e.className = type
+      let tnode = doc.createTextNode(value)
+      e.append (value)
+      return e
+  }
+
+  function main () {
+    const req = new XMLHttpRequest ()
+      req.responseType = 'text'
+      req.onload = $=> show (req.responseText)
+      req.onerror = $=> show ('<h1>Error</h1>\n<p>XMLHttpRequest failed</p>')
+    // Go!
+    
+    doc.body.onclick = function (evt) {
+      if (objectKey in evt.target)
+        inspect (evt.target [objectKey])
+    }
+    
+    req.open ('GET', document.location)
+    req.send ()
+  }
+</script>
+<script>main()</script>
+
+
