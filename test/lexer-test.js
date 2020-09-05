@@ -1,9 +1,6 @@
 const log = console.log.bind (console)
-const { tags, chunks, printState } = require ('../lib')
+const { Lexer, tags, chunks, printState } = require ('../lib')
 
-log (chunks)
-
-//*
 // Test
 // ====
 
@@ -25,7 +22,20 @@ function pr (input) {
   }
 }
 
+//*
 var sample =`
-<a href = foo >test<!-- foo -->`
+<a href = foo >test<!-- foo --></bar>`
 pr (sample)
+//*/
+
+// Multiple writes
+//*
+var l = new Lexer
+l.write ('<span hr')
+l.write ('n href="foo">')
+l.end ('<!--comment >')
+
+log (l.state)
+for (let x of l.read ())
+  log (x, l.state)
 //*/

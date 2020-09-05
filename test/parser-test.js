@@ -3,7 +3,7 @@ const { equal:equals, deepEqual:deepEquals } = assert
 const util = require ('util')
 
 const html = require ('../lib/')
-const { TreeBuilder } = html
+const { TreeBuilder, Parser } = html
 const log = console.log.bind (console)
 
 const fs = require ('fs')
@@ -12,9 +12,12 @@ function run (sample) {
   if (sample.length < 100) {
     log (sample)
     log ('=====') }
-  const p = new TreeBuilder
-  for (let t of html.tags (sample)) p.write (t)
-  log (util.inspect (p.document, { depth:200 }))
+  const doc = new Parser ()
+    .parse (sample)
+  //log (doc)
+  // const p = new TreeBuilder
+  // for (let t of html.tags (sample)) p.write (t)
+  log (util.inspect (doc, { depth:200 }))
 }
 
 var sample = '<base>foo'
@@ -28,6 +31,7 @@ var sample = '  </html> foo'
 var sample = ' eh'
 var sample = ' <a>'
 var sample = '<select><optgroup><option>one<option>two<optgroup>three<table><td>foo'
+//var sample = '<h1> One Two '
 
 //var sample = fs.readFileSync ('../test/test.html', 'utf8')
 
