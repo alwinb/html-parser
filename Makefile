@@ -8,8 +8,11 @@ all: dist/html.min.js
 run: all
 	open test/test.html
 
-dist/html.min.js: dist/ $(sources)
-	browserify lib/browser.js | terser -cm > dist/html.min.js
+dist/html.min.js: dist/html.js $(sources)
+	cat dist/html.js | terser -cm > dist/html.min.js
+
+dist/html.js: dist/ $(sources)
+	browserify lib/browser.js > dist/html.js
 
 dist/:
 	mkdir dist/
