@@ -20,7 +20,6 @@ function run (sample) {
   log (util.inspect (doc, { depth:200 }))
 }
 
-var sample = '<base>foo'
 var sample = '<select><li>foo'
 var sample = '<head><li>foo'
 var sample = '</head> one two theee'
@@ -30,7 +29,14 @@ var sample = '<b><li>test</b> nonbold'
 var sample = '  </html> foo'
 var sample = ' eh'
 var sample = ' <a>'
+var sample = '<base>foo'
 var sample = '<select><optgroup><option>one<option>two<optgroup>three<table><td>foo'
+var sample = '<table><td>foo<col>'
+var sample = '<table><td>foo<tfoot>'
+var sample = '<table><td>foo<tr>'
+var sample = '<table><caption>foo<td>'
+var sample = '<table><colgroup><td>foo<td>'
+var sample = '<script src=foo>'
 //var sample = '<h1> One Two '
 
 //var sample = fs.readFileSync ('../test/test.html', 'utf8')
