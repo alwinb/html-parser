@@ -6,7 +6,7 @@ excludeInFileChooser = "{$exclude,dist/*}"
 TM_RUN_TARGET = "${TM_PROJECT_DIRECTORY}/test/lexer-test.js"
 
 [ tokens.js ]
-TM_RUN_TARGET = "${TM_PROJECT_DIRECTORY}/test/lexer-test.js"
+TM_RUN_TARGET = "${TM_PROJECT_DIRECTORY}/test/tokenizer-test.js"
 
 [ parser.js ]
 TM_RUN_TARGET = "${TM_PROJECT_DIRECTORY}/test/parser-test.js"
