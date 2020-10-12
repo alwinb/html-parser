@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Tree Builder Test Page</title>
+  <link rel="stylesheet" href="style/base.css">
+  <link rel="stylesheet" href="style/tree.css">
+  <script src="./scripts/console.js"></script>
+</head>
+<body>
+
+<h1>Dom viewer</h1>
+
+<p>This is a test page for the HTML parser,
+
+<ul id=tabs>
+</ul>
+<textarea id=input>
+</textarea>
+
+<div id=view1 class=DomTree>
+  Browser
+</div>
+
+<div id=view2 class=DomTree>
+  Html Parser
+</div>
+
+<script>
+  window.console = new Console ()
+  document.body.append (console.elem)
+  window.addEventListener ('error', evt => console.errorHandler (evt), true)
+</script>
+
+<script src="../dist/html.js"></script>
+<script>(()=>{
+  const { html } = modules
+  const T = html.tokenTypes
+  const $ = name => document.createElement (name)
+  const log = console.log.bind (console)
+  log (T)
+
+  const setProps = (el, props) => {
+    for (let k in props) el.setAttribute (k, props[k])
+  }
+
+  Object.defineProperty (Object.prototype, Symbol.toStringTag, { get:function () { return this.constructor.name } })
+
+  // OK lets create the tree
+  // MDN: In addition, every kind of DOM node is represented by an interface based on Node. These include Attr, CharacterData (which Text, Comment, and CDATASection are all based on), ProcessingInstruction, DocumentType, Notation, Entity, and EntityReference.
+
+  function nativeParse (input) {
+    return new DOMParser () .parseFromString (input, 'text/html')
+  }
+
+  function makeTabs (samples) {
+    const ul = document.getElementById ('tabs')
+    let li, i = 0
+    for (let x of samples) { let li
+      ul.append((li = $('li')))
+      li.className = '-button'
+      li.append('Sample '+ (++i))
+      li.onclick = _ => showSample (x)
+    }
+    return ul
+  }
+
+  const objectKey = Symbol ()
+  const htmlns = 'http://www.w3.org/1999/xhtml'
+
+  function showTree (domNode) {
+    let elem, label, clss
+
+    if (domNode instanceof Text) {
+      clss = (/^\s*$/.test (domNode.data)) ? 'space' : 'text'
+      elem = $('span')
+      elem.append (domNode.data)
+      elem.className = clss
+      elem[objectKey] = domNode
+      return elem
+    }
+    if (typeof domNode === 'string') {
+      clss = (/^\s*$/.test (domNode)) ? 'space' : 'text'
+      elem = $('span')
+      elem.append (domNode)
+      elem.className = clss
+      elem[objectKey] = domNode
+      return elem
+    }
+
+    elem = $('div')
+    if (domNode instanceof Document || domNode instanceof html.Document)
+      label = '#document'
+
+    else if (domNode instanceof Comment || domNode[0] === T.Comment)
+      label = '<!-->'
+
+    else if (domNode instanceof Element || domNode instanceof html.Node || domNode instanceof html.Leaf || domNode[0] === T.FormatTag) {
+      label = (domNode.tagName||domNode.name).toLowerCase ()
+      if (domNode.namespaceURI && domNode.namespaceURI !== htmlns)
+        label = domNode.namespaceURI.split('/').pop () + ':' + label
+    }
+    else if (domNode[0] === T.FormatEndTag)
+      label = '/'+domNode.name
+
+    // log (domNode.__proto__)
+    elem.append (label)
+    elem[objectKey] = domNode
+    
+    if (clss) elem.classList.add(clss)
+    let ul; elem.append ((ul = $('div')))
+    ul.className = 'children'
+    for (let x of domNode.childNodes || domNode.children || []) {
+      ul.append (showTree (x))
+    }
+    return elem
+  }
+
+  function showSample (sample) {
+    const [input, view1, view2] = ['input', 'view1', 'view2'].map (_ => document.getElementById (_))
+    input.value = sample
+    view1.innerHTML = view2.innerHTML = ''
+    view1.append (showTree (nativeParse (sample)))
+    view2.append (showTree (html.parse (sample)))
+  }
+  document.addEventListener ('click', evt => {
+    if (objectKey in evt.target)
+      log (evt.target[objectKey])
+  })
+
+  var samples = [
+    '<tr><b>bold<i>italic<li></b>',
+    '<svg><path>text<bar>Foo<p>Test<rect></body><!--->',
+    '<select>Foo<option>Bar<optgroup><select>Baz<optgroup>Item<li>item<di>Di',
+    '<option>Item<li>item<di><option><select><option>Item<li>item<di><option><select>',
+    '<option>Item<li>item<di><option>Item2<li>item<di><option><select><option>Item<li>item<di><option><option>Item2<li>item<di>',
+    'Hello',
+    '<body>Hello',
+    '<script>fn</'+'script>Hello',
+    '<table><td>foo<tr><td>bar<col>', 
+    '<br>', 
+    '<table><colgroup><td>foo<tr><br>',
+    ]
+  
+  makeTabs(samples)
+  showSample(samples[0])
+
+})()</script>

@@ -1,0 +1,126 @@
+html, body {
+  margin:0; padding:0;
+  font-size:24px;
+}
+
+body {
+	font-family:Helvetica, Arial, Sans;
+  font-size:16px;
+  line-height:1rem;
+}
+
+/** Styles for the tokens **/
+
+pre, code { 
+  font-size:13px;
+	color:white;
+	background:#202020;
+	font-family:Menlo, Monaco, Monospace;
+	tab-size:2;
+}
+
+/* Html colors */
+
+.bogus,
+.bogusStart,
+.bogusData,
+.bogusEnd,
+.commentStart,
+.commentStartBogus,
+.commentData,
+.commentEnd,
+.commentEndBogus,
+.comment,
+.beforeAttribute,
+.afterAttributeName,
+.beforeValue,
+.tagSpace {
+	color:#746D74;
+}
+
+.startQuote,
+.endQuote,
+.value,
+.valueStart,
+.valueEnd,
+.attributeValueStart,
+.attributeValue,
+.attributeValueData,
+.attributeValueEnd {
+	color: #8F9D6A;
+}
+
+.charRefDecimal,
+.charRefHex,
+.charRefNamed {
+	color: #DDF7AC;
+}
+
+.charRefDecimal,
+.charRefHex,
+.charRefNamed {
+	/* color:#E9784F; */
+}
+
+.tagName,
+.startTagStart,
+.endTagStart,
+.startTagEnd,
+.endTagEnd,
+.tagEnd,
+.tagEndClose {
+	color: #B38243;
+}
+
+.assign,
+.attributeName {
+	color: #D4BD7F;
+}
+
+
+/* .data,
+.rcdata,
+.rawtext,
+.plaintext */
+
+.unescaped {
+	background: #60315A;
+}
+
+
+/** Some additional stying for the rest of the sample page **/
+
+body {
+  padding:1rem 1rem;
+}
+h1 {
+  font-size:48px;
+  line-height:2rem;
+  min-height:2rem;
+}
+pre {
+  display:block;
+  line-height:1rem;
+  padding:.7rem 1rem 1.3rem;
+  border-radius:.3rem;
+  overflow:auto;
+}
+
+#colors {
+  cursor:default;
+}
+#colors span {
+  padding:.15rem 0;
+  border-radius:.1rem;
+}
+#colors span:hover {
+  background:#444;
+}
+
+
+#colors span {
+  border:1px solid #fff3;
+  margin-right:-1px;
+  border-radius:.2rem;
+  padding:0 1px;
+}
