@@ -22,9 +22,9 @@ pre, code {
 /* Html colors */
 
 .bogus,
-.bogusCommentStart,
-.bogusCommentData,
-.bogusCommentEnd,
+.bogusStart,
+.bogusData,
+.bogusEnd,
 .commentStart,
 .commentStartBogus,
 .commentData,
@@ -41,7 +41,10 @@ pre, code {
 .startQuote,
 .endQuote,
 .value,
+.valueStart,
+.valueEnd,
 .attributeValueStart,
+.attributeValue,
 .attributeValueData,
 .attributeValueEnd {
 	color: #8F9D6A;
@@ -62,6 +65,8 @@ pre, code {
 .tagName,
 .startTagStart,
 .endTagStart,
+.startTagEnd,
+.endTagEnd,
 .tagEnd,
 .tagEndClose {
 	color: #B38243;

@@ -135,14 +135,14 @@
       stateAfter = html.printState(stream.state)
       const el = renderChunk (chunk)
       pre.append (el)
-      el [objectKey] = { type:html.stateNames[chunk[0]], stateBefore, stateAfter }
+      el [objectKey] = { type:html.tokenName(chunk[0]), stateBefore, stateAfter }
       stateBefore = stateAfter
     }
   }
 
   function renderChunk ([type, value]) {
     const e = doc.createElement ('SPAN')
-      e.title = e.className = html.stateNames[type]
+      e.title = e.className = html.tokenName(type)
       let tnode = doc.createTextNode(value)
       e.append (value)
       return e
