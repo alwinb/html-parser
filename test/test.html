@@ -23,6 +23,10 @@
   <li>a<div>b<p>c<div>f
   <li>d
     
+  <tagname< with/>
+    <script type=none> with <
+    </script>
+    <textarea>With < </textarea>
   <dl>
     <dd><div>a<p>b<dt>c
     
@@ -112,7 +116,7 @@
   const log = console.log.bind (console)
   const doc = document
     log (modules.html)
-  const tinyhtml = modules.html
+  const html = modules.html
   
   const pre = doc.getElementById ('colors')
   const pre2 = doc.getElementById ('inspector')
@@ -125,20 +129,20 @@
   }
 
   function show (data) {
-    const stream = tinyhtml.chunks (data)
-    let stateBefore = tinyhtml.printState(stream.state), stateAfter
+    const stream = html.chunks (data)
+    let stateBefore = html.printState(stream.state), stateAfter
     for (let chunk of stream) {
-      stateAfter = tinyhtml.printState(stream.state)
+      stateAfter = html.printState(stream.state)
       const el = renderChunk (chunk)
       pre.append (el)
-      el [objectKey] = { type:tinyhtml.stateNames[chunk[0]], stateBefore, stateAfter }
+      el [objectKey] = { type:html.stateNames[chunk[0]], stateBefore, stateAfter }
       stateBefore = stateAfter
     }
   }
 
   function renderChunk ([type, value]) {
     const e = doc.createElement ('SPAN')
-      e.title = e.className = tinyhtml.stateNames[type]
+      e.title = e.className = html.stateNames[type]
       let tnode = doc.createTextNode(value)
       e.append (value)
       return e
