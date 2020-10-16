@@ -37,10 +37,9 @@ var sample = '<table><td>foo<tr>'
 var sample = '<table><caption>foo<td>'
 var sample = '<table><colgroup><td>foo<td>'
 var sample = '<script src=foo>'
-//var sample = '<h1> One Two '
+var sample = '<h1> One Two </h1> bar'
 
-//var sample = fs.readFileSync ('../test/test.html', 'utf8')
-
+// var sample = fs.readFileSync ('../test/test.html', 'utf8')
 // var sample = '<script></script><foo>'
 // var sample = '<td>foo'
 // var sample = '<table><tr><td>1<td>2</table>'
