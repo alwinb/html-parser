@@ -107,7 +107,6 @@ function _renderStackLine (line) {
 }
 
 function _rewriteUrl (url1, line = 1, column = 0) {
-  log ('rewriteUrl')
   const url = new URL (url1, document.baseURI)
   let callbackUrl = url
     Object.entries ({ line, column }) .forEach (kv => url.searchParams.set (...kv))
@@ -121,9 +120,7 @@ function _rewriteUrl (url1, line = 1, column = 0) {
 
 //const log = console.log.bind (console)
 //_renderStackLine ('asdasdf')
-log ('foo')
-_renderStackLine ('file://')
-
+// _renderStackLine ('file://')
 globalThis.Console = Console
 globalThis.Dom = Dom
 globalThis.setProps = setProps

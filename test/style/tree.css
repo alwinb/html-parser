@@ -1,0 +1,72 @@
+.-button {
+  background:#ccc;
+  line-height:2rem;
+  height:2rem;
+}
+html {
+  font-size:20px;
+  font-family:Sans-Serif;
+}
+body {
+  font-size:14px;
+  margin:2rem 2em;
+}
+#input {
+  width:calc(100vw - 4em);
+  height:10rem;
+  display:block;
+}
+#view1, #view2 {
+  width:calc(40vw - 4em);
+  float:left;
+}
+#tabs {
+  display:block;
+  padding:0;margin:0;
+}
+#tabs li {
+  display:inline-block;
+  padding:0 1em 0;
+  margin:0 .3em 0 0;
+  cursor:pointer;
+}
+#tabs li:hover {
+  text-decoration:underline;
+}
+.DomTree {
+  /*font-family:Hack, Monaco, Menlo, Monospace;*/
+  /*font-size:12px;*/
+  overflow:scroll;
+  padding:1rem;
+  font-weight:bold;
+}
+div.children {
+  margin-left:.8em;
+  padding-left:.5em;
+  border-left:1.5px solid black;
+  white-space:pre;
+}
+div.children:after {
+  content:'';
+  display:block;
+  clear:both;
+  height:0px;
+}
+.text {
+  font-weight:normal;
+  font-style:italic;
+  background:#eee;
+  min-height:rem;
+  display:inline-block;
+}
+
+.Console {
+  background:#fffe;
+  width:100vw;
+  height:20vh;
+  position:absolute;
+  bottom:0; left:0;
+  padding:0 1em;
+  overflow-y:scroll;
+  border-top:1px solid currentColor;
+}
