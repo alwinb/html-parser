@@ -158,7 +158,10 @@ Html Parser
   var sample = '<select>Foo<option>Bar<optgroup><select>Baz<optgroup>Item<li>item<di>Di'
   var sample = '<option>Item<li>item<di><option><select><option>Item<li>item<di><option><select>'
   var sample = '<option>Item<li>item<di><option>Item2<li>item<di><option><select><option>Item<li>item<di><option><option>Item2<li>item<di>'
-  var sample = '<table><td>foo<tr><td>bar<col>'
+  var sample = 'Hello'
+  var sample = '<body>Hello'
+  var sample = '<script>fn</'+'script>Hello'
+  // var sample = '<table><td>foo<tr><td>bar<col>'
   document.getElementById ('view1').append (showTree (nativeParse (sample)))
   document.getElementById ('view2').append (showTree (html.parse (sample)))
 
