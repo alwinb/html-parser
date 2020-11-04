@@ -1,19 +1,25 @@
 :root {
-  --acolor:#2B6679;
+/*  --acolor:#2B6679;
   --bgcolor:#FFF9DE;
   --screen:#CCBB9B66;
+*/
+  --screen:#0002;
 }
 
-@media screen {
-  html {
-    background-color:var(--bgcolor);
-    background:linear-gradient(var(--bgcolor), var(--bgcolor));
-  }
-  textarea {
-    background-color:var(--bgcolor);
-    font-family:MonoSpace;
-  }
+html {
+  background-color:var(--bgcolor);
+  background:linear-gradient(var(--bgcolor), var(--bgcolor));
 }
+textarea {
+  background-color:var(--bgcolor);
+  font-family:MonoSpace;
+}
+h1 {
+  line-height:2rem;
+  font-size:2rem;
+  
+}
+
 
 .-button {
   background:var(--screen);

@@ -12,7 +12,6 @@
 <h1>Dom viewer</h1>
 
 <p>This is a test page for the HTML parser,
-On the top, enter sample input. On the left, will be the DOM tree as parsed by the browser, and on the right, will be the tree as parsed by my HTML parser.</p>
 
 <ul id=tabs>
 </ul>
@@ -33,7 +32,7 @@ On the top, enter sample input. On the left, will be the DOM tree as parsed by t
   window.addEventListener ('error', evt => console.errorHandler (evt), true)
 </script>
 
-<script src="../dist/html.min.js"></script>
+<script src="../dist/html.js"></script>
 <script>(()=>{
   const { html } = modules
   const T = html.tokenTypes
