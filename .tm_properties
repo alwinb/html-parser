@@ -12,5 +12,5 @@ TM_RUN_TARGET = "${TM_PROJECT_DIRECTORY}/test/tokenizer-test.js"
 TM_RUN_TARGET = "${TM_PROJECT_DIRECTORY}/test/parser-test.js"
 
 [ schema.js ]
-TM_RUN_TARGET = "${TM_PROJECT_DIRECTORY}/test/parser-test.js"
+TM_RUN_TARGET = "${TM_PROJECT_DIRECTORY}/test/info-test.js"
 

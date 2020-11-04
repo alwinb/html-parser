@@ -3,8 +3,8 @@ HTML5 Grammar
 
 An attempt at a formal lexical grammar for HTML5. 
 
-NB. The tokenizer algorithm in the standard is specified in terms of unicode code points, and requires a pre-pass over the input to normalise newlines. 
-It is however possible to express the lexical grammar on any ascii compatible encoding, (directly on an octet-stream) and without a pre-pass to normalize newlines, and I am aiming for that. 
+NB. The tokeniser algorithm in the standard is specified in terms of unicode code points, and requires a pre-pass over the input to normalise newlines. 
+It is however possible to express the lexical grammar on any ascii compatible encoding, directly on an octet-stream and without a pre-pass to normalize newlines, and I am aiming for that. Decoding can then be done in a latter phase. Support for ASCII incompatible encosings can be added later.
 
 This is work in progress. 
 
@@ -12,8 +12,8 @@ This is work in progress.
 Character sets
 --------------
 
-any       := not { }
-alpha     := { a…z, a…Z }
+any       := { %00…%FF }
+alpha     := { a…z, A…Z }
 digit     := { 0…9 }
 alphad    := alpha | digit
 hexdigit  := { 0…9, a…f, A…F }

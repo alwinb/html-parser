@@ -106,7 +106,7 @@
 </ul>
 
 <div>
-  <pre id=inspector style=white-space:unset>
+  <pre id=inspector>
     Inspect the output by clicking on it, below
   </pre>
   <pre id=colors></pre>
@@ -130,9 +130,9 @@
 
   function show (data) {
     const stream = html.chunks (data)
-    let stateBefore = html.printState(stream.state), stateAfter
+    let stateBefore = html.stateInfo(stream.state), stateAfter
     for (let chunk of stream) {
-      stateAfter = html.printState(stream.state)
+      stateAfter = html.stateInfo(stream.state)
       const el = renderChunk (chunk)
       pre.append (el)
       el [objectKey] = { type:html.tokenName(chunk[0]), stateBefore, stateAfter }

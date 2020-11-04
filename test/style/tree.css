@@ -1,5 +1,22 @@
+:root {
+  --acolor:#2B6679;
+  --bgcolor:#FFF9DE;
+  --screen:#CCBB9B66;
+}
+
+@media screen {
+  html {
+    background-color:var(--bgcolor);
+    background:linear-gradient(var(--bgcolor), var(--bgcolor));
+  }
+  textarea {
+    background-color:var(--bgcolor);
+    font-family:MonoSpace;
+  }
+}
+
 .-button {
-  background:#ccc;
+  background:var(--screen);
   line-height:2rem;
   height:2rem;
 }
@@ -33,6 +50,9 @@ body {
 #tabs li:hover {
   text-decoration:underline;
 }
+.error {
+  color:#9D0006;
+}
 .DomTree {
   /*font-family:Hack, Monaco, Menlo, Monospace;*/
   /*font-size:12px;*/
@@ -55,13 +75,13 @@ div.children:after {
 .text {
   font-weight:normal;
   font-style:italic;
-  background:#eee;
+  background:var(--screen);
   min-height:rem;
   display:inline-block;
 }
 
 .Console {
-  background:#fffe;
+  background:#fff3;
   width:100vw;
   height:20vh;
   position:absolute;
