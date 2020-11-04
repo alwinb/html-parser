@@ -1,4 +1,4 @@
-($=>{
+(()=>{
 const svgns = 'http://www.w3.org/2000/svg'
 const htmlns = 'http://www.w3.org/1999/xhtml'
 const log = (...args) => globalThis.console.log (...args)
@@ -14,9 +14,8 @@ function _DomNS (ns, _default, tagname, ...subs) {
   var names = tagname.split ('.')
   tagname = names.length ? names.shift () : _default
   var el = document.createElementNS (ns, tagname)
-  if (names.length)
-    setProps (el, { 'class': names.join (' ') })
-  el.append (...subs)
+  for (let name of names) el.classList.add (name)
+  for (let sub of subs) el.append (sub)
   return el
 }
 
@@ -71,50 +70,45 @@ class Console {
     this.pre0.innerHTML = this.pre.innerHTML = ''
   }
 
-  errorHandler ({ message, filename, lineno:line, colno:column, error }) {
-    // Convert to a txtmt URL
-    if (filename != null) {
-      const url = new URL (filename, document.baseURI)
-      let callbackUrl = url
-        Object.entries ({ line, column }) .forEach (kv => url.searchParams.set (...kv))
-      if (url.protocol === 'file:' || url.protocol === 'x-txmt-filehandle:') { // convert to txmt: URL
-        callbackUrl = new URL ('txmt://open?')
-        Object.entries ({ url:filename, line, column }) .forEach (kv => callbackUrl.searchParams.set (...kv))
-      }
-      const el = Dom ('a.error', url)
-        el.href = callbackUrl
-      this.error (message)
-      this.write ('\t', el, '\n')
-      error.stack.split ('\n') .forEach ($ => console.write (...(_renderStackLine ($) )))
-    }
-    else
-      this.error (error.name + ':' + message, filename, line, column)
+  errorHandler ({ message, filename, line=1, column=0, error }) {
+    const stack = parseStack (error.stack)
+    this.write (...stack.flatMap (_renderStackFrame))
+    // Hm an error.name?
+    this.error (error.message)
   }
-
 }
 
+function parseStack (stack) {
+  const r = []
+  for (let sline of stack.split ('\n')) {
+    let msg, line, col, url, _
+    [msg, url] = (sline.split (/@?(?=\bfile:[/][/])/i)) // FF, Safari
+    if (url) {
+      [_, url, line, col] = /^(.*)[:](\d+)[:](\d+)$/.exec (url)
+      r.push ({ msg, url, line, col })
+    }
+  }
+  return r.reverse()
+}
 
-function _renderStackLine (line) {
-  let [msg, url] = (('\t'+line).split (/(?=\bfile:\/\/)/i))
+function _renderStackFrame ({ msg, url, line, col }) {
   if (url != null) {
-    // TODO parse the line and col from the url
-    const a = Dom ('a.error', url)
-    const href = _rewriteUrl (url)
-      setProps (a, { href })
-    return [Dom ('span.error', msg), a, '\n']
+    const a = Dom ('a.error', msg)
+    const href = _rewriteUrl (url, line, col)
+      setProps (a, { href, title:url+`?line=${line}&column=${col}` })
+    return [a, ' » ']
   }
   else return [Dom('span.error', msg), '\n']
 }
 
 function _rewriteUrl (url1, line = 1, column = 0) {
   const url = new URL (url1, document.baseURI)
-  let callbackUrl = url
-    Object.entries ({ line, column }) .forEach (kv => url.searchParams.set (...kv))
   if (url.protocol === 'file:' || url.protocol === 'x-txmt-filehandle:') { // convert to txmt: URL
     callbackUrl = new URL ('txmt://open?')
     Object.entries ({ url, line, column }) .forEach (kv => callbackUrl.searchParams.set (...kv))
     return callbackUrl
   }
+  Object.entries ({ line, column }) .forEach (kv => url.searchParams.set (...kv))
   return url1
 }
 
