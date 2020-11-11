@@ -3,16 +3,13 @@
 files = browser.js lexer.js tokens.js parser.js index.js dom.js schema.js
 sources = $(addprefix lib/, $(files))
 
-all: dist/html.min.js
+all: dist/html.js dist/html.min.js
 
-run: all
-	open test/test.html
-
-dist/html.min.js: dist/html.js $(sources)
-	cat dist/html.js | terser -cm > dist/html.min.js
+dist/html.min.js: dist/ $(sources)
+	esbuild lib/browser.js --bundle --minify --outfile=dist/html.min.js
 
 dist/html.js: dist/ $(sources)
-	browserify lib/browser.js > dist/html.js
+	esbuild lib/browser.js --bundle --sourcemap --outfile=dist/html.js
 
 dist/:
 	mkdir dist/

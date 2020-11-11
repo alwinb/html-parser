@@ -28,3 +28,4 @@ One significant difference is that currently, I am not creating elements in the 
 
 License
 --------
+Mozilla Public License Version 2.0
