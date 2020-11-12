@@ -1,0 +1,31 @@
+{
+  "name": "html-parser",
+  "version": "0.0.1",
+  "description": "HTML5 Parser",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alwinb/html-parser.git"
+  },
+  "keywords": [
+    "HTML5",
+    "lexer",
+    "tokeniser",
+    "parser",
+    "fast",
+    "lightweight"
+  ],
+  "author": "Alwin Blok",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/alwinb/html-parser/issues"
+  },
+  "homepage": "https://github.com/alwinb/html-parser#readme"
+}
