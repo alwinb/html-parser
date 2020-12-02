@@ -29,6 +29,11 @@ var sample =`
 // var sample = `data<!-->data`
 // var sample = `data<!---!>comment`
 var sample = `<script>//</script>`
+var sample = `<!DOCTYPE html x>text`
+var sample = `<z/0  <>`
+var sample = '<a a=aa`>'
+var sample = `<h a='&COPY'>` // FIXME
+
 
 pr (sample)
 //*/
