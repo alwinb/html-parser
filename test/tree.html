@@ -110,7 +110,10 @@
     if (clss) elem.classList.add(clss)
     let ul; elem.append ((ul = $('div')))
     ul.className = 'children'
-    for (let x of domNode.childNodes || domNode.children || []) {
+
+    const children = domNode instanceof HTMLTemplateElement ?
+      domNode.content.childNodes : domNode.childNodes || domNode.children || []
+    for (let x of children) {
       ul.append (showTree (x))
     }
     return elem
@@ -129,17 +132,33 @@
   })
 
   var samples = [
-    '<tr><b>bold<i>italic<li></b>',
-    '<svg><path>text<bar>Foo<p>Test<rect></body><!--->',
-    '<select>Foo<option>Bar<optgroup><select>Baz<optgroup>Item<li>item<di>Di',
-    '<option>Item<li>item<di><option><select><option>Item<li>item<di><option><select>',
-    '<option>Item<li>item<di><option>Item2<li>item<di><option><select><option>Item<li>item<di><option><option>Item2<li>item<di>',
-    'Hello',
-    '<body>Hello',
-    '<script>fn</'+'script>Hello',
-    '<table><td>foo<tr><td>bar<col>', 
-    '<br>', 
-    '<table><colgroup><td>foo<tr><br>',
+    `<p><foo><li>`,
+    `<svg><big><rect></svg>`,
+    `<tr><b>bold<i>italic<li></b>`,
+    `<svg><path>text<bar>Foo<p>Test<rect></body><!--->`,
+
+    `Test nesting of option and optgroup.
+    <select>Foo<textarea>Bar</textarea>
+    <select>Foo<input>
+    <select>Foo<keygen>
+    <select>Foo<option>Bar<option>Baz<optgroup>Baz<option>Bee<select>Baz<optgroup>Item<li>item<optgroup>g<di>Di</select>
+    `,
+    
+    // `<option>Item<li>item<di><option><select><option>Item<li>item<di><option><select>`,
+    // `<option>Item<li>item<di><option>Item2<li>item<di><option><select><option>Item<li>item<di><option><option>Item2<li><optgroup>item<di>`,
+
+    `Hello`,
+    `<body>Hello`,
+    `<script>fn</`+`script>Hello`,
+    `<table><td>foo<tr><td>bar<col>`, 
+    `<br>`, 
+
+    `Test close by cell
+    <table><colgroup><td>cell1<td>cell2`,
+
+    `Test close by cell (2)
+    <template><colgroup><td>cell1<td>cell2`,
+
     ]
   
   makeTabs(samples)
