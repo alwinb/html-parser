@@ -29,7 +29,14 @@
     <textarea>With < </textarea>
   <dl>
     <dd><div>a<p>b<dt>c
-    
+
+    <br a='&COPY'  b=&COPY   c=&COPY; >
+    <br a='&#123'  b=&#123   c=&#123; >
+    <br a='&#x123' b=&#x123  c=&#x123;>
+    <br a='&#x'    b=&#x     c=&#x;   >
+    <br a='&#'     b=&#      c=&#;    >
+    <br a='&'      b=&       c=&;     >
+
   <li/b>
   <a> text </a>
   <li a = = b /> >
@@ -96,14 +103,18 @@
   <li>comment 15  <!-- with -> within --> and data
   <li>comment 16  <!-- with bogus end -> comment data --> data
   <li>comment 17  <!-- Comment with -- double dash within --> and data
+  <li>comment 17  <!-- Comment with -- double dash within --> and data
   <li>comment 18  <!-- Comment with --!- weird stuff within --> and data
   <li>comment 19  <!-- Comment with strange end --!> and data >
-  <li>bogus comment 20 <! with end !@> and data
-  <li>bogus comment 21 </ with end !@> and data
-  <li>bogus comment 22 <? with end !@> and data
-  <li>bogus comment 23 <!- with end -> and data
-  <li>comment 24 <!weird markup declaration> and data
-  <li>bogus 25 comment </ with end !@> and data
+  <li>comment 20  <!-- Comment with strange end !--> and data >
+  <li>comment 21  <!-----> and data
+  <li>comment 22  <!--<!-->
+  <li>bogus comment 1 <! with end !@> and data
+  <li>bogus comment 2 </ with end !@> and data
+  <li>bogus comment 3 <? with end !@> and data
+  <li>bogus comment 4 <!- with end -> and data
+  <li>comment 5 <!weird markup declaration> and data
+  <li>bogus 6 comment </ with end !@> and data
 </ul>
 
 <div>

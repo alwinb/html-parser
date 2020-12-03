@@ -32,14 +32,15 @@ var sample = `<script>//</script>`
 var sample = `<!DOCTYPE html x>text`
 var sample = `<z/0  <>`
 var sample = '<a a=aa`>'
-var sample = `<h a='&COPY'>` // FIXME
+var sample = `<h a='&COPY'>`
+var sample = `<!----->` // FIXME
 
 
 pr (sample)
 //*/
 
 // Multiple writes
-//*
+/*
 log ('\n\nMultiple writes\n========')
 
 var l = new Lexer

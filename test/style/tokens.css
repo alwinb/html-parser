@@ -52,13 +52,13 @@ pre, code {
 }
 
 .NumRef,
-.charRefHex,
+.HexRef,
 .NamedRef {
 	color: #DDF7AC;
 }
 
 .NumRef,
-.charRefHex,
+.HexRef,
 .NamedRef {
 	/* color:#E9784F; */
 }
