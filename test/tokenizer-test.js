@@ -17,5 +17,6 @@ var sample = '<!Doctype html><h1>header</h1><span att= a att2= "10 &amp 20">Foo 
 var sample = `<!DOCTYPE html x>text`
 var sample = `<h a='&COPY'>` // FIXME
 var sample = `<s o=& t>`
+var sample = `<!->`
 
 log (util.inspect(tokenize (sample), { depth:100 }))
