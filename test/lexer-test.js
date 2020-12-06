@@ -40,7 +40,7 @@ pr (sample)
 //*/
 
 // Multiple writes
-/*
+//*
 log ('\n\nMultiple writes\n========')
 
 var l = new Lexer
@@ -48,9 +48,9 @@ l.write ('<span hr')
 l.write ('n href="foo">')
 l.end ('<!--comment >')
 
-log (l.state)
+// log (l.state)
 for (let [t,v] of l.read ()) {
   log ([tokenName(t), v])
-  log (stateInfo (l.state), stateInfo (l.state), '\n\n')
+  // log (stateInfo (l.state), stateInfo (l.state), '\n\n')
 }
 //*/
