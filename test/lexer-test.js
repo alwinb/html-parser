@@ -29,6 +29,12 @@ var sample =`
 // var sample = `data<!-->data`
 // var sample = `data<!---!>comment`
 var sample = `<script>//</script>`
+var sample = `<!DOCTYPE html x>text`
+var sample = `<z/0  <>`
+var sample = '<a a=aa`>'
+var sample = `<h a='&COPY'>`
+var sample = `<!----->` // FIXME
+
 
 pr (sample)
 //*/
@@ -42,9 +48,9 @@ l.write ('<span hr')
 l.write ('n href="foo">')
 l.end ('<!--comment >')
 
-log (l.state)
+// log (l.state)
 for (let [t,v] of l.read ()) {
   log ([tokenName(t), v])
-  log (stateInfo (l.state), stateInfo (l.state), '\n\n')
+  // log (stateInfo (l.state), stateInfo (l.state), '\n\n')
 }
 //*/

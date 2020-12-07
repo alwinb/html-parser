@@ -18,18 +18,64 @@
 </table>-->
 
 <ul style=display:none>
-    
+    <!->
   <select><optgroup>a<optgroup>b<option>c</tr>d  
   <li>a<div>b<p>c<div>f
-  <li>d
+  <li>d</select>
+  <test<asd>>>><<a>
     
   <tagname< with/>
     <script type=none> with <
     </script>
-    <textarea>With < </textarea>
-  <dl>
-    <dd><div>a<p>b<dt>c
+    <textarea>With </script> </textarea>
+
+    <a b= value></a>
+    <br c= "fo<o>bar">
     
+  <div id=charRefs>
+
+    &am&am&&amp 
+
+    <br a='&COPY'  b=&COPY   c=&COPY; >
+    <br a='&#123'  b=&#123   c=&#123; >
+    <br a='&#x123' b=&#x123  c=&#x123;>
+    <br a='&#x'    b=&#x     c=&#x;   >
+    <br a='&#'     b=&#      c=&#;    >
+    <br a='&'      b=&       c=&;     >
+
+    <br a='&COPY&a'  b=&COPY&a   c=&COPY;&a >
+    <br a='&#123&a'  b=&#123&a   c=&#123;&a >
+    <br a='&#x123&a' b=&#x123&a  c=&#x123;&a>
+    <br a='&#x&a'    b=&#x&a     c=&#x;&a   >
+    <br a='&#&a'     b=&#&a      c=&#;&a    >
+    <br a='&&a'      b=&&a       c=&;&a     >
+
+    <br a= '&COPY&a'  b= &COPY&a   c= &COPY;&a >
+    <br a= '&#123&a'  b= &#123&a   c= &#123;&a >
+    <br a= '&#x123&a' b= &#x123&a  c= &#x123;&a>
+    <br a= '&#x&a'    b= &#x&a     c= &#x;&a   >
+    <br a= '&#&a'     b= &#&a      c= &#;&a    >
+    <br a= '&&a'      b= &&a       c= &;&a     >
+
+    &COPY   &COPY;    &COPY&a   &COPY;&a 
+    &#123   &#123;    &#123&a   &#123;&a 
+    &#x123  &#x123;   &#x123&a  &#x123;&a
+    &#x     &#x;      &#x&a     &#x;&a   
+    &#      &#;       &#&a      &#;&a    
+    &       &;        &&a       &;&a     
+
+    &not(       <br value=asda&not(>
+    &not-       <br value=asda&not->
+    &not*=c     <br value=asda&not*=c>
+    &not=c      <br value=asda&not=c>
+    &notit;     <br value="asda&notit;">
+    &notin;     <br value="asda&notin;">
+    &notin*=c   <br value=asda&notin*=c>
+    &notin=c    <br value=asda&notin=c>
+    &notin;=c   <br value=asda&notin;=c>
+
+  </div>
+
   <li/b>
   <a> text </a>
   <li a = = b /> >
@@ -51,23 +97,6 @@
 </span></li></notag></ul>
 
 <ul style=display:none>
-  <li>charref: special <input value=asda&not(></input>
-  <li>charref: special <input value=asda&not-></input>
-  <li>charref: special <input value=asda&not*=c></input>
-  <li>charref: special <input value=asda&not=c></input>
-  <li>charref: special <input value="asda&notit; I tell you"></input>
-  <li>charref: non-special <input value=asda&notin*=c></input>
-  <li>charref: non-special <input value=asda&notin=c></input>
-  <li>charref: non-special <input value=asda&notin;=c></input>
-  <li>charref: special &not(
-  <li>charref: special &not-
-  <li>charref: special &not*=c in data
-  <li>charref: special &not=c in data
-  <li>charref: special &notit; I tell you, in data
-  <li>charref: special &notin; I tell you, in data
-  <li>charref: non-special &notin*=c in data
-  <li>charref: non-special &notin=c in data
-  <li>charref: non-special &notin;=c in data
   <li>charref: named <input value="you &amp; me"/> in attribute
   <li>charref: named <input value='you &amp; me'/> in attribute
   <li>charref: named <input value=you&#12me /> in attribute
@@ -95,14 +124,18 @@
   <li>comment 15  <!-- with -> within --> and data
   <li>comment 16  <!-- with bogus end -> comment data --> data
   <li>comment 17  <!-- Comment with -- double dash within --> and data
+  <li>comment 17  <!-- Comment with -- double dash within --> and data
   <li>comment 18  <!-- Comment with --!- weird stuff within --> and data
   <li>comment 19  <!-- Comment with strange end --!> and data >
-  <li>bogus comment 20 <! with end !@> and data
-  <li>bogus comment 21 </ with end !@> and data
-  <li>bogus comment 22 <? with end !@> and data
-  <li>bogus comment 23 <!- with end -> and data
-  <li>comment 24 <!weird markup declaration> and data
-  <li>bogus 25 comment </ with end !@> and data
+  <li>comment 20  <!-- Comment with strange end !--> and data >
+  <li>comment 21  <!-----> and data
+  <li>comment 22  <!--<!-->
+  <li>bogus comment 1 <! with end !@> and data
+  <li>bogus comment 2 </ with end !@> and data
+  <li>bogus comment 3 <? with end !@> and data
+  <li>bogus comment 4 <!- with end -> and data
+  <li>comment 5 <!weird markup declaration> and data
+  <li>bogus 6 comment </ with end !@> and data
 </ul>
 
 <div>

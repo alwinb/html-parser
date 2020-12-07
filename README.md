@@ -11,9 +11,7 @@ The Lexer
 ---------
 There is a preliminary attempt at a lexical grammar for HTML5 in `notes/`. 
 
-I have painstakingly charted a transition table based on the standard and then used a technique outlined in this [gist][1] to encode the state machine in very few lines. 
-
-The lexer is almost complete, but a few things still need to be added. Most importantly, character references are not yet tokenised as such. 
+I have painstakingly charted a transition table based on the standard and then used a technique outlined in this [gist][1] to encode the state machine in very few lines. The lexer is almost complete.
 
 [1]: https://gist.github.com/alwinb/d2787f4cde1f7aadd197f40806cb08ef#file-statemachine-js
 

@@ -21,59 +21,61 @@ pre, code {
 
 /* Html colors */
 
-.bogus,
-.bogusStart,
-.bogusData,
-.bogusEnd,
-.commentStart,
-.commentStartBogus,
-.commentData,
-.commentEnd,
-.commentEndBogus,
-.comment,
-.beforeAttribute,
-.afterAttributeName,
-.beforeValue,
-.tagSpace {
+.AfterAttributeName,
+.BeforeAtt,
+.BeforeAttribute,
+.BeforeValue,
+.Bogus,
+.BogusData,
+.BogusEnd,
+.BogusStart,
+.Comment,
+.CommentData,
+.CommentEnd,
+.CommentEndBogus,
+.CommentStart,
+.CommentStartBogus,
+.TagSpace {
 	color:#746D74;
 }
 
-.startQuote,
-.endQuote,
-.value,
-.valueStart,
-.valueEnd,
-.attributeValueStart,
-.attributeValue,
-.attributeValueData,
-.attributeValueEnd {
+.AttributeValue,
+.AttributeValueData,
+.AttributeValueEnd,
+.AttributeValueStart,
+.EndQuote,
+.StartQuote,
+.Value,
+.ValueEnd,
+.ValueStart {
 	color: #8F9D6A;
 }
 
-.charRefDecimal,
-.charRefHex,
-.charRefNamed {
+.NumRef,
+.HexRef,
+.NamedRef {
 	color: #DDF7AC;
 }
 
-.charRefDecimal,
-.charRefHex,
-.charRefNamed {
+.NumRef,
+.HexRef,
+.NamedRef {
 	/* color:#E9784F; */
 }
 
-.tagName,
-.startTagStart,
-.endTagStart,
-.startTagEnd,
-.endTagEnd,
-.tagEnd,
-.tagEndClose {
+.TagName,
+.StartTagStart,
+.EndTagStart,
+.StartTagEnd,
+.EndTagEnd,
+.TagEnd,
+.TagEndClose {
 	color: #B38243;
 }
 
-.assign,
-.attributeName {
+.Assign,
+.AttName,
+.AttributeName {
 	color: #D4BD7F;
 }
 
