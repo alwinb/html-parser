@@ -8,28 +8,37 @@ const {
 
 // TODO also list default
 
-log ('\n\nElements\n================')
+log ('\n// Elements\n// --------\n')
 
+log ('const elements = {', )
 for (let [k,v] of entries (E)) {
-  log ('\n'+k+'\n--------')
+  const r = []
   for (let x in elementInfo)
-    if (elementInfo[x] & v) log (x)
+    if (elementInfo[x] & v) r.push (x)
+  log ('  ' + k + ': `' + r.sort () .join (' ') + '`,')
 }
+log ('}')
 
-log ('\n\nElement Categories\n================')
+log ('\n\n// Element Categories\n// ------------------\n')
 
+log ('const categories = {', )
 for (let [k,v] of entries (C)) {
-  log ('\n'+k+'\n--------')
+  const r = []
   for (let x in elementInfo)
-    if (elementInfo[x] & v) log (x)
+    if (elementInfo[x] & v) r.push (x)
+  log ('  ' + k + ': `' + r.sort () .join (' ') + '`,')
 }
+log ('}')
 
 
-log ('\n\nElement Boundaries\n================')
+log ('\n\n// Element Boundaries\n// ------------------\n')
 
+log ('const boundaries = {', )
 for (let [k,v] of entries (B)) {
-  log ('\n'+k+'-boundary\n--------')
+  const r = []
   for (let x in elementInfo)
-    if (elementInfo[x] & v) log (x)
+    if (elementInfo[x] & v) r.push (x)
+  log ('  ' + k + ': `' + r.sort () .join (' ') + '`,')
 }
+log ('}')
 
