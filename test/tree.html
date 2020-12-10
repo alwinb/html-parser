@@ -17,6 +17,7 @@
 </ul>
 <textarea id=input>
 </textarea>
+<button id=submit>Run</button>
 
 <div id=view1 class=DomTree>
   Browser
@@ -64,6 +65,10 @@
     }
     return ul
   }
+  document.getElementById ('submit') .addEventListener ('click', evt => {
+    showSample (document.getElementById ('input').value)
+  })
+
 
   const objectKey = Symbol ()
   const htmlns = 'http://www.w3.org/1999/xhtml'
@@ -132,11 +137,22 @@
   })
 
   var samples = [
+    `<ul><li><applet><as></li>test</ul>
+<ul><li><p><as></li>test`, // FIXME, this has to do with the 'active formating elements...', incorrect only for applet, marquee, object, may be?
+    `<p>Test<h1>Head<div><h2>`, // FIXME
+    `<p>para<object>and<p>para`, // FIXME
+    `<p>Test<h1>Head<button><h2>`, // FIXME
+    `<table><td><p>Test<h1>Head<button><td><h2>`, // FIXME
+    `<p>Test<h1>Head`,
+    `<table><td><p>Test<blockquote>Foo<p>bar<td>`,
+    `<p>Test<li>li<blockquote>Foo<p>bar<p>`,
+    `<table><td>foo<button>one<button><p>two<button>three<td>cell`,
     `<p><foo><li>`,
     `<svg><big><rect></svg>`,
     `<tr><b>bold<i>italic<li></b>`,
     `<svg><path>text<bar>Foo<p>Test<rect></body><!--->`,
 
+    // NB parsed differently in Firefox
     `Test nesting of option and optgroup.
     <select>Foo<textarea>Bar</textarea>
     <select>Foo<input>
