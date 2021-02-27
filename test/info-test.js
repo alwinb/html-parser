@@ -1,8 +1,8 @@
 const log = console.log.bind (console)
 const { entries } = Object
 const {
-  elements:E, categories:C, boundaries:B,
-  defaultInfo, info:elementInfo, boundarySets, defaultBoundarySet,
+  elements:E, categories:C,
+  defaultInfo, elementInfo, boundarySets, defaultBoundarySet,
   rules, defaultRule } = require ('../lib/schema')
 
 
@@ -30,15 +30,4 @@ for (let [k,v] of entries (C)) {
 }
 log ('}')
 
-
-log ('\n\n// Element Boundaries\n// ------------------\n')
-
-log ('const boundaries = {', )
-for (let [k,v] of entries (B)) {
-  const r = []
-  for (let x in elementInfo)
-    if (elementInfo[x] & v) r.push (x)
-  log ('  ' + k + ': `' + r.sort () .join (' ') + '`,')
-}
-log ('}')
 

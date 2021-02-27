@@ -128,8 +128,8 @@
     const [input, view1, view2] = ['input', 'view1', 'view2'].map (_ => document.getElementById (_))
     input.value = sample
     view1.innerHTML = view2.innerHTML = ''
-    view1.append (showTree (nativeParse (sample)))
-    view2.append (showTree (html.parse (sample)))
+    view1.append ('native', showTree (nativeParse (sample)))
+    view2.append ('parser', showTree (html.parse (sample)))
   }
   document.addEventListener ('click', evt => {
     if (objectKey in evt.target)
@@ -174,7 +174,10 @@
 
     `Test close by cell (2)
     <template><colgroup><td>cell1<td>cell2`,
-
+    '<p>para<span>foo<select><dd>dd',
+    '<table><td><applet><td>',
+    '<button><div><p><applet><button>',
+    '<button><div><p><applet><p>', 
     ]
   
   makeTabs(samples)
