@@ -9,8 +9,9 @@
 </head>
 <body>
 
-<h1>Dom viewer</h1>
+<main>
 
+<h1>Dom viewer</h1>
 <p>This is a test page for the HTML parser,
 
 <ul id=tabs>
@@ -26,6 +27,8 @@
 <div id=view2 class=DomTree>
   Html Parser
 </div>
+
+</main>
 
 <script>
   window.console = new Console ()
@@ -137,9 +140,23 @@
   })
 
   var samples = [
+    `<table><td><p>Test<h1>Head<button><td><h2>`,
+    `<uli>a<button>b</uli><p>c<button>dee`,
+    `<ul><li>one<ul></li>text`,
+    `<p>Test<h1>Head1<div><h2>Head2`,
+    `<p>Test<h1>Head1<sdiv><h2>Head2`,
+    `<p>Test<h1>Head1<div></h2>Text`,
+    '<li><applet>a </li>test <li>test',
+    '<ul><li>one<ul></li>text',
+    '<table><td><template><td>',
+    '<table><caption><table><td></caption>text',
+    '<table><caption><td><table><td></caption>text',
+    '<table><caption><applet>applet-text</table>body-text',
+    '<table><td><applet>applet-text</table>body-text',
+    '<table><caption><td></table>Hello',
+    '<table><caption><td><div></table>Hello',
     `<ul><li><applet><as></li>test</ul>
 <ul><li><p><as></li>test`, // FIXME, this has to do with the 'active formating elements...', incorrect only for applet, marquee, object, may be?
-    `<p>Test<h1>Head<div><h2>`, // FIXME
     `<p>para<object>and<p>para`, // FIXME
     `<p>Test<h1>Head<button><h2>`, // FIXME
     `<table><td><p>Test<h1>Head<button><td><h2>`, // FIXME
