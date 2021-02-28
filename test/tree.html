@@ -10,24 +10,20 @@
 <body>
 
 <main>
+  <h1>Dom viewer</h1>
+  <p>This is a test page for the HTML parser,
 
-<h1>Dom viewer</h1>
-<p>This is a test page for the HTML parser,
+  <ul id=tabs></ul>
+  <textarea id=input></textarea>
+  <button id=submit>Run</button>
 
-<ul id=tabs>
-</ul>
-<textarea id=input>
-</textarea>
-<button id=submit>Run</button>
+  <div id=view1 class=DomTree>
+    Browser
+  </div>
 
-<div id=view1 class=DomTree>
-  Browser
-</div>
-
-<div id=view2 class=DomTree>
-  Html Parser
-</div>
-
+  <div id=view2 class=DomTree>
+    Html Parser
+  </div>
 </main>
 
 <script>
@@ -37,44 +33,78 @@
 </script>
 
 <script src="../dist/html.js"></script>
+<script src="../dist/domex.min.js"></script>
+<script src="scripts/samples.js"></script>
 <script>(()=>{
-  const { html } = modules
-  const T = html.tokenTypes
-  const $ = name => document.createElement (name)
-  const log = console.log.bind (console)
-  log (T)
 
+  const log = console.log.bind (console)
+  const { html, domex: { domex, DomEx, Domex } } = modules
+  const { defineProperty:define } = Object
+  const T = html.tokenTypes
+
+  // For debugging
+  define (Object.prototype, Symbol.toStringTag, {
+    get: function () { return this.constructor.name }
+  })
+
+  // DOM tools
+  const htmlns = 'http://www.w3.org/1999/xhtml'
+  const byId = document.getElementById.bind (document)
+  const $ = name => document.createElement (name)
   const setProps = (el, props) => {
     for (let k in props) el.setAttribute (k, props[k])
   }
 
-  Object.defineProperty (Object.prototype, Symbol.toStringTag, { get:function () { return this.constructor.name } })
-
-  // OK lets create the tree
-  // MDN: In addition, every kind of DOM node is represented by an interface based on Node. These include Attr, CharacterData (which Text, Comment, and CDATASection are all based on), ProcessingInstruction, DocumentType, Notation, Entity, and EntityReference.
-
+  // native HTML parser
   function nativeParse (input) {
     return new DOMParser () .parseFromString (input, 'text/html')
   }
 
+
+  // Main
+  // ----
+
+  const objectKey = Symbol ()
+  const samples = window['html-samples']
+
+  function main () {
+    makeTabs (samples)
+    showSample (samples[0])
+
+    byId ('submit') .addEventListener ('click', evt => {
+      showSample (byId ('input') .value)
+    })
+
+    document.addEventListener ('click', evt => {
+      if (objectKey in evt.target)
+        log (evt.target [objectKey])
+    })
+  }
+  
+  setTimeout (main)
+
+  // OK lets create the tree
+  // MDN: In addition, every kind of DOM node is represented by an interface based on Node. These include Attr, CharacterData (which Text, Comment, and CDATASection are all based on), ProcessingInstruction, DocumentType, Notation, Entity, and EntityReference.
+
   function makeTabs (samples) {
-    const ul = document.getElementById ('tabs')
+    const ul = byId ('tabs')
     let li, i = 0
     for (let x of samples) { let li
-      ul.append((li = $('li')))
+      ul.append ((li = $('li')))
       li.className = '-button'
-      li.append('Sample '+ (++i))
+      li.append ('Sample '+ (++i))
       li.onclick = _ => showSample (x)
     }
     return ul
   }
-  document.getElementById ('submit') .addEventListener ('click', evt => {
-    showSample (document.getElementById ('input').value)
-  })
 
-
-  const objectKey = Symbol ()
-  const htmlns = 'http://www.w3.org/1999/xhtml'
+  function showSample (sample) {
+    const [input, view1, view2] = ['input', 'view1', 'view2'] .map (byId)
+    input.value = sample
+    view1.innerHTML = view2.innerHTML = ''
+    view1.append ('native', showTree (nativeParse (sample)))
+    view2.append ('parser', showTree (html.parse (sample)))
+  }
 
   function showTree (domNode) {
     let elem, label, clss
@@ -126,78 +156,5 @@
     }
     return elem
   }
-
-  function showSample (sample) {
-    const [input, view1, view2] = ['input', 'view1', 'view2'].map (_ => document.getElementById (_))
-    input.value = sample
-    view1.innerHTML = view2.innerHTML = ''
-    view1.append ('native', showTree (nativeParse (sample)))
-    view2.append ('parser', showTree (html.parse (sample)))
-  }
-  document.addEventListener ('click', evt => {
-    if (objectKey in evt.target)
-      log (evt.target[objectKey])
-  })
-
-  var samples = [
-    `<table><td><p>Test<h1>Head<button><td><h2>`,
-    `<uli>a<button>b</uli><p>c<button>dee`,
-    `<ul><li>one<ul></li>text`,
-    `<p>Test<h1>Head1<div><h2>Head2`,
-    `<p>Test<h1>Head1<sdiv><h2>Head2`,
-    `<p>Test<h1>Head1<div></h2>Text`,
-    '<li><applet>a </li>test <li>test',
-    '<ul><li>one<ul></li>text',
-    '<table><td><template><td>',
-    '<table><caption><table><td></caption>text',
-    '<table><caption><td><table><td></caption>text',
-    '<table><caption><applet>applet-text</table>body-text',
-    '<table><td><applet>applet-text</table>body-text',
-    '<table><caption><td></table>Hello',
-    '<table><caption><td><div></table>Hello',
-    `<ul><li><applet><as></li>test</ul>
-<ul><li><p><as></li>test`, // FIXME, this has to do with the 'active formating elements...', incorrect only for applet, marquee, object, may be?
-    `<p>para<object>and<p>para`, // FIXME
-    `<p>Test<h1>Head<button><h2>`, // FIXME
-    `<table><td><p>Test<h1>Head<button><td><h2>`, // FIXME
-    `<p>Test<h1>Head`,
-    `<table><td><p>Test<blockquote>Foo<p>bar<td>`,
-    `<p>Test<li>li<blockquote>Foo<p>bar<p>`,
-    `<table><td>foo<button>one<button><p>two<button>three<td>cell`,
-    `<p><foo><li>`,
-    `<svg><big><rect></svg>`,
-    `<tr><b>bold<i>italic<li></b>`,
-    `<svg><path>text<bar>Foo<p>Test<rect></body><!--->`,
-
-    // NB parsed differently in Firefox
-    `Test nesting of option and optgroup.
-    <select>Foo<textarea>Bar</textarea>
-    <select>Foo<input>
-    <select>Foo<keygen>
-    <select>Foo<option>Bar<option>Baz<optgroup>Baz<option>Bee<select>Baz<optgroup>Item<li>item<optgroup>g<di>Di</select>
-    `,
-    
-    // `<option>Item<li>item<di><option><select><option>Item<li>item<di><option><select>`,
-    // `<option>Item<li>item<di><option>Item2<li>item<di><option><select><option>Item<li>item<di><option><option>Item2<li><optgroup>item<di>`,
-
-    `Hello`,
-    `<body>Hello`,
-    `<script>fn</`+`script>Hello`,
-    `<table><td>foo<tr><td>bar<col>`, 
-    `<br>`, 
-
-    `Test close by cell
-    <table><colgroup><td>cell1<td>cell2`,
-
-    `Test close by cell (2)
-    <template><colgroup><td>cell1<td>cell2`,
-    '<p>para<span>foo<select><dd>dd',
-    '<table><td><applet><td>',
-    '<button><div><p><applet><button>',
-    '<button><div><p><applet><p>', 
-    ]
-  
-  makeTabs(samples)
-  showSample(samples[0])
 
 })()</script>
