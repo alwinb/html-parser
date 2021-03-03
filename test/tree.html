@@ -71,16 +71,27 @@
     makeTabs (samples)
     showSample (samples[0])
 
-    byId ('submit') .addEventListener ('click', evt => {
-      showSample (byId ('input') .value)
+    const 
+      submit = byId ('submit'),
+      ipnut = byId ('input')
+
+    submit .addEventListener ('click', evt => {
+      showSample (input.value)
     })
 
     document.addEventListener ('click', evt => {
       if (objectKey in evt.target)
         log (evt.target [objectKey])
     })
+    
+    window.addEventListener ('keydown', evt => {
+      if (evt.key === 'Enter' && evt.ctrlKey || evt.metaKey)
+        showSample (input.value)
+    })
+    
+    input.focus ()
   }
-  
+
   setTimeout (main)
 
   // OK lets create the tree

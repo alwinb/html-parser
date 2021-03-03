@@ -2,11 +2,15 @@ const log = console.log.bind (console)
 const { entries } = Object
 const {
   elements:E, categories:C,
-  defaultInfo, elementInfo, boundarySets, defaultBoundarySet,
+  defaultInfo, elementInfo, printInfo, 
   rules, defaultRule } = require ('../lib/schema')
 
 
 // TODO also list default
+
+for (let k in elementInfo)
+  log ((k+':').padEnd (12), printInfo(elementInfo[k]))
+
 
 log ('\n// Elements\n// --------\n')
 
