@@ -34,14 +34,15 @@ var sample = '<table><td>foo<col>'
 var sample = '<table><td>foo<tfoot>'
 var sample = '<table><td>foo<tr>'
 var sample = '<table><caption>foo<td>'
-var sample = '<table><colgroup><td>foo<tr><br>' // FIXME
-// var sample = '<html><head></head><body><h1>Foo</h1><p>Lorem<p>Ipsum'
+var sample = '<table><colgroup><td>foo<tr><br>'
+var sample = '<table><td>foo<td><col>'
+var sample = '<select>Foo<option>boo<select>Bar'
 
+// var sample = '<html><head></head><body><h1>Foo</h1><p>Lorem<p>Ipsum'
 // var sample = '<script src=foo>'
 // var sample = '<h1> One Two </h1> bar'
 // var sample = '<select><optgroup><option>one<option>two<optgroup>three<table><td>foo'
 // var sample = '<h1><!-- comment -->some data</h6> <p>Hello <strong>World!</strong>'
-
 // var sample = fs.readFileSync ('../test/test.html', 'utf8')
 // var sample = '<script></script><foo>'
 // var sample = '<td>foo'

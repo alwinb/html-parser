@@ -19,8 +19,6 @@ h1 {
   font-size:2rem;
   
 }
-
-
 .-button {
   background:var(--screen);
   line-height:2rem;
@@ -35,9 +33,10 @@ body {
   margin:2rem 2em;
 }
 #input {
-  width:calc(100vw - 4em);
+  width:calc(100vw - 13em);
   height:10rem;
   display:block;
+  float:left;
 }
 #view1, #view2 {
   width:calc(40vw - 4em);
@@ -45,12 +44,17 @@ body {
 }
 #tabs {
   display:block;
-  padding:0;margin:0;
+  padding:0;
+  margin:0 1rem 0 0;
+  width:5rem;
+  float:left;
 }
 #tabs li {
-  display:inline-block;
+  display:block;
   padding:0 1em 0;
-  margin:0 .3em 0 0;
+  height:1.5rem;
+  line-height:1.5rem;
+  border-bottom:2px solid white;
   cursor:pointer;
 }
 #tabs li:hover {
@@ -87,12 +91,28 @@ div.children:after {
 }
 
 .Console {
-  background:#fff3;
+  background:#fffd;
   width:100vw;
-  height:20vh;
+  height:30vh;
   position:absolute;
   bottom:0; left:0;
-  padding:0 1em;
+  padding:0 1rem 1rem 1rem;
+  font-size:12px;
   overflow-y:scroll;
   border-top:1px solid currentColor;
+}
+
+html, body {
+  width:100vw;
+  height:100vh;
+  overflow:hidden;
+  margin:0;
+}
+
+main {
+  position:absolute;
+  height:70vh;
+  width:100vw;
+  overflow:auto;
+  padding:1rem;
 }
