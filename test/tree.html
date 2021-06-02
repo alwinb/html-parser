@@ -95,6 +95,7 @@
   // MDN: In addition, every kind of DOM node is represented by an interface based on Node. These include Attr, CharacterData (which Text, Comment, and CDATASection are all based on), ProcessingInstruction, DocumentType, Notation, Entity, and EntityReference.
 
   function showSample (sample) {
+    window.console.clear ()
     const [input, view1, view2] = ['input', 'view1', 'view2'] .map (byId)
     input.value = sample
     view1.innerHTML = view2.innerHTML = ''
