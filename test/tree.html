@@ -9,23 +9,6 @@
 </head>
 <body>
 
-<main>
-  <h1>Dom viewer</h1>
-  <p>This is a test page for the HTML parser,
-
-  <ul id=tabs></ul>
-  <textarea id=input></textarea>
-  <button id=submit>Run</button>
-
-  <div id=view1 class=DomTree>
-    Browser
-  </div>
-
-  <div id=view2 class=DomTree>
-    Html Parser
-  </div>
-</main>
-
 <script>
   window.console = new Console ()
   document.body.append (console.elem)
@@ -35,6 +18,7 @@
 <script src="../dist/html.js"></script>
 <script src="../dist/domex.min.js"></script>
 <script src="scripts/samples.js"></script>
+
 <script>(()=>{
 
   const log = console.log.bind (console)
@@ -65,16 +49,26 @@
   // ----
 
   const objectKey = Symbol ()
-  const samples = window['html-samples']
+  const samples = window ['html-samples']
+
+  const ui = domex `main
+    > h1 "Dom viewer"
+    + p "This is a test page for the HTML parser,"
+    + (ul#tabs > li.-button [data-key=$] *samples "Sample " $)
+    + textarea#input + button#submit "Run"
+    + div#view1 "Browser"
+    + div#view2 "Html Parser"
+  `
 
   function main () {
-    makeTabs (samples)
+
+    document.body.append (ui.render ({ samples }) .elem)
+
+    // makeTabs (samples)
     showSample (samples[0])
 
-    const 
-      submit = byId ('submit'),
-      ipnut = byId ('input')
-
+    const submit = byId ('submit')
+    
     submit .addEventListener ('click', evt => {
       showSample (input.value)
     })
@@ -82,6 +76,9 @@
     document.addEventListener ('click', evt => {
       if (objectKey in evt.target)
         log (evt.target [objectKey])
+      if ('key' in evt.target.dataset)
+        showSample (samples [+evt.target.dataset.key])
+
     })
     
     window.addEventListener ('keydown', evt => {
@@ -96,18 +93,6 @@
 
   // OK lets create the tree
   // MDN: In addition, every kind of DOM node is represented by an interface based on Node. These include Attr, CharacterData (which Text, Comment, and CDATASection are all based on), ProcessingInstruction, DocumentType, Notation, Entity, and EntityReference.
-
-  function makeTabs (samples) {
-    const ul = byId ('tabs')
-    let li, i = 0
-    for (let x of samples) { let li
-      ul.append ((li = $('li')))
-      li.className = '-button'
-      li.append ('Sample '+ (++i))
-      li.onclick = _ => showSample (x)
-    }
-    return ul
-  }
 
   function showSample (sample) {
     const [input, view1, view2] = ['input', 'view1', 'view2'] .map (byId)
