@@ -4,8 +4,9 @@
 // FIXME: 23, ...
 
 window['html-samples'] = [
-  '<main><p><table><p>foo<td>foo', 
+  '<!doctype html><main><p><table><p>foo<td>bar', 
   '<main><table><caption><ul><li>text<table><p>foo<td>foo<tr></table>γαμμα',
+  '<main><button><table><caption><button>text<table>foo<button>bar<p>bee<td>baz<tr></table>γαμμα',
 
   // Testing list scope
   '<li>a<ul><li>a<li>b',
