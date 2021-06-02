@@ -35,7 +35,7 @@ Mismatched tags are end-tags that do not match up with the last 'accepted' open 
 
 This is always resolved in essentially one way:
 
-1. For each start-tag, (possibly considering a bit of its context), it is specified to which end-tags it is 'transparent'. For example, `<applet>` is not transparant to `</ul>`, thus the `</ul>` tag does not 'see' a matching start-tag and it will be ignored. However `<tbody>`, `<tr>` and `<td>` are transparent to `</table>`, so the `</table>` tag does 'see' a matching start-tag, and as the corresponding table element will be closed. 
+1. For each start-tag, (possibly considering a bit of its context), it is specified by which end-tags it may be implicitly closed/ to which end-tags it is 'transparent'. For example, `<applet>` is not transparant to `</ul>`, thus the `</ul>` tag does not 'see' a matching start-tag and it will be ignored. However `<tbody>`, `<tr>` and `<td>` are transparent to `</table>`, so the `</table>` tag does 'see' a matching start-tag, and as the corresponding table element will be closed. 
 
 ### Misplaced tags
 
@@ -66,7 +66,7 @@ I precompute a single dictionary that maps tag-names to such an integer, thus re
 Whenever the parser creates a new element for a start-tag, it stores with it a small amount of information. It stores:
 
 - a 'scope'. This encodes in a single integer the union of the categories of all open elements that may be visible to potential end-tags. 
-- a 'closeBy' aka. 'transparantTo' property that encodes the collection of end-tags to which the element is transparent. 
+- a 'allowEnd' aka. 'transparantTo' property that encodes the collection of end-tags to which the element is transparent. 
 - a 'closeFor' property, which encodes again in a single integer which potential start-tags would trigger behaviour 3. above (i.e. inserting an implicit ent-tag before it). 
 - a 'paths' property that specifies per start-tag-name the elements that should be inserted; this is behaviour 2. above. 
 - A 'contents' property which specifies (via its complement) which start-tags should be ignored. 
