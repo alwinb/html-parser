@@ -5,6 +5,14 @@
 
 window['html-samples'] = [
 
+
+  // Testing foster parenting
+  '<!doctype html><main><button><table><caption><button>text<table>foo<button>bar<p>bee<td>baz<tr></table>γαμμα',
+  '<!doctype html><main><p><table><p>foo<td>bar', 
+  '<main><table><caption><ul><li>text<table><p>foo<td>foo<tr></table>γαμμα',
+  '<!doctype html><p>Test<h1>Head1<table>asd<div></h2>Text',
+  '<!doctype html><p>TestHead1<table>asd<div></h2>Text',
+
   // Testing list scope
   '<li>a<ul><li>a<li>b',
   '<li>a<div><li>a<li>b',
@@ -33,6 +41,19 @@ window['html-samples'] = [
   // `<option>Item<li>item<di><option><select><option>Item<li>item<di><option><select>`,
   // `<option>Item<li>item<di><option>Item2<li>item<di><option><select><option>Item<li>item<di><option><option>Item2<li><optgroup>item<di>`,
 
+  // Test for implicit head, body elements
+  `Hello`,
+  `<body>Hello`,
+  `<script>fn</script>Hello`,
+  `<br>`,
+  `</head>Foo`,
+  `</body>Foo`,
+  `</html>Foo`,
+  `<head></head>After head</head>Foo`,
+  `<head></head>After head</body>Foo`,
+  `<head></head>After head</html>Foo`,
+
+
   // Tests for headings
   `text<h1>s<div>b<h2>`,
   `text<h1>b<h2>`,
@@ -48,12 +69,6 @@ window['html-samples'] = [
   `<table><td><p>Test<h1>Head<button><td><h2>`,
   `<p>Test<h1>Head`,
 
-  // Test for implicit head, body elements
-  `Hello`,
-  `<body>Hello`,
-  `<script>fn</script>Hello`,
-  `<table><td>foo<tr><td>bar<col>`, 
-  `<br>`,
 
   // Others
   `<uli>a<button>b</uli><p>c<button>dee`,
@@ -85,6 +100,7 @@ window['html-samples'] = [
   <table><colgroup><td>cell1<td>cell2`,
   `Test close by cell (2)
   <template><colgroup><td>cell1<td>cell2`,
+  `<table><td>foo<tr><td>bar<col>`, 
   '<p>para<span>foo<select><dd>dd',
   '<table><td><applet><td>',
   '<button><div><p><applet><button>',

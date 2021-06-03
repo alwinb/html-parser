@@ -38,6 +38,13 @@ var sample = '<table><colgroup><td>foo<tr><br>'
 var sample = '<table><td>foo<td><col>'
 var sample = '<select>Foo<option>boo<select>Bar'
 
+var sample = '<main><table>text<td>foo<tr>'
+var sample = '<main><table><div>text<td>foo<tr>'
+var sample = '<main><table><ul><li>a<li>text<p>foo<td>foo<tr></table>γαμμα'
+var sample = '<button><table>aa<button>one<td>two<tr>three'
+var sample = '<main><table><caption><ul><li>a<li>text<table><p>foo<td>foo<tr></table>γαμμα'
+
+
 // var sample = '<html><head></head><body><h1>Foo</h1><p>Lorem<p>Ipsum'
 // var sample = '<script src=foo>'
 // var sample = '<h1> One Two </h1> bar'
