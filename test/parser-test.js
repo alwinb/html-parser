@@ -43,7 +43,7 @@ var sample = '<main><table><div>text<td>foo<tr>'
 var sample = '<main><table><ul><li>a<li>text<p>foo<td>foo<tr></table>γαμμα'
 var sample = '<button><table>aa<button>one<td>two<tr>three'
 var sample = '<main><table><caption><ul><li>a<li>text<table><p>foo<td>foo<tr></table>γαμμα'
-
+var sample = '<br>'
 
 // var sample = '<html><head></head><body><h1>Foo</h1><p>Lorem<p>Ipsum'
 // var sample = '<script src=foo>'
