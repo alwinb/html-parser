@@ -7,7 +7,7 @@ window['html-samples'] = [
 
 
   // Testing foster parenting
-  '<!doctype html><main><button><table><caption><button>text<table>foo<button>bar<p>bee<td>baz<tr></table>γαμμα',
+  '<table><caption><button>text<table>foo<button>bar<p>bee<td>baz<tr></table>γαμμα',
   '<!doctype html><main><p><table><p>foo<td>bar', 
   '<main><table><caption><ul><li>text<table><p>foo<td>foo<tr></table>γαμμα',
   '<!doctype html><p>Test<h1>Head1<table>asd<div></h2>Text',
