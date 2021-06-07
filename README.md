@@ -68,7 +68,7 @@ Whenever the parser creates a new element for a start-tag, it stores with it a s
 - a 'scope'. This encodes in a single integer the union of the categories of all open elements that may be visible to potential end-tags. 
 - a 'allowEnd' aka. 'transparantTo' property that encodes the collection of end-tags to which the element is transparent. 
 - a 'closeFor' property, which encodes again in a single integer which potential start-tags would trigger behaviour 3. above (i.e. inserting an implicit ent-tag before it). 
-- a 'paths' property that specifies per start-tag-name the elements that should be inserted; this is behaviour 2. above. 
+- an 'openFor' property that specifies per start-tag-name the elements that should be inserted; this is behaviour 2. above. 
 - A 'contents' property which specifies (via its complement) which start-tags should be ignored. 
 - The fourth behaviour I've not yet implemented!
 
