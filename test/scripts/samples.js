@@ -5,6 +5,13 @@
 
 window['html-samples'] = [
 
+  // Testing formatting tags
+  '<a><i><b>asdf</i><div>one',
+  '<a><i><b>asdf</i><sdiv>one',
+  '<a><i><b>asdf</i>ibs',
+  '<a><i><b>asdf</b>ibs',
+  '<i><sdiv><b> a</sdiv>asda',
+  '<li>a<ul><li>a<b>a<li>b',
 
   // Testing foster parenting
   '<table><caption><button>text<table>foo<button>bar<p>bee<td>baz<tr></table>γαμμα',
