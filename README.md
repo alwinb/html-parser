@@ -4,8 +4,9 @@ Html Parser
 This is a new HTML5 parser that I am working on.
 The focus is on code size, _speed_ and simplicity. 
 
-Standard compliance _is_ a goal in the sense that I do intend to produce, for all possible input, a parse tree that is equivalent to the one produced by the algorithm in the HTML5 Standard. 
-However, I do not use the same algorithm. 
+Standard compliance _is_ a goal. I intend to produce, for all possible input, a parse tree that is equivalent to the one produced by the algorithm in the HTML5 Standard.
+
+However, I do not use the same algorithm. Instead I am trying to come up with an algorithm that is much, much simpler, but that does produce the same results. 
 
 The Lexer
 ---------
@@ -21,17 +22,15 @@ The Parser
 
 I'm trying to come up with a declarative description, or at least a more elegant algorithm than the one that is described in the standard. Tree construction is not quite compatible with the standard yet, but I am making good progress. 
 
-One significant difference is that currently, I am not creating elements in the DOM for formatting elelements, but instead I leave them as formatting on and formatting off marks within the tree in tree order. I think that this is a better representation for some of the applications that I have in mind, but I might change that eventually.  
-
 
 The Algorithm
 -------------
 
-I'm working on a declarative system for specifying the parser. Parsing HTML documents with correctly matched– and none omitted start– and end-tags is a very simple task. The difficulty part is handling _mismatched_- and _misplaced_ tags in a way that agrees with the standard. 
+I'm working on a declarative system for specifying the parser. Parsing HTML documents with correctly matched– and none omitted start– and end-tags is a very simple task. The difficult part is handling _mismatched end tags_- and _misplaced tags in a way that agrees with the standard. 
 
-### Mismatched tags
+### Mismatched end tags
 
-Mismatched tags are end-tags that do not match up with the last 'accepted' open tag. Examples are `<ul><applet>foo</ul>bar` and `<table><tbody><tr><td>item</table>`, but also `<p>foo</div>`. 
+Mismatched end tags are end-tags that do not match up with the last 'accepted' open tag. Examples are `<ul><applet>foo</ul>bar` and `<table><tbody><tr><td>item</table>`, but also `<p>foo</div>`. 
 
 This is always resolved in essentially one way:
 
@@ -50,7 +49,7 @@ There are four ways to resolve such a situation:
 
 These four methods are run in a loop, until the start-tag or text-node is either inserted, or dropped. 
 
-**Note** There is a third category of mis-nested tags that is resolved in a different way: mis-nested formatting tags such as `<b>`, `<i>`, `<em>` and alike. This seems to be not too complicated to characterise, but so far I'm leaving them as unmatched on– and off markers in the tree. 
+**Note** There is a third category of mis-nested tags that is resolved in a different way: mis-nested formatting tags such as `<b>`, `<i>`, `<em>` and alike. I will write more about that later. 
 
 
 ### Element categories
