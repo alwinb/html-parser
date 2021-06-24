@@ -1,22 +1,23 @@
-html, body {
-  margin:0; padding:0;
-  font-size:24px;
-}
-
-body {
-	font-family:Helvetica, Arial, Sans;
-  font-size:16px;
-  line-height:1rem;
-}
+html { font-size:24px; }
+body { font-size:16px; }
 
 /** Styles for the tokens **/
 
 pre, code { 
   font-size:13px;
+	font-family:Hack, Menlo, Monaco, Monospace;
+	tab-size:2;
+}
+
+#inspector code {
+	background:#ddd;
+  padding:2px;
+  border-radius:2px;
+}
+
+pre, pre > code {
 	color:white;
 	background:#202020;
-	font-family:Menlo, Monaco, Monospace;
-	tab-size:2;
 }
 
 /* Html colors */
