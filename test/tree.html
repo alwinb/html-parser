@@ -52,7 +52,7 @@
   const samples = window ['html-samples']
 
   const ui = domex `main
-    > h1 "Dom viewer"
+    > h1 "HTML Parser"
     + p "This is a test page for the HTML parser,"
     + (ul#tabs > li.-button [data-key=$] *samples "Sample " $)
     + textarea#input + button#submit "Run"

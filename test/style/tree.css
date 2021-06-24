@@ -1,3 +1,21 @@
+html { font-size:22px; }
+body { font-size:14px; }
+
+html, body {
+  width:100vw;
+  height:100vh;
+  overflow:hidden;
+  margin:0;
+}
+
+main {
+  position:absolute;
+  height:70vh;
+  width:100vw;
+  overflow:auto;
+  padding:1rem;
+}
+
 :root {
 /*  --acolor:#2B6679;
   --bgcolor:#FFF9DE;
@@ -6,37 +24,18 @@
   --screen:#0002;
 }
 
-html {
-  background-color:var(--bgcolor);
-  background:linear-gradient(var(--bgcolor), var(--bgcolor));
-}
-textarea {
-  background-color:var(--bgcolor);
-  font-family:MonoSpace;
-}
-h1 {
-  line-height:2rem;
-  font-size:2rem;
-  
-}
 .-button {
   background:var(--screen);
   line-height:2rem;
   height:2rem;
 }
-html {
-  font-size:20px;
-  font-family:Sans-Serif;
-}
-body {
-  font-size:14px;
-  margin:2rem 2em;
-}
+
 #input {
   width:calc(100vw - 13em);
   height:10rem;
   display:block;
   float:left;
+	font-family:Hack, Menlo, Monaco, Monospace;
 }
 #view1, #view2 {
   width:calc(40vw - 4em);
@@ -102,19 +101,4 @@ div.children:after {
   font-size:12px;
   overflow-y:scroll;
   border-top:1px solid currentColor;
-}
-
-html, body {
-  width:100vw;
-  height:100vh;
-  overflow:hidden;
-  margin:0;
-}
-
-main {
-  position:absolute;
-  height:70vh;
-  width:100vw;
-  overflow:auto;
-  padding:1rem;
 }

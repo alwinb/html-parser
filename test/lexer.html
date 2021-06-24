@@ -1,12 +1,15 @@
+<link rel="stylesheet" type="text/css" href="./style/base.css">
 <link rel="stylesheet" type="text/css" href="./style/tokens.css">
 <!-- -->
 <script>//</script>
 <!-- -->
-<script src="../dist/html.min.js">//</script>
+<script src="../dist/html.js"></script>
+<script src="../dist/domex.min.js"></script>
 </head>
 <bgsound>
 
-<h1>Another Html Parser</h1>
+<body class=m1>
+<h1>HTML Lexer</h1>
 <p>
 
   This shows the code of this page (before the execution of scripts),
@@ -139,36 +142,63 @@
 </ul>
 
 <div>
-  <pre id=inspector>
+  <div id=inspector class=br>
     Inspect the output by clicking on it, below
-  </pre>
+  </div>
   <pre id=colors></pre>
 </div>
 
 <script>
   const log = console.log.bind (console)
   const doc = document
-    log (modules.html)
-  const html = modules.html
-  
+  const { html, domex: { domex, Domex } } = modules
+  const { defineProperty:define } = Object
+
   const pre = doc.getElementById ('colors')
-  const pre2 = doc.getElementById ('inspector')
+  const inspector = doc.getElementById ('inspector')
   const objectKey = Symbol ()
 
-  function inspect (...args) {
-    pre2.innerHTML = ''
-    for (let x of args)
-      pre2.append (JSON.stringify (x, null, 2), doc.createElement ('BR'))
+  const stateView = domex `
+
+    span@token
+      > b %type
+      + " "
+      + code %value;
+
+    span@stateName
+      > (code % + "-")::string ~quote
+      + b %st
+      + (("." + b %)::string ~sub)
+      + (" in " + b %)::string ~tag
+      + " in " + b %content + " / " + code %last;
+
+    dl@stateInfo.tab
+      > (di > dt "line"     + dd > %line + ":" + %col)
+      + (di > dt "state"    + dd > @stateName)
+      + (di > dt "refIn"    + dd > b %)::string ~refIn
+      + (di > dt "tagname"  + dd > %tagname "/" %tagname_);
+    
+    (div.tab
+      > "Token: " + div > @token)  ~token
+    + div.tab
+      > ("State before: " + @stateInfo) ~stateBefore
+      + ("State after: " + @stateInfo) ~stateAfter
+  `
+
+  function inspect (info) {
+    inspector.innerHTML = ''
+    inspector.append (stateView .render (info) .elems)
+    console.log (info)
   }
 
   function show (data) {
     const stream = html.chunks (data)
-    let stateBefore = html.stateInfo(stream.state), stateAfter
+    let stateBefore = html.stateInfo (stream.state), stateAfter
     for (let chunk of stream) {
-      stateAfter = html.stateInfo(stream.state)
+      stateAfter = html.stateInfo (stream.state)
       const el = renderChunk (chunk)
       pre.append (el)
-      el [objectKey] = { type:html.tokenName(chunk[0]), stateBefore, stateAfter }
+      el [objectKey] = { token: { type: html.tokenName(chunk[0]), value: chunk[1] }, stateBefore, stateAfter }
       stateBefore = stateAfter
     }
   }

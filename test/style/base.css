@@ -7,15 +7,15 @@ html.debug {
 }
 
 html.debug * {
-  outline:1px solid rgba(0,0,0,.6);
-  opacity:.9;
+  outline:1px solid rgba(0,0,0,.4);
+  opacity:.95;
 }
 
 /* Establish a vertial rhythm by using
   one rem unit as a global line-height unit */
 
 html {
-  font-size:24px;
+  font-size:21px;
   line-height:1;
   font-family:Sans-Serif;
   margin:0;
@@ -23,9 +23,9 @@ html {
 }
 
 body {
-  font-size:16px;
+  font-size:calc(2rem/3);
   line-height:1rem;
-  margin:0;
+  margin:1rem; /* NB! */
   padding:0;
 }
 
@@ -34,19 +34,20 @@ body {
   line-height:inherit;
 }
 
-*:not(h1,h2,h3,h4,h5,h6) {
+*:not(h1,h2,h3,h4,h5,h6,html,body) {
   font-size:inherit;
 }
 
 /* Block elements followed by a blank line */
-hr,p,ol,ul,dl,table,form,blockquote,pre,figure,img,video,canvas,h1,h2 {
+hr,p,ol,ul,dl,table,form,blockquote,pre,figure,img,video,canvas,h1,h2,section {
   display:block;
   margin-top:0;
   margin-bottom:1rem;
+  border-spacing:0;
 }
 
 /* No extra line after :last-child */
-hr:last-child,p:last-child,ol:last-child,ul:last-child,dl:last-child,table:last-child,form:last-child,blockquote:last-child,pre:last-child,figure:last-child,img:last-child,video:last-child,canvas:last-child,h1:last-child,h2:last-child {
+hr:last-child,p:last-child,ol:last-child,ul:last-child,dl:last-child,table:last-child,form:last-child,blockquote:last-child,pre:last-child,figure:last-child,img:last-child,video:last-child,canvas:last-child,h1:last-child,h2:last-child,section:last-child {
   margin-bottom:0;
 }
 
@@ -56,3 +57,168 @@ header,main,aside,article,footer,nav,div,dd,dt,fieldset,legend,figcaption,h3,h4,
   margin-top:0;
   margin-bottom:0;
 }
+
+
+/* Defaults
+/* ======== */
+
+h1 {
+  font-size:1.5rem;
+  line-height:2rem;
+}
+
+pre {
+  tab-size:2;
+  white-space:pre;
+  /* white-space:pre-wrap; */
+}
+
+a[href] { text-decoration:none; cursor:pointer }
+a[href]:hover { text-decoration:underline }
+
+/* defaults for, ol, ol, and esp. dl */
+ul, ol, dl {
+  margin-left:0;
+  margin-right:0;
+  padding-left:1rem;
+}
+
+dd { margin-left:1rem }
+dt { font-weight:bold }
+dt:not(:last-child)::after { content:': ' } /* NB */
+
+di { display:list-item }
+di > dt, di > dd {
+  display:inline;
+  margin-left:0;
+}
+
+*:is(ul,ol,dl) *:is(dl,ul) { list-style-type:circle }
+*:is(ul,ol,dl) *:is(ul,ol,dl) *:is(dl,ul) { list-style-type:square }
+
+td, th {
+  padding-left:.5rem;
+  padding-right:.5rem;
+}
+
+/* Slightly problematic */
+
+
+/** Set a default size for body?
+body {
+  margin:2rem 4rem 4rem;
+  width:24rem;
+}*/
+
+
+/* Library
+/* ============= */
+
+/* horizontal-lists */
+.hlist {
+  display:block;
+  padding-left:0;
+}
+.hlist > * {
+  display:inline-block;
+  line-height:inherit;
+  padding:0 .75ch; /* NB */
+}
+
+/* vertical lists */
+.vlist {
+  display:block;
+  padding-left:0;
+}
+.vlist > * {
+  display:block;
+}
+
+/* display-table */
+.tab {
+  display:table;
+  border-spacing:0;
+}
+.tab > * {
+  display:table-row;
+}
+.tab > * > * {
+  display:table-cell;
+  padding:0 .75ch; /* NB */
+}
+
+/* Margins and Padding
+/* ------------------- */
+
+.m0   { margin: 0 }
+.m1   { margin: 1rem }
+.m2   { margin: 2rem }
+.m3   { margin: 3rem }
+.m4   { margin: 4rem }
+.m5   { margin: 5rem }
+.mm1  { margin: calc(1rem/12) }
+.mm2  { margin: calc(2rem/12) }
+.mm3  { margin: calc(3rem/12) }
+.mm4  { margin: calc(4rem/12) }
+.mm5  { margin: calc(5rem/12) }
+.mm6  { margin: calc(6rem/12) }
+.mm7  { margin: calc(7rem/12) }
+.mm8  { margin: calc(8rem/12) }
+.mm9  { margin: calc(9rem/12) }
+.mm10 { margin: calc(10rem/12) }
+.mm11 { margin: calc(11rem/12) }
+.mm12 { margin: calc(12rem/12) }
+
+.p0   { padding: 0rem }
+.p1   { padding: 1rem }
+.p2   { padding: 2rem }
+.p3   { padding: 3rem }
+.p4   { padding: 4rem }
+.p5   { padding: 5rem }
+.pp1  { padding: calc(1rem/12) }
+.pp2  { padding: calc(2rem/12) }
+.pp3  { padding: calc(3rem/12) }
+.pp4  { padding: calc(4rem/12) }
+.pp5  { padding: calc(5rem/12) }
+.pp6  { padding: calc(6rem/12) }
+.pp7  { padding: calc(7rem/12) }
+.pp8  { padding: calc(8rem/12) }
+.pp9  { padding: calc(9rem/12) }
+.pp10 { padding: calc(10rem/12) }
+.pp11 { padding: calc(11rem/12) }
+.pp12 { padding: calc(12rem/12) }
+
+/* margin-bottom */
+.br0 { margin-bottom:0 }
+.br1, .br { margin-bottom:1rem }
+
+/*
+.pad0 { padding:0 }
+.pad1, .pad { padding:1rem }
+*/
+
+
+/* others */
+
+.nowrap { white-space:nowrap }
+.scroll { overflow:auto }
+.scrollx { overflow:hidden; overflow-x:auto }
+.scrolly { overflow:hidden; overflow-y:auto }
+.error { color:#9D0006; }
+
+/*.warn { color:orange; }*/
+/*
+TODO inline or inline-block?
+Want to add 'colors', 
+.err .info .warn
+.danger
+and selection/ focus
+
+some display: classes,
+inline, block, inline-block, ....
+combine that with hlist, maybe
+
+separators should be useful
+
+And borders/ .hlines .vlines .lines .border
+*/
