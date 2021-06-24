@@ -1,83 +1,122 @@
 Html Parser
 ===========
 
-This is a new HTML5 parser that I am working on.
-The focus is on code size, _speed_ and simplicity. 
+**Version 0.5.0**
 
-Standard compliance _is_ a goal in the sense that I do intend to produce, for all possible input, a parse tree that is equivalent to the one produced by the algorithm in the HTML5 Standard. 
-However, I do not use the same algorithm. 
+This is a new HTML5 parser that I am working on.  
+The focus is on code size, speed and simplicity. 
+
+This is part of a larger project.  
+The goal is to create a concise, accurate and elegant description of the HTML5 language 'as parsed'. 
+
+Standard compliance is a goal.  
+I intend to produce, for all possible input, a parse tree that is equivalent to the one that is produced by the algorithm in the HTML5 Standard.
 
 The Lexer
 ---------
-There is a preliminary attempt at a lexical grammar for HTML5 in `notes/`. 
 
-I have painstakingly charted a transition table based on the standard and then used a technique outlined in this [gist][1] to encode the state machine in very few lines. The lexer is almost complete.
+There is a preliminary attempt at a lexical grammar for HTML5 in [notes][2]. 
+
+For the implementation, I have painstakingly charted a transition table based on the standard and then used a technique outlined in this [gist][1] to encode the state machine in very few lines. The lexer is almost complete.
 
 [1]: https://gist.github.com/alwinb/d2787f4cde1f7aadd197f40806cb08ef#file-statemachine-js
+[2]: ./notes/lexical-grammar.txt
 
 
 The Parser
 ----------
 
-I'm trying to come up with a declarative description, or at least a more elegant algorithm than the one that is described in the standard. Tree construction is not quite compatible with the standard yet, but I am making good progress. 
+I'm trying to come up with a declarative description and a more elegant algorithm than the one that is described in the standard. The algorithm is not quite compatible with the standard yet but the progress is good!
 
-One significant difference is that currently, I am not creating elements in the DOM for formatting elelements, but instead I leave them as formatting on and formatting off marks within the tree in tree order. I think that this is a better representation for some of the applications that I have in mind, but I might change that eventually.  
+### The Algorithm
 
+Parsing HTML documents is straightforward if the input has correctly matched start- and end-tags. The complicated part is handling _mismatched end tags_ and _misplaced tags_ in a way that agrees with the standard. 
 
-The Algorithm
--------------
+### Mismatched end tags
 
-I'm working on a declarative system for specifying the parser. Parsing HTML documents with correctly matched– and none omitted start– and end-tags is a very simple task. The difficulty part is handling _mismatched_- and _misplaced_ tags in a way that agrees with the standard. 
+Mismatched end tags are end-tags that do not match up with the last 'accepted' open tag.
 
-### Mismatched tags
+Examples:
 
-Mismatched tags are end-tags that do not match up with the last 'accepted' open tag. Examples are `<ul><applet>foo</ul>bar` and `<table><tbody><tr><td>item</table>`, but also `<p>foo</div>`. 
+1. `<ul><applet>foo</ul>bar`
+2. `<table><tbody><tr><td>item</table>`
+3. `<p>foo</div>`. 
 
 This is always resolved in essentially one way:
 
-1. For each start-tag, (possibly considering a bit of its context), it is specified by which end-tags it may be implicitly closed/ to which end-tags it is 'transparent'. For example, `<applet>` is not transparant to `</ul>`, thus the `</ul>` tag does not 'see' a matching start-tag and it will be ignored. However `<tbody>`, `<tr>` and `<td>` are transparent to `</table>`, so the `</table>` tag does 'see' a matching start-tag, and as the corresponding table element will be closed. 
+* For each element's name, (possibly considering some context), it is specified which end-tags may implicitly close it.
+* **Note**: When a mismatched end-tag results in an implicit closing of _formatting elements_, then these formatting elements are 'remembered for reopening': A subsequent open tag may then result in a sequnce of implicit formatting elements being opened whilst the tag is handled. 
+
+Back to the examples:
+
+1. `<applet>` may not be implicitly closed by `</ul>`, thus the `</ul>` tag does not'see' a matching start-tag and it will be ignored. 
+2. However `<tbody>`, `<tr>` and `<td>` may be implicitly closed by `</table>`, so the `</table>` tag does'see' a matching start-tag, and the table element will be closed.
 
 ### Misplaced tags
 
-Misplaced tags are start-tags and/or text-nodes that are not allowed in the current context. Examples are `<table><td>` and `<p><ul>`.
+Misplaced tags are start-tags and/or text-nodes that are not allowed in the current context. Examples are `<table><td>`, `<table>text` and `<p><ul>`.
 
 There are four ways to resolve such a situation:
 
-1. Ignore the misplaced start-tag.
-2. Insert implicit start-tags until the context allows the misplaced start-tag. 
-3. Insert implicit end-tags until the context allows the misplaced start-tag
-4. Redirect the misplaced start-tag to another place in the document. 
+1. Insert implicit start-tags until the context allows the misplaced tag.
+2. Insert implicit end-tags until the context allows the misplaced tag.
+3. Ignore the misplaced tag.
+4. Redirect the misplaced tag to another parent node ('foster parenting').
 
-These four methods are run in a loop, until the start-tag or text-node is either inserted, or dropped. 
+These options are run in a loop, until the tag is either inserted or ignored.
 
-**Note** There is a third category of mis-nested tags that is resolved in a different way: mis-nested formatting tags such as `<b>`, `<i>`, `<em>` and alike. This seems to be not too complicated to characterise, but so far I'm leaving them as unmatched on– and off markers in the tree. 
-
-
-### Element categories
-
-Rather than pointing out the behaviours mentioned above for each combination of tag-names in code, I am working on a declarative system, a schema of sorts, and I am studying the structure of that schema. 
-
-First of all, the set of all possible tag-names is divided into subsets (I call them element-categories). Each of these subsets is either a finite set, or it has a finite complement. I am using integer bitfields as identifiers for these subsets. This allows _very fast_ computations with element categories. 
-
-I precompute a single dictionary that maps tag-names to such an integer, thus representing the union of the categories to which the tag belongs. 
 
 ### The parser state
 
-Whenever the parser creates a new element for a start-tag, it stores with it a small amount of information. It stores:
+The parser state consists of:
 
-- a 'scope'. This encodes in a single integer the union of the categories of all open elements that may be visible to potential end-tags. 
-- a 'allowEnd' aka. 'transparantTo' property that encodes the collection of end-tags to which the element is transparent. 
-- a 'closeFor' property, which encodes again in a single integer which potential start-tags would trigger behaviour 3. above (i.e. inserting an implicit ent-tag before it). 
-- a 'paths' property that specifies per start-tag-name the elements that should be inserted; this is behaviour 2. above. 
-- A 'contents' property which specifies (via its complement) which start-tags should be ignored. 
-- The fourth behaviour I've not yet implemented!
+- A stack of 'open elements', each of them annotated with additional context.
+- A list of implicitly closed formatting elements, rememberd for reopening. 
+
+Each stack frame stores:
+
+- a 'scope'. This encodes in a single integer the set of 'visible' open elements' names. 
+- an 'allowEnd' property that encodes the set of end-tag names to which the element is transparent. 
+- an 'openFor' property that specifies per start-tag-name the elements that should be inserted; this is behaviour 1. above. 
+- a 'closeFor' property, which encodes the set of potential start-tags' names that would trigger behaviour 2. above (i.e. inserting an implicit ent-tag before it). 
+- A 'contents' property that encodes start-tags to be ignored (via its complement). This is behaviour 3. above.
+- An optional 'foster' property. This is only used with table elements, and it stores a copy of the stack (excluding the table element itself) that is used for foster parenting. This is behaviour 4 above. 
+
+
+
+### A schema, using element categories
+
+Rather than pointing out the behaviours mentioned above for each combination of tag-names in code, I am working on a declarative system, a kind of schema. This 'schema' determines which of the above rules are to be applied in the case of mismatched and misplaced tags. 
+
+The schema is specified using subsets of the set of all elements. (I call them element-categories). Each of these subsets is either a finite set, or it has a finite complement. I am using integer bitfields as identifiers for these subsets. This allows _very fast_ computations with element categories. 
+
+I precompute a single dictionary that maps tag-names to such an integer, thus representing the union of the categories to which the tag belongs. 
+
 
 ### Forthcoming...
 
 So far that's it. I will write more of it down later. 
-I'd like to eventually turn this into a concise description of the HTML5 language 'as parsed'. 
 
+
+Remaining work
+--------------
+
+The progress so far is very good, but a few issues remain. 
+
+* Lexer
+	- Doctype and CDATA tags are as of yet lexed as bogus comments
+	- The end tags of comments are lexed slightly differently
+	- Lexing of rawtext/ rcdata/ plaintext may be incorret in svg and mathml
+
+* Parser
+	- The tree construction rules for svg and mathml are not properly covered
+	- Neither are the tree construction rules for framesets and template tags
+	- At most three formatting elements should be reopened per family (Noah's Ark)
+	- The Adoption Agency Algorithm for formatting tags is not covered yet
+	- There may be a few remaining exceptions that are not covered yet. 
+  	- Easy, but the attributes are not attached to the elements yet ...
 
 License
 --------
+
 Mozilla Public License Version 2.0

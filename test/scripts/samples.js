@@ -5,14 +5,41 @@
 
 window['html-samples'] = [
 
+  /* Testing formatting tags
+  '<i><s><b>bar</s>asd',
+  '<i><s><b>bar</i>asd',
+  '<div><b>bar</div>asd',
+  '<applet><b>bar</applet>asd',
+  '<marquee><b>bar</marquee>asd',
+  '<sdiv><b>bar</sdiv>asd',
+  '<object><b>bar</object>asd',
+  '<template><b>bar</template>asd',
+  '<table><th><b>bar<th>asd',
+  '<a><i><b>asdf</i>ibs',
+  '<a><i><b>asdf</b>ibs',
+  '<i><sdiv><b> a</sdiv>asda',
+  '<li>a<ul><li>a<b>a<li>b', //*/
+
+  // Test reconstruction of formatting
+  '<a><i><b>asdf</i><div>one',
+  '<a><i><b>asdf</i><nobr>one',
+  '<a><i><b>asdf</i><a>one',
+  '<a><i><b>asdf</i><br>one',
+  '<a><i><b>asdf</i><input>one',
+  '<a><i><b>asdf</i><sdiv>one',
 
   // Testing foster parenting
+  '<button>text<table>foo<button>bar<td>baz</table>γαμμα',
   '<table><caption><button>text<table>foo<button>bar<p>bee<td>baz<tr></table>γαμμα',
+  '<button>text<table>foo<button>bar<p>bee<td>baz<tr></table>γαμμα',
   '<!doctype html><main><p><table><p>foo<td>bar', 
   '<main><table><caption><ul><li>text<table><p>foo<td>foo<tr></table>γαμμα',
   '<!doctype html><p>Test<h1>Head1<table>asd<div></h2>Text',
   '<!doctype html><p>TestHead1<table>asd<div></h2>Text',
 
+  // Testing foster parenting with formatting tags
+  '<table><caption><b>text<table>foo<b>bar<p>bee<td>baz<tr></table>γαμμα', 
+  
   // Testing list scope
   '<li>a<ul><li>a<li>b',
   '<li>a<div><li>a<li>b',

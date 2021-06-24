@@ -1,12 +1,10 @@
 HTML5 Grammar
 =============
 
-An attempt at a formal lexical grammar for HTML5. 
+A preliminary formal lexical grammar for HTML5. 
 
 NB. The tokeniser algorithm in the standard is specified in terms of unicode code points, and requires a pre-pass over the input to normalise newlines. 
-It is however possible to express the lexical grammar on any ascii compatible encoding, directly on an octet-stream and without a pre-pass to normalize newlines, and I am aiming for that. Decoding can then be done in a latter phase. Support for ASCII incompatible encosings can be added later.
-
-This is work in progress. 
+It is however possible to express the lexical grammar on any ASCII compatible encoding, directly on an octet-stream and without a pre-pass to normalise newlines, and I am aiming for that. Decoding can then be done in a latter phase. Support for ASCII incompatible encosings can be added later.
 
 
 Character sets
@@ -23,8 +21,8 @@ sls       := space | { / }
 nonsq     := any \ { ' }
 nondq     := any \ { " }
 nonq      := any \ s \ { > }
-anstart    := any \ s \ { >, / }
-anchar     := any \ s \ { >, /, = }
+anstart   := any \ s \ { >, / }
+anchar    := any \ s \ { >, /, = }
 tnchar    := any \ s \ { >, / }
 
 
