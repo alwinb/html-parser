@@ -3,10 +3,13 @@
 
 window['html-samples'] = [
 
-  '<svg><a>foo',
-  '<math><desc>foo<div>bar',
+  // Test table content in caption
+  '<table><caption><b>text<b>bar<p>bee<td>baz<tr></table>γαμμα',
+
 
   // Test integration points
+  '<svg><a>foo',
+  '<math><desc>foo<div>bar',
   '<svg><desc>foo<rect>foo<tr><div>bar</svg>bee',
   '<svg><foreignObject>foo<rect>bar<tr><div>baz</svg>bee',
 
@@ -82,14 +85,17 @@ window['html-samples'] = [
   `<bar><p>as<select><li>foo`,
   `Foo bar<p>as<select><li>foo<li>bar<option>bee<li><option><p><h1><select>ad`,
   `Foo<option>Bar<option>Baz<optgroup>Baz<option>Bee<select>Baz<optgroup>Item<li>item<optgroup>g<di>Di</select>`,
-  `Test nesting of option and optgroup.
+  `Test nesting of option and optgroup (1).
+    <select>Foo<option>Bar<option>Baz<optgroup>Baz<option>Bee
+    <select>Taz<optgroup>Item<li>item<optgroup>g<di>Di`,
+  `Test nesting of option and optgroup (2).
     <select>Foo<textarea>Bar</textarea>
     <select>Foo<input>
     <select>Foo<keygen>
-    <select>Foo<option>Bar<option>Baz<optgroup>Baz<option>Bee<select>Baz<optgroup>Item<li>item<optgroup>g<di>Di</select>
-  `,
-  
-  // `<option>Item<li>item<di><option><select><option>Item<li>item<di><option><select>`,
+    <select>Foo<option>Bar<option>Baz<optgroup>Baz<option>Bee
+    <select>Baz<optgroup>Item<li>item<optgroup>g<di>Di</select>`,
+  `<option>Item<li>item<di><option><select><option>Item<li>item<di><option><select>`,
+
   // `<option>Item<li>item<di><option>Item2<li>item<di><option><select><option>Item<li>item<di><option><option>Item2<li><optgroup>item<di>`,
 
   // Test implicit head and body
