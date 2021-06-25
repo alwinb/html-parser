@@ -74,8 +74,10 @@
     })
 
     document.addEventListener ('click', evt => {
-      if (objectKey in evt.target)
+      if (objectKey in evt.target) {
         log (evt.target [objectKey])
+        window.$ = evt.target [objectKey]
+      }
       if ('key' in evt.target.dataset)
         showSample (samples [+evt.target.dataset.key])
 
@@ -130,17 +132,15 @@
     else if (domNode instanceof Comment || domNode[0] === T.Comment)
       label = '<!-->'
 
-    else if (domNode instanceof Element || domNode instanceof html.Node || domNode instanceof html.Leaf || domNode[0] === T.FormatTag) {
+    else if (domNode instanceof Element || domNode instanceof html.Node || domNode instanceof html.Leaf) {
       label = (domNode.tagName||domNode.name).toLowerCase ()
       if (domNode.namespaceURI && domNode.namespaceURI !== htmlns)
         label = domNode.namespaceURI.split('/').pop () + ':' + label
     }
-    else if (domNode[0] === T.FormatEndTag)
-      label = '/'+domNode.name
 
     // log (domNode.__proto__)
     elem.append (label)
-    elem[objectKey] = domNode
+    elem[objectKey] = domNode.frame ? _frameInfo (domNode.frame) : domNode
     
     if (clss) elem.classList.add(clss)
     let ul; elem.append ((ul = $('div')))
@@ -152,6 +152,18 @@
       ul.append (showTree (x))
     }
     return elem
+  }
+  
+  function _frameInfo ({ node, flags, visiblyOpen, allowEnd, closeFor, content, openFor }) {
+    return {
+      name: node.name,
+      flags: html.printInfo (flags),
+      visiblyOpen: html.printInfo (visiblyOpen),
+      allowEnd: html.printInfo (allowEnd),
+      closeFor: html.printInfo (closeFor),
+      content: html.printInfo (content),
+      openFor
+    }
   }
 
 })()</script>

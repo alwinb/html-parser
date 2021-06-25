@@ -3,11 +3,15 @@
 
 window['html-samples'] = [
 
+  '<svg><a>foo',
+  '<math><desc>foo<div>bar',
+
   // Test integration points
   '<svg><desc>foo<rect>foo<tr><div>bar</svg>bee',
   '<svg><foreignObject>foo<rect>bar<tr><div>baz</svg>bee',
 
   // Test foreign content
+  '<math><desc>foo<svg>foo<tr><div>bar</svg>bee',
   '<svg><desc>foo<b>bar',
   '<svg><b>foo',
   '<svg>foo<sub>bar',
