@@ -1,46 +1,26 @@
 // Samples
 // -------
 
-// FIXME: 23, ...
-
 window['html-samples'] = [
 
-  /* Testing formatting tags
-  '<i><s><b>bar</s>asd',
-  '<i><s><b>bar</i>asd',
-  '<div><b>bar</div>asd',
-  '<applet><b>bar</applet>asd',
-  '<marquee><b>bar</marquee>asd',
-  '<sdiv><b>bar</sdiv>asd',
-  '<object><b>bar</object>asd',
-  '<template><b>bar</template>asd',
-  '<table><th><b>bar<th>asd',
-  '<a><i><b>asdf</i>ibs',
-  '<a><i><b>asdf</b>ibs',
-  '<i><sdiv><b> a</sdiv>asda',
-  '<li>a<ul><li>a<b>a<li>b', //*/
+  // Test integration points
+  '<svg><desc>foo<rect>foo<tr><div>bar</svg>bee',
+  '<svg><foreignObject>foo<rect>bar<tr><div>baz</svg>bee',
 
-  // Test reconstruction of formatting
-  '<a><i><b>asdf</i><div>one',
-  '<a><i><b>asdf</i><nobr>one',
-  '<a><i><b>asdf</i><a>one',
-  '<a><i><b>asdf</i><br>one',
-  '<a><i><b>asdf</i><input>one',
-  '<a><i><b>asdf</i><sdiv>one',
+  // Test foreign content
+  '<svg><desc>foo<b>bar',
+  '<svg><b>foo',
+  '<svg>foo<sub>bar',
+  '<svg>foo<other>bar',
+  '<svg>foo<body>bar',
+  '<svg>foo<center>bar',
+  `<svg><big><rect></svg>`,
+  '<svg>foo<rect><path><circle></rect>sd<center>bar',
+  `<svg><path>text<bar>Foo<p>Test<rect></body><!--->`,
+  '<svg>foo<blockquote>bar', //*/
 
-  // Testing foster parenting
-  '<button>text<table>foo<button>bar<td>baz</table>γαμμα',
-  '<table><caption><button>text<table>foo<button>bar<p>bee<td>baz<tr></table>γαμμα',
-  '<button>text<table>foo<button>bar<p>bee<td>baz<tr></table>γαμμα',
-  '<!doctype html><main><p><table><p>foo<td>bar', 
-  '<main><table><caption><ul><li>text<table><p>foo<td>foo<tr></table>γαμμα',
-  '<!doctype html><p>Test<h1>Head1<table>asd<div></h2>Text',
-  '<!doctype html><p>TestHead1<table>asd<div></h2>Text',
 
-  // Testing foster parenting with formatting tags
-  '<table><caption><b>text<table>foo<b>bar<p>bee<td>baz<tr></table>γαμμα', 
-  
-  // Testing list scope
+  // Test list scope
   '<li>a<ul><li>a<li>b',
   '<li>a<div><li>a<li>b',
   '<li>a<address><li>a<li>b',
@@ -49,26 +29,66 @@ window['html-samples'] = [
   '<li>a<dl><li>a<li>b',
   '<li>a<di><li>a<li>b',
 
-  // Testing dd dt scope
+
+  /* Test reopening of formatting 
+  '<i><s><b>bar</s>foo',
+  '<i><s><b>bar</i>foo',
+  '<div><b>bar</div>foo',
+  '<applet><b>bar</applet>foo',
+  '<marquee><b>bar</marquee>foo',
+  '<sdiv><b>bar</sdiv>foo',
+  '<object><b>bar</object>foo',
+  '<template><b>bar</template>foo',
+  '<table><th><b>bar<th>foo',
+  '<a><i><b>foo</i>ibs',
+  '<a><i><b>foo</b>ibs',
+  '<i><sdiv><b> a</sdiv>foo',
+  '<li>a<ul><li>a<b>a<li>b', //*/
+
+  // Test reconstruction of formatting 
+  '<div><s><s><i><b><tt>foo</i></div><select>',
+  '<a><i><b>foo</i><div>one',
+  '<a><i><b>foo</i><nobr>one',
+  '<a><i><b>foo</i><a>one',
+  '<a><i><b>foo</i><br>one',
+  '<a><i><b>foo</i><input>one',
+  '<a><i><b>foo</i><sdiv>one',
+
+
+  // Test foster parenting
+  '<button>text<table>foo<button>bar<td>baz</table>γαμμα',
+  '<table><caption><button>text<table>foo<button>bar<p>bee<td>baz<tr></table>γαμμα',
+  '<button>text<table>foo<button>bar<p>bee<td>baz<tr></table>γαμμα',
+  '<!doctype html><main><p><table><p>foo<td>bar', 
+  '<main><table><caption><ul><li>text<table><p>foo<td>bar<tr></table>γαμμα',
+  '<!doctype html><p>Test<h1>Head1<table>foo<div></h2>Text',
+  '<!doctype html><p>TestHead1<table>foo<div></h2>Text',
+
+  // Test foster parenting with formatting tags
+  '<table><caption><b>text<table>foo<b>bar<p>bee<td>baz<tr></table>γαμμα', 
+
+
+  // Test dd dt scope
   `text<li>li<dd><li><td>dd1<dd>dd2`,
   `text<li>li<dd>dd1<dd>dd2`,
   `text<li>li<dd><div>dd1<dd>dd2`,
 
-  // Tests for select/ option/ optgroup elements
+
+  // Test select, option and optgroup
   `<bar><p>as<select><li>foo`,
   `Foo bar<p>as<select><li>foo<li>bar<option>bee<li><option><p><h1><select>ad`,
+  `Foo<option>Bar<option>Baz<optgroup>Baz<option>Bee<select>Baz<optgroup>Item<li>item<optgroup>g<di>Di</select>`,
   `Test nesting of option and optgroup.
     <select>Foo<textarea>Bar</textarea>
     <select>Foo<input>
     <select>Foo<keygen>
     <select>Foo<option>Bar<option>Baz<optgroup>Baz<option>Bee<select>Baz<optgroup>Item<li>item<optgroup>g<di>Di</select>
   `,
-  `Foo<option>Bar<option>Baz<optgroup>Baz<option>Bee<select>Baz<optgroup>Item<li>item<optgroup>g<di>Di</select>`,
   
   // `<option>Item<li>item<di><option><select><option>Item<li>item<di><option><select>`,
   // `<option>Item<li>item<di><option>Item2<li>item<di><option><select><option>Item<li>item<di><option><option>Item2<li><optgroup>item<di>`,
 
-  // Test for implicit head, body elements
+  // Test implicit head and body
   `Hello`,
   `<body>Hello`,
   `<script>fn</script>Hello`,
@@ -81,7 +101,7 @@ window['html-samples'] = [
   `<head></head>After head</html>Foo`,
 
 
-  // Tests for headings
+  // Test headings
   `text<h1>s<div>b<h2>`,
   `text<h1>b<h2>`,
   `<p>Test<h1>Head1<div><h2>Head2`,
@@ -119,9 +139,7 @@ window['html-samples'] = [
   `<p>Test<li>li<blockquote>Foo<p>bar<p>`,
   `<table><td>foo<button>one<button><p>two<button>three<td>cell`,
   `<p><foo><li>`,
-  `<svg><big><rect></svg>`,
   `<tr><b>bold<i>italic<li></b>`,
-  `<svg><path>text<bar>Foo<p>Test<rect></body><!--->`,
 
   `Test close by cell
   <table><colgroup><td>cell1<td>cell2`,

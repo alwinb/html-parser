@@ -26,7 +26,7 @@ log ('}')
 log ('\n\n// Element Categories\n// ------------------\n')
 
 log ('const categories = {', )
-for (let [k,v] of entries (C)) {
+for (let [k,v] of entries (C)) if (k[0] !== '_') {
   const r = []
   for (let x in elementInfo)
     if (elementInfo[x] & v) r.push (x)

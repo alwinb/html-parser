@@ -114,7 +114,7 @@ The progress so far is very good, but a few issues remain.
 	- At most three formatting elements should be reopened per family (Noah's Ark)
 	- The Adoption Agency Algorithm for formatting tags is not covered yet
 	- There may be a few remaining exceptions that are not covered yet. 
-  	- Easy, but the attributes are not attached to the elements yet ...
+  - Easy, but the attributes are not attached to the elements yet ...
 
 License
 --------
