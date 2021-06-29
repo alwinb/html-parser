@@ -51,13 +51,23 @@
   const objectKey = Symbol ()
   const samples = window ['html-samples']
 
-  const ui = domex `main
-    > h1 "HTML Parser"
-    + p "This is a test page for the HTML parser,"
-    + (ul#tabs > li.-button [data-key=$] *samples "Sample " $)
-    + textarea#input + button#submit "Run"
-    + div#view1 "Browser"
-    + div#view2 "Html Parser"
+  const ui = domex `
+
+    li@tab.-button [data-key=$]
+      > "Sample " + $;
+
+    ul@tabs
+      > @tab*;
+
+    main@main
+      > h1 "HTML Parser"
+      + p "This is a test page for the HTML parser,"
+      + @tabs#tabs ~samples
+      + textarea#input + button#submit "Run"
+      + div#view1 "Browser"
+      + div#view2 "Html Parser";
+    
+    @main
   `
 
   function main () {
@@ -154,15 +164,15 @@
     return elem
   }
   
-  function _frameInfo ({ node, flags, visiblyOpen, allowEnd, closeFor, content, openFor }) {
+  function _frameInfo ({ node, flags, closable, allowed, openable, openFor = 0n, paths }) {
     return {
       name: node.name,
       flags: html.printInfo (flags),
-      visiblyOpen: html.printInfo (visiblyOpen),
-      allowEnd: html.printInfo (allowEnd),
-      closeFor: html.printInfo (closeFor),
-      content: html.printInfo (content),
-      openFor
+      closable: html.printInfo (closable),
+      openable: html.printInfo (openable),
+      allowed: html.printInfo (allowed),
+      openFor: html.printInfo (openFor),
+      paths
     }
   }
 
