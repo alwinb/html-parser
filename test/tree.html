@@ -111,8 +111,20 @@
     const [input, view1, view2] = ['input', 'view1', 'view2'] .map (byId)
     input.value = sample
     view1.innerHTML = view2.innerHTML = ''
-    view1.append ('native', showTree (nativeParse (sample)))
-    view2.append ('parser', showTree (html.parse (sample)))
+    
+    const nativeResult = nativeParse (sample)
+    const result = html.parse (sample)
+
+    view1.append ('native', showTree (nativeResult))
+    view2.append ('parser', showTree (result))
+
+    
+    const p1 = print (nativeResult)
+    const p2 = print (result)
+    if (p1 !== p2) {
+      console.error ('test failed', sample)
+      console.log (p1, p2)
+    }
   }
 
   function showTree (domNode) {
@@ -175,5 +187,49 @@
       paths
     }
   }
+  
+  // Serialise Test Result
+  // ---------------------
+
+  function print (node) {
+    return [... _print (node)] .join ('')
+  }
+
+  function* _print (node, depth=0) {
+    // UGH need to coalesce text nodes
+    let indent = ''
+    for (let i=0; i<depth; i++) indent += '  '
+    if (typeof node === 'string')
+      yield `| ${indent}"${node}"\n`
+
+    else if (node instanceof Text)
+      yield `| ${indent}"${node.data}"\n`
+
+    else if (node instanceof html.Node) {
+      yield `| ${indent}<${node.name}>\n`
+      // TODO also print attrs, and coalesce text nodes
+      for (let child of node.children) yield* _print (child, depth+1)
+    }
+
+    else if (node instanceof Element) {
+      yield `| ${indent}<${node.tagName.toLowerCase ()}>\n`
+      // TODO also print attrs, and coalesce text nodes
+      for (let child of node.childNodes) yield* _print (child, depth+1)
+    }
+
+    else if (node instanceof html.Leaf) {
+      yield `| ${indent}<${node.name}>\n`
+      // TODO also print attrs, and add quotes around text
+    }
+
+    else if (node instanceof html.Document)
+      for (let child of node.children) yield* _print (child, depth)
+
+    else if (node instanceof Document)
+      for (let child of node.childNodes) yield* _print (child, depth)
+  }
+  
+  
+  
 
 })()</script>
