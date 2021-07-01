@@ -24,7 +24,7 @@
   const log = console.log.bind (console)
   const { html, domex: { domex, DomEx, Domex } } = modules
   const { defineProperty:define } = Object
-  const T = html.tokenTypes
+  const T = html.Lexer.tokenTypes
 
   // For debugging
   define (Object.prototype, Symbol.toStringTag, {
@@ -148,13 +148,13 @@
     }
 
     elem = $('div')
-    if (domNode instanceof Document || domNode instanceof html.Document)
+    if (domNode instanceof Document || domNode instanceof html.TreeBuilder.Document)
       label = '#document'
 
     else if (domNode instanceof Comment || domNode[0] === T.Comment)
       label = '<!-->'
 
-    else if (domNode instanceof Element || domNode instanceof html.Node || domNode instanceof html.Leaf) {
+    else if (domNode instanceof Element || domNode instanceof html.TreeBuilder.Node || domNode instanceof html.TreeBuilder.Leaf) {
       label = (domNode.tagName||domNode.name).toLowerCase ()
       if (domNode.namespaceURI && domNode.namespaceURI !== htmlns)
         label = domNode.namespaceURI.split('/').pop () + ':' + label
@@ -162,7 +162,7 @@
 
     // log (domNode.__proto__)
     elem.append (label)
-    elem[objectKey] = domNode.frame ? _frameInfo (domNode.frame) : domNode
+    elem[objectKey] = domNode.frame ? html.TreeBuilder.frameInfo (domNode.frame) : domNode
     
     if (clss) elem.classList.add(clss)
     let ul; elem.append ((ul = $('div')))
@@ -176,18 +176,7 @@
     return elem
   }
   
-  function _frameInfo ({ node, flags, closable, allowed, openable, openFor = 0n, paths }) {
-    return {
-      name: node.name,
-      flags: html.printInfo (flags),
-      closable: html.printInfo (closable),
-      openable: html.printInfo (openable),
-      allowed: html.printInfo (allowed),
-      openFor: html.printInfo (openFor),
-      paths
-    }
-  }
-  
+
   // Serialise Test Result
   // ---------------------
 
@@ -205,7 +194,7 @@
     else if (node instanceof Text)
       yield `| ${indent}"${node.data}"\n`
 
-    else if (node instanceof html.Node) {
+    else if (node instanceof html.TreeBuilder.Node) {
       yield `| ${indent}<${node.name}>\n`
       // TODO also print attrs, and coalesce text nodes
       for (let child of node.children) yield* _print (child, depth+1)
@@ -217,12 +206,12 @@
       for (let child of node.childNodes) yield* _print (child, depth+1)
     }
 
-    else if (node instanceof html.Leaf) {
+    else if (node instanceof html.TreeBuilder.Leaf) {
       yield `| ${indent}<${node.name}>\n`
       // TODO also print attrs, and add quotes around text
     }
 
-    else if (node instanceof html.Document)
+    else if (node instanceof html.TreeBuilder.Document)
       for (let child of node.children) yield* _print (child, depth)
 
     else if (node instanceof Document)
