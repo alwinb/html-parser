@@ -3,15 +3,52 @@
 
 window['html-samples'] = [
   
+  // Test reopening of formatting 
+  '<div><s><s><i><b><tt><s><s><s>foo</i><tt><tt><tt><tt></div>X',
+  '<i><s><b>bar</s>foo',
+  '<i><s><b>bar</i>foo',
+  '<div><b>bar</div>foo',
+  '<applet><b>bar</applet>foo',
+  '<marquee><b>bar</marquee>foo',
+  '<sdiv><b>bar</sdiv>foo',
+  '<object><b>bar</object>foo',
+  '<template><b>bar</template>foo',
+  '<table><th><b>bar<th>foo',
+  '<a><i><b>foo</i>ibs',
+  '<a><i><b>foo</b>ibs',
+  '<i><sdiv><b> a</sdiv>foo',
+  '<li>a<ul><li>a<b>a<li>b', //*/
+
+  // Test reconstruction of formatting 
+  '<div><s><s><i><b><tt>foo</i></div><select>',
+  '<a><i><b>foo</i><div>one',
+  '<a><i><b>foo</i><nobr>one',
+  '<a><i><b>foo</i><a>one',
+  '<a><i><b>foo</i><br>one',
+  '<a><i><b>foo</i><input>one',
+  '<a><i><b>foo</i><sdiv>one',
+
+
   // Bugs
-  '<button><other><table><button><div><button>',
-  '<p>foo<button>bar</p>bee',
-  '<p><other><h2>',
-  '<h1><b><h2>',
+  '<table><button><div><button>',
   '<svg>foo<body>bar',
-  '<button>foo<p>bar</button>bee',
-  
-  
+
+  // Test table content in caption
+  '<table><caption><b>text<b>bar<p>bee<td>baz<tr></table>γαμμα',
+
+  // Test foster parenting
+  '<button>text<table>foo<button>bar<td>baz</table>γαμμα',
+  '<table><caption><button>text<table>foo<button>bar<p>bee<td>baz<tr></table>γαμμα',
+  '<button>text<table>foo<button>bar<p>bee<td>baz<tr></table>γαμμα',
+  '<!doctype html><main><p><table><p>foo<td>bar', 
+  '<main><table><caption><ul><li>text<table><p>foo<td>bar<tr></table>γαμμα',
+  '<!doctype html><p>Test<h1>Head1<table>foo<div></h2>Text',
+  '<!doctype html><p>TestHead1<table>foo<div></h2>Text',
+
+  // Test foster parenting with formatting tags
+  '<table><caption><b>text<table>foo<b>bar<p>bee<td>baz<tr></table>γαμμα', 
+
+
   /* Paragraphs
   '<optgroup>foo<p>bar</optgroup>bee',
   '<optgroup>foo<p>bar<optgroup>bee',
@@ -208,46 +245,6 @@ window['html-samples'] = [
   '<svg><foreignObject>foo<rect>bar<tr><div>baz</svg>bee',
 
 
-  // Test reopening of formatting 
-  '<i><s><b>bar</s>foo',
-  '<i><s><b>bar</i>foo',
-  '<div><b>bar</div>foo',
-  '<applet><b>bar</applet>foo',
-  '<marquee><b>bar</marquee>foo',
-  '<sdiv><b>bar</sdiv>foo',
-  '<object><b>bar</object>foo',
-  '<template><b>bar</template>foo',
-  '<table><th><b>bar<th>foo',
-  '<a><i><b>foo</i>ibs',
-  '<a><i><b>foo</b>ibs',
-  '<i><sdiv><b> a</sdiv>foo',
-  '<li>a<ul><li>a<b>a<li>b', //*/
-
-  // Test reconstruction of formatting 
-  '<div><s><s><i><b><tt>foo</i></div><select>',
-  '<a><i><b>foo</i><div>one',
-  '<a><i><b>foo</i><nobr>one',
-  '<a><i><b>foo</i><a>one',
-  '<a><i><b>foo</i><br>one',
-  '<a><i><b>foo</i><input>one',
-  '<a><i><b>foo</i><sdiv>one',
-
-
-
-  // Test table content in caption
-  '<table><caption><b>text<b>bar<p>bee<td>baz<tr></table>γαμμα',
-
-  // Test foster parenting
-  '<button>text<table>foo<button>bar<td>baz</table>γαμμα',
-  '<table><caption><button>text<table>foo<button>bar<p>bee<td>baz<tr></table>γαμμα',
-  '<button>text<table>foo<button>bar<p>bee<td>baz<tr></table>γαμμα',
-  '<!doctype html><main><p><table><p>foo<td>bar', 
-  '<main><table><caption><ul><li>text<table><p>foo<td>bar<tr></table>γαμμα',
-  '<!doctype html><p>Test<h1>Head1<table>foo<div></h2>Text',
-  '<!doctype html><p>TestHead1<table>foo<div></h2>Text',
-
-  // Test foster parenting with formatting tags
-  '<table><caption><b>text<table>foo<b>bar<p>bee<td>baz<tr></table>γαμμα', 
 
 
   // Test implicit head and body
