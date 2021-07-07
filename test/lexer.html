@@ -152,6 +152,8 @@
   const log = console.log.bind (console)
   const doc = document
   const { html, domex: { domex, Domex } } = modules
+  const { tokenName, stateInfo } = html.Lexer
+  
   const { defineProperty:define } = Object
 
   const pre = doc.getElementById ('colors')
@@ -193,19 +195,19 @@
 
   function show (data) {
     const stream = html.chunks (data)
-    let stateBefore = html.stateInfo (stream.state), stateAfter
+    let stateBefore = stateInfo (stream.state), stateAfter
     for (let chunk of stream) {
-      stateAfter = html.stateInfo (stream.state)
+      stateAfter = stateInfo (stream.state)
       const el = renderChunk (chunk)
       pre.append (el)
-      el [objectKey] = { token: { type: html.tokenName(chunk[0]), value: chunk[1] }, stateBefore, stateAfter }
+      el [objectKey] = { token: { type: tokenName (chunk[0]), value: chunk[1] }, stateBefore, stateAfter }
       stateBefore = stateAfter
     }
   }
 
   function renderChunk ([type, value]) {
     const e = doc.createElement ('SPAN')
-      e.title = e.className = html.tokenName(type)
+      e.title = e.className = tokenName (type)
       let tnode = doc.createTextNode(value)
       e.append (value)
       return e

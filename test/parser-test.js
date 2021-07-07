@@ -3,7 +3,8 @@ const { equal:equals, deepEqual:deepEquals } = assert
 const util = require ('util')
 
 const html = require ('../lib/')
-const { Leaf, Document, Node, TreeBuilder, Parser } = html
+const { TreeBuilder, Parser } = html
+const { Leaf, Document, Node } = TreeBuilder
 const log = console.log.bind (console)
 
 const fs = require ('fs')
