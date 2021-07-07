@@ -1,0 +1,234 @@
+<link rel="stylesheet" type="text/css" href="./style/base.css">
+<link rel="stylesheet" type="text/css" href="./style/tokens.css">
+<!-- -->
+<script>//</script>
+<!-- -->
+<script src="../dist/html.min.js"></script>
+<script src="../dist/domex.min.js"></script>
+</head>
+<bgsound>
+
+<body class=m1>
+<h1>HTML Lexer</h1>
+<p>
+
+  This shows the code of this page (before the execution of scripts),
+  as analysed by the lexer. 
+</p>
+
+<!--
+<table>d<tr>a<td>1<td>2
+</table>-->
+
+<ul style=display:none>
+    <!->
+  <select><optgroup>a<optgroup>b<option>c</tr>d  
+  <li>a<div>b<p>c<div>f
+  <li>d</select>
+  <test<asd>>>><<a>
+    
+  <tagname< with/>
+    <script type=none> with <
+    </script>
+    <textarea>With </script> </textarea>
+
+    <a b= value></a>
+    <br c= "fo<o>bar">
+    
+  <div id=charRefs>
+
+    &am&am&&amp 
+
+    <br a='&COPY'  b=&COPY   c=&COPY; >
+    <br a='&#123'  b=&#123   c=&#123; >
+    <br a='&#x123' b=&#x123  c=&#x123;>
+    <br a='&#x'    b=&#x     c=&#x;   >
+    <br a='&#'     b=&#      c=&#;    >
+    <br a='&'      b=&       c=&;     >
+
+    <br a='&COPY&a'  b=&COPY&a   c=&COPY;&a >
+    <br a='&#123&a'  b=&#123&a   c=&#123;&a >
+    <br a='&#x123&a' b=&#x123&a  c=&#x123;&a>
+    <br a='&#x&a'    b=&#x&a     c=&#x;&a   >
+    <br a='&#&a'     b=&#&a      c=&#;&a    >
+    <br a='&&a'      b=&&a       c=&;&a     >
+
+    <br a= '&COPY&a'  b= &COPY&a   c= &COPY;&a >
+    <br a= '&#123&a'  b= &#123&a   c= &#123;&a >
+    <br a= '&#x123&a' b= &#x123&a  c= &#x123;&a>
+    <br a= '&#x&a'    b= &#x&a     c= &#x;&a   >
+    <br a= '&#&a'     b= &#&a      c= &#;&a    >
+    <br a= '&&a'      b= &&a       c= &;&a     >
+
+    &COPY   &COPY;    &COPY&a   &COPY;&a 
+    &#123   &#123;    &#123&a   &#123;&a 
+    &#x123  &#x123;   &#x123&a  &#x123;&a
+    &#x     &#x;      &#x&a     &#x;&a   
+    &#      &#;       &#&a      &#;&a    
+    &       &;        &&a       &;&a     
+
+    &not(       <br value=asda&not(>
+    &not-       <br value=asda&not->
+    &not*=c     <br value=asda&not*=c>
+    &not=c      <br value=asda&not=c>
+    &notit;     <br value="asda&notit;">
+    &notin;     <br value="asda&notin;">
+    &notin*=c   <br value=asda&notin*=c>
+    &notin=c    <br value=asda&notin=c>
+    &notin;=c   <br value=asda&notin;=c>
+
+  </div>
+
+  <li/b>
+  <a> text </a>
+  <li a = = b /> >
+  <li 1 = 2 = 3 "4">
+  data< notag
+  data</ notag! >
+  <b  at0 = 0 at1= 1  at2=  "fo" at3=\'tes"tt\'> foo </b>
+  <li///>
+  <li fo//=bar///>
+  <li///fo=bar///>
+  <li///fo='bar'///>
+  <li///fo=`bar`///>
+  <li///fo=///>
+  <li///fo///>
+  <li///fo ///>
+  <li///fo// />
+  <br// />
+  <span a=1 b="2" =3>`
+</span></li></notag></ul>
+
+<ul style=display:none>
+  <li>charref: named <input value="you &amp; me"/> in attribute
+  <li>charref: named <input value='you &amp; me'/> in attribute
+  <li>charref: named <input value=you&#12me /> in attribute
+  <li>charref: named <input value=&amp;me /> in attribute
+  <li>charref: named <input value=&amp attr=val /> in attribute
+  <li>charref: named <input value=&ampo attr=val /> in attribute
+  <li>charref: bogus <input value="you &# am me"/> in attribute
+  <li>charref: bogus <input value='you &# amp me'/> in attribute
+  <li>charref: bogus <input value=you&x ampme /> in attribute
+  <li>charref: ampHash &amp;# such
+  <li>comment 1 <!> and data
+  <li>comment 2 <?> and data
+  <li>comment 3 </> and data
+  <li>comment 4 <!-> and data
+  <li>comment 5 <?-> and data
+  <li>comment 6 <!-> and data
+  <li>comment 7 <!--> and data
+  <li>comment 8 <?--> and data
+  <li>comment 9  <!--> and data
+  <li>comment 10  <!--!> comment -->
+  <li>comment 11  <!--> and data
+  <li>comment 12 <!-> and data
+  <li>comment 13  <!---!> this is also comment data -->
+  <li>comment 14  <!----!> and data
+  <li>comment 15  <!-- with -> within --> and data
+  <li>comment 16  <!-- with bogus end -> comment data --> data
+  <li>comment 17  <!-- Comment with -- double dash within --> and data
+  <li>comment 17  <!-- Comment with -- double dash within --> and data
+  <li>comment 18  <!-- Comment with --!- weird stuff within --> and data
+  <li>comment 19  <!-- Comment with strange end --!> and data >
+  <li>comment 20  <!-- Comment with strange end !--> and data >
+  <li>comment 21  <!-----> and data
+  <li>comment 22  <!--<!-->
+  <li>bogus comment 1 <! with end !@> and data
+  <li>bogus comment 2 </ with end !@> and data
+  <li>bogus comment 3 <? with end !@> and data
+  <li>bogus comment 4 <!- with end -> and data
+  <li>comment 5 <!weird markup declaration> and data
+  <li>bogus 6 comment </ with end !@> and data
+</ul>
+
+<div>
+  <div id=inspector class=br>
+    Inspect the output by clicking on it, below
+  </div>
+  <pre id=colors></pre>
+</div>
+
+<script>
+  const log = console.log.bind (console)
+  const doc = document
+  const { html, domex: { domex, Domex } } = modules
+  const { tokenName, stateInfo } = html.Lexer
+  
+  const { defineProperty:define } = Object
+
+  const pre = doc.getElementById ('colors')
+  const inspector = doc.getElementById ('inspector')
+  const objectKey = Symbol ()
+
+  const stateView = domex `
+
+    span@token
+      > b %type
+      + " "
+      + code %value;
+
+    span@stateName
+      > (code % + "-")::string ~quote
+      + b %st
+      + (("." + b %)::string ~sub)
+      + (" in " + b %)::string ~tag
+      + " in " + b %content + " / " + code %last;
+
+    dl@stateInfo.tab
+      > (di > dt "line"     + dd > %line + ":" + %col)
+      + (di > dt "state"    + dd > @stateName)
+      + (di > dt "refIn"    + dd > b %)::string ~refIn
+      + (di > dt "tagname"  + dd > %tagname "/" %tagname_);
+    
+    (div.tab
+      > "Token: " + div > @token)  ~token
+    + div.tab
+      > ("State before: " + @stateInfo) ~stateBefore
+      + ("State after: " + @stateInfo) ~stateAfter
+  `
+
+  function inspect (info) {
+    inspector.innerHTML = ''
+    inspector.append (stateView .render (info) .elems)
+    console.log (info)
+  }
+
+  function show (data) {
+    const stream = html.chunks (data)
+    let stateBefore = stateInfo (stream.state), stateAfter
+    for (let chunk of stream) {
+      stateAfter = stateInfo (stream.state)
+      const el = renderChunk (chunk)
+      pre.append (el)
+      el [objectKey] = { token: { type: tokenName (chunk[0]), value: chunk[1] }, stateBefore, stateAfter }
+      stateBefore = stateAfter
+    }
+  }
+
+  function renderChunk ([type, value]) {
+    const e = doc.createElement ('SPAN')
+      e.title = e.className = tokenName (type)
+      let tnode = doc.createTextNode(value)
+      e.append (value)
+      return e
+  }
+
+  function main () {
+    const req = new XMLHttpRequest ()
+      req.responseType = 'text'
+      req.onload = $=> show (req.responseText)
+      req.onerror = $=> show ('<h1>Error</h1>\n<p>XMLHttpRequest failed</p>')
+    // Go!
+    
+    doc.body.onclick = function (evt) {
+      if (objectKey in evt.target)
+        inspect (evt.target [objectKey])
+    }
+    
+    req.open ('GET', document.location)
+    req.send ()
+  }
+</script>
+<script>main()</script>
+
+

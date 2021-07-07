@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Tree Builder Test Page</title>
+  <link rel="stylesheet" href="style/base.css">
+  <link rel="stylesheet" href="style/tree.css">
+  <script src="./scripts/console.js"></script>
+</head>
+<body>
+
+<script>
+  window.console = new Console ()
+  document.body.append (console.elem)
+  window.addEventListener ('error', evt => console.errorHandler (evt), true)
+</script>
+
+<script src="../dist/html.min.js"></script>
+<script src="../dist/domex.min.js"></script>
+<script src="./scripts/samples.js"></script>
+<script src="./scripts/testui.js"></script>
+
+<script>(()=>{
+
+  const log = console.log.bind (console)
+
+  // For debugging
+  Object.defineProperty (Object.prototype, Symbol.toStringTag, {
+    get: function () { return this.constructor.name }
+  })
+
+
+  // Tests
+  // -----
+
+  function runTests () {
+    const suites = window ['html-suites']
+    let count = 0
+    const failures = []
+    for (const suite of suites) {
+      for (const sample of suite.samples) {
+        count ++
+        const native = nativeParse (sample)
+        const parsed = html.parse (sample)
+        if (printTree (native) !== printTree (parsed))
+          failures.push (sample)
+      }
+    }
+    return { failures, total:count }
+  }
+
+  // Main 
+  // ----
+
+  function main () {
+
+    // Run all samples
+    const { failures, total } = runTests ()
+    window ['html-suites'] .unshift ({
+      title: `🐞 Failed Tests (${failures.length} / ${total})`,
+      samples: failures,
+    })
+
+    // Set up Test UI
+    const ui = new TestUI () .showSuite (0)
+    const submit = byId ('submit')
+    submit .addEventListener ('click', evt => {
+      ui.showSampleValue (input.value)
+    })
+
+    // Event handlers...
+    document.addEventListener ('click', evt => {
+      if (objectKey in evt.target) {
+        log (evt.target [objectKey])
+        window.$ = evt.target [objectKey]
+      }
+      if ('key' in evt.target.dataset)
+        ui.showSample (+evt.target.dataset.key)
+
+      if ('suite' in evt.target.dataset)
+        ui.showSuite (+evt.target.dataset.suite)
+
+    })
+
+    window.addEventListener ('keydown', evt => {
+      if (evt.key === 'Enter' && evt.ctrlKey || evt.metaKey)
+        ui.showSampleValue (input.value)
+    })
+
+    ui.focus ()
+  }
+
+ setTimeout (main)
+})()</script>

@@ -1,0 +1,117 @@
+html { font-size:22px; }
+body { font-size:14px; }
+
+html, body {
+  width:100vw;
+  height:100vh;
+  overflow:hidden;
+  margin:0;
+}
+
+main {
+  position:absolute;
+  height:70vh;
+  width:100vw;
+  overflow:auto;
+  padding:1rem;
+}
+
+:root {
+/*  --acolor:#2B6679;
+  --bgcolor:#FFF9DE;
+  --screen:#CCBB9B66;
+*/
+  --screen:#0002;
+}
+
+.-button {
+  background:var(--screen);
+  line-height:2rem;
+  height:2rem;
+}
+
+#input {
+  width:calc(100vw - 20rem);
+  height:10rem;
+  display:block;
+  float:left;
+	font-family:Hack, Menlo, Monaco, Monospace;
+}
+#view1, #view2 {
+  width:calc(30vw - 4em);
+  float:left;
+}
+#tabs {
+  display:block;
+  padding:0;
+  margin:0 1rem 0 0;
+  width:5rem;
+  height: 60vh;
+  overflow-y:auto;
+  float:left;
+}
+#suites {
+  display:block;
+  padding:0;
+  margin:0 1em 0 0;
+  width:9rem;
+  height: 60vh;
+  overflow-y:auto;
+  float:left;
+}
+#suites li {
+  overflow:hidden;
+  white-space:nowrap;
+}
+#suites li, #tabs li {
+  display:block;
+  padding:0 1em 0;
+  height:1.5rem;
+  line-height:1.5rem;
+  border-bottom:2px solid white;
+  cursor:pointer;
+}
+#tabs li:hover {
+  text-decoration:underline;
+}
+.error {
+  color:#9D0006;
+}
+.DomTree {
+  /*font-family:Hack, Monaco, Menlo, Monospace;*/
+  /*font-size:12px;*/
+  overflow:scroll;
+  padding:1rem;
+  font-weight:bold;
+}
+div.children {
+  margin-left:.8em;
+  padding-left:.5em;
+  border-left:1.5px solid black;
+  white-space:pre;
+}
+div.children:after {
+  content:'';
+  display:block;
+  clear:both;
+  height:0px;
+}
+.text {
+  font-weight:normal;
+  font-style:italic;
+  background:var(--screen);
+  min-height:rem;
+  display:inline-block;
+}
+
+.Console {
+  background:#fffd;
+  width:100vw;
+  height:30vh;
+  position:absolute;
+  bottom:0; left:0;
+  padding:0 1rem 1rem 1rem;
+  font-size:12px;
+  overflow-y:scroll;
+  border-top:1px solid currentColor;
+}
