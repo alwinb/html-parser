@@ -31,14 +31,14 @@ main {
 }
 
 #input {
-  width:calc(100vw - 13em);
+  width:calc(100vw - 20rem);
   height:10rem;
   display:block;
   float:left;
 	font-family:Hack, Menlo, Monaco, Monospace;
 }
 #view1, #view2 {
-  width:calc(40vw - 4em);
+  width:calc(30vw - 4em);
   float:left;
 }
 #tabs {
@@ -50,7 +50,20 @@ main {
   overflow-y:auto;
   float:left;
 }
-#tabs li {
+#suites {
+  display:block;
+  padding:0;
+  margin:0 1em 0 0;
+  width:9rem;
+  height: 60vh;
+  overflow-y:auto;
+  float:left;
+}
+#suites li {
+  overflow:hidden;
+  white-space:nowrap;
+}
+#suites li, #tabs li {
   display:block;
   padding:0 1em 0;
   height:1.5rem;
