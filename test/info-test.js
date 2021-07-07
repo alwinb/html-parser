@@ -1,7 +1,7 @@
 const log = console.log.bind (console)
 const { entries } = Object
 const {
-  elements:E, categories:C,
+  elements:E, tagNameSets:C,
   defaultInfo, elementInfo, printInfo, 
   rules, defaultRule } = require ('../lib/schema')
 

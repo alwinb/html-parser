@@ -109,7 +109,7 @@ The progress so far is very good, but a few issues remain.
   - Lexing of rawtext/ rcdata/ plaintext may be incorret in svg and mathml.
 * Parser:
   - The tree construction rules for template tags.
-  - At most three formatting elements should be reopened per family (Noah's Ark).
+  - Include attributes check in the implementation of 'Noah's Ark'.
   - The Adoption Agency Algorithm for formatting tags is not covered yet.
   - There may be a few remaining exceptions that are not covered yet. 
   - Body to frameset switching (the 'frameset-ok' flag).
