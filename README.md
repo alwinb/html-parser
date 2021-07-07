@@ -103,18 +103,19 @@ Remaining work
 
 The progress so far is very good, but a few issues remain. 
 
-* Lexer
-	- Doctype and CDATA tags are as of yet lexed as bogus comments
-	- The end tags of comments are lexed slightly differently
-	- Lexing of rawtext/ rcdata/ plaintext may be incorret in svg and mathml
+* Lexer:
+  - Doctype and CDATA tags are as of yet lexed as bogus comments.
+  - The end tags of comments are lexed slightly differently.
+  - Lexing of rawtext/ rcdata/ plaintext may be incorret in svg and mathml.
+* Parser:
+  - The tree construction rules for template tags.
+  - Include attributes check in the implementation of 'Noah's Ark'.
+  - The Adoption Agency Algorithm for formatting tags is not covered yet.
+  - There may be a few remaining exceptions that are not covered yet. 
+  - Body to frameset switching (the 'frameset-ok' flag).
+  - Easy, but the attributes are not attached to the elements yet ...
+  - Handle self closing tags in svg and math
 
-* Parser
-	- The tree construction rules for svg and mathml are not properly covered
-	- Neither are the tree construction rules for framesets and template tags
-	- At most three formatting elements should be reopened per family (Noah's Ark)
-	- The Adoption Agency Algorithm for formatting tags is not covered yet
-	- There may be a few remaining exceptions that are not covered yet. 
-  	- Easy, but the attributes are not attached to the elements yet ...
 
 License
 --------

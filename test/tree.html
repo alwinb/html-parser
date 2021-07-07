@@ -17,141 +17,78 @@
 
 <script src="../dist/html.js"></script>
 <script src="../dist/domex.min.js"></script>
-<script src="scripts/samples.js"></script>
+<script src="./scripts/samples.js"></script>
+<script src="./scripts/testui.js"></script>
 
 <script>(()=>{
 
   const log = console.log.bind (console)
-  const { html, domex: { domex, DomEx, Domex } } = modules
-  const { defineProperty:define } = Object
-  const T = html.tokenTypes
 
   // For debugging
-  define (Object.prototype, Symbol.toStringTag, {
+  Object.defineProperty (Object.prototype, Symbol.toStringTag, {
     get: function () { return this.constructor.name }
   })
 
-  // DOM tools
-  const htmlns = 'http://www.w3.org/1999/xhtml'
-  const byId = document.getElementById.bind (document)
-  const $ = name => document.createElement (name)
-  const setProps = (el, props) => {
-    for (let k in props) el.setAttribute (k, props[k])
+
+  // Tests
+  // -----
+
+  function runTests () {
+    const suites = window ['html-suites']
+    let count = 0
+    const failures = []
+    for (const suite of suites) {
+      for (const sample of suite.samples) {
+        count ++
+        const native = nativeParse (sample)
+        const parsed = html.parse (sample)
+        if (printTree (native) !== printTree (parsed))
+          failures.push (sample)
+      }
+    }
+    return { failures, total:count }
   }
 
-  // native HTML parser
-  function nativeParse (input) {
-    return new DOMParser () .parseFromString (input, 'text/html')
-  }
-
-
-  // Main
+  // Main 
   // ----
-
-  const objectKey = Symbol ()
-  const samples = window ['html-samples']
-
-  const ui = domex `main
-    > h1 "HTML Parser"
-    + p "This is a test page for the HTML parser,"
-    + (ul#tabs > li.-button [data-key=$] *samples "Sample " $)
-    + textarea#input + button#submit "Run"
-    + div#view1 "Browser"
-    + div#view2 "Html Parser"
-  `
 
   function main () {
 
-    document.body.append (ui.render ({ samples }) .elem)
+    // Run all samples
+    const { failures, total } = runTests ()
+    window ['html-suites'] .unshift ({
+      title: `🐞 Failed Tests (${failures.length} / ${total})`,
+      samples: failures,
+    })
 
-    // makeTabs (samples)
-    showSample (samples[0])
-
+    // Set up Test UI
+    const ui = new TestUI () .showSuite (0)
     const submit = byId ('submit')
-    
     submit .addEventListener ('click', evt => {
-      showSample (input.value)
+      ui.showSampleValue (input.value)
     })
 
+    // Event handlers...
     document.addEventListener ('click', evt => {
-      if (objectKey in evt.target)
+      if (objectKey in evt.target) {
         log (evt.target [objectKey])
+        window.$ = evt.target [objectKey]
+      }
       if ('key' in evt.target.dataset)
-        showSample (samples [+evt.target.dataset.key])
+        ui.showSample (+evt.target.dataset.key)
+
+      if ('suite' in evt.target.dataset)
+        ui.showSuite (+evt.target.dataset.suite)
 
     })
-    
+
     window.addEventListener ('keydown', evt => {
       if (evt.key === 'Enter' && evt.ctrlKey || evt.metaKey)
-        showSample (input.value)
+        ui.showSampleValue (input.value)
     })
-    
-    input.focus ()
+
+    ui.focus ()
   }
 
-  setTimeout (main)
-
-  // OK lets create the tree
-  // MDN: In addition, every kind of DOM node is represented by an interface based on Node. These include Attr, CharacterData (which Text, Comment, and CDATASection are all based on), ProcessingInstruction, DocumentType, Notation, Entity, and EntityReference.
-
-  function showSample (sample) {
-    window.console.clear ()
-    const [input, view1, view2] = ['input', 'view1', 'view2'] .map (byId)
-    input.value = sample
-    view1.innerHTML = view2.innerHTML = ''
-    view1.append ('native', showTree (nativeParse (sample)))
-    view2.append ('parser', showTree (html.parse (sample)))
-  }
-
-  function showTree (domNode) {
-    let elem, label, clss
-
-    if (domNode instanceof Text) {
-      clss = (/^\s*$/.test (domNode.data)) ? 'space' : 'text'
-      elem = $('span')
-      elem.append (domNode.data)
-      elem.className = clss
-      elem[objectKey] = domNode
-      return elem
-    }
-    if (typeof domNode === 'string') {
-      clss = (/^\s*$/.test (domNode)) ? 'space' : 'text'
-      elem = $('span')
-      elem.append (domNode)
-      elem.className = clss
-      elem[objectKey] = domNode
-      return elem
-    }
-
-    elem = $('div')
-    if (domNode instanceof Document || domNode instanceof html.Document)
-      label = '#document'
-
-    else if (domNode instanceof Comment || domNode[0] === T.Comment)
-      label = '<!-->'
-
-    else if (domNode instanceof Element || domNode instanceof html.Node || domNode instanceof html.Leaf || domNode[0] === T.FormatTag) {
-      label = (domNode.tagName||domNode.name).toLowerCase ()
-      if (domNode.namespaceURI && domNode.namespaceURI !== htmlns)
-        label = domNode.namespaceURI.split('/').pop () + ':' + label
-    }
-    else if (domNode[0] === T.FormatEndTag)
-      label = '/'+domNode.name
-
-    // log (domNode.__proto__)
-    elem.append (label)
-    elem[objectKey] = domNode
-    
-    if (clss) elem.classList.add(clss)
-    let ul; elem.append ((ul = $('div')))
-    ul.className = 'children'
-
-    const children = domNode instanceof HTMLTemplateElement ?
-      domNode.content.childNodes : domNode.childNodes || domNode.children || []
-    for (let x of children) {
-      ul.append (showTree (x))
-    }
-    return elem
-  }
-
+ setTimeout (main)
 })()</script>
