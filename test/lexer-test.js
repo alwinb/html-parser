@@ -1,5 +1,6 @@
 const log = console.log.bind (console)
-const { tokenName, Lexer, tokens, chunks, stateInfo } = require ('../lib')
+const { Lexer, tokens, chunks } = require ('../lib')
+const { tokenName, stateInfo } = Lexer
 
 // Test
 // ====
@@ -36,7 +37,7 @@ var sample = `<h a='&COPY'>`
 var sample = `<!----->` // FIXME
 var sample = `<br>bar</br><i foo=1>Italic</i foo>`
 var sample = `<br>bar</br><i>Italic</i>`
-
+var sample = `<path/>`
 
 pr (sample)
 //*/
