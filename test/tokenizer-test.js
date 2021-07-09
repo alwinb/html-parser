@@ -19,5 +19,6 @@ var sample = `<s o=& t>`
 var sample = `<!->`
 var sample = `<fo><br>bar</br><i foo=1>Italic</i>`
 var sample = `<h a='&COPY'b/d=c>`
+var sample = `foo bar`
 
 log (util.inspect(tokenize (sample), { depth:100 }))
