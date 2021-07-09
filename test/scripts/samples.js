@@ -260,6 +260,7 @@ window['html-suites'] = [
   {
     title: 'Select in Table',
     samples: [
+      '<table><select>foo<select>bar',
       '<table><td>bar<select><td>bee',
       '<table><caption>bar<select><table>bee',
       '<table><caption>bar<select><caption>bee',
