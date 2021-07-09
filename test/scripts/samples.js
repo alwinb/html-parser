@@ -240,6 +240,7 @@ window['html-suites'] = [
     title: 'Select, Option and Optgroup',
     samples: [
       '<p>para<span>foo<select><dd>dd',
+      '<select><table><div>foo</div><div>bar',
       `<bar><p>as<select><li>foo`,
       `Foo bar<p>as<select><li>foo<li>bar<option>bee<li><option><p><h1><select>ad`,
       `Test nesting of option and optgroup (1).
@@ -259,11 +260,25 @@ window['html-suites'] = [
   {
     title: 'Select in Table',
     samples: [
-      'foo<table><td>bar<select><td>bee',
-      'foo<table><caption>bar<select><td>bee',
-      'foo<table><caption>bar<select><option><caption>bee',
-      'foo<table><caption>bar<select><option></caption>bee',
-      'foo<table><caption>bar<select><optgroup></caption>bee',
+      '<table><td>bar<select><td>bee',
+      '<table><caption>bar<select><table>bee',
+      '<table><caption>bar<select><caption>bee',
+      '<table><caption>bar<select><colgroup>bee',
+      '<table><caption>bar<select><col>bee',
+      '<table><caption>bar<select><tbody>bee',
+      '<table><caption>bar<select><tr>bee',
+      '<table><caption>bar<select><td>bee',
+      '<table><caption>bar<select><option><caption>bee',
+      '<table><caption>bar<select><option></caption>bee',
+      '<table><caption>bar<select><optgroup></caption>bee',
+      '<table><select>foo<td>bar</td>bee',
+      '<table><select>foo<table>bar',
+      '<table><select>foo<caption>bar',
+      '<table><select>foo<colgroup>bar',
+      '<table><select>foo<col>bar',
+      '<table><select>foo<tbody>bar',
+      '<table><select>foo<tr>bar',
+      '<table><select>foo<td>bar',
     ]
   },
 
