@@ -418,6 +418,7 @@ window['html-suites'] = [
   {
     title: 'Others',
     samples: [
+      '<table><caption><p><option><tr>',
       '<h1><option><h2>bar<option>',
       '<p><option><h1>bar<option>',
       '<button><li><button>bar<li>',
