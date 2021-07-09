@@ -115,6 +115,7 @@ window['html-suites'] = [
   {
     title: 'Foster parenting and Formatting',
     samples: [
+      '<table><b><td><s>bee<td>bar</table>buzz',
       '<table><caption><b>text<table>foo<b>bar<p>bee<td>baz<tr></table>γαμμα', 
     ]
   },
@@ -338,8 +339,10 @@ window['html-suites'] = [
     samples: [
       '<svg><a>foo',
       '<math><desc>foo<div>bar',
+      '<svg><foreignobject>foo<p>bar<p>baz</svg>bee',
+      '<svg><foreignObject>foo<p>bar<p>baz</svg>bee',
+      '<svg><foreigNObject>foo<p>bar<p>baz</svg>bee',
       '<svg><desc>foo<rect>foo<tr><div>bar</svg>bee',
-      '<svg><foreignObject>foo<rect>bar<tr><div>baz</svg>bee',
     ]
   },
 
@@ -367,6 +370,14 @@ window['html-suites'] = [
     ]
   },//*/
   
+  { 
+    title: 'Space in Tables',
+    samples: [
+      '<table><colgroup>a b<col> <col>',
+      '<table> s<td></td> </table>',
+    ]
+  },
+
   {
     title: 'Tables',
     samples: [
@@ -381,8 +392,8 @@ window['html-suites'] = [
       `<table><td>foo<button>one<button><p>two<button>three<td>cell`,
       `<table><td><p>Test<blockquote>Foo<p>bar<td>`,
       `<table><td>foo<button>one<button><p>two<button>three<td>cell`,
-      `Test close by cell
-      <table><colgroup><td>cell1<td>cell2`,
+      `<table><colgroup><td>cell1<td>cell2`,
+      `<table><tr><tr><td>cell1<td>cell2`,
       `<table><td>foo<tr><td>bar<col>`, 
       '<table><td><applet><td>',
     ]
