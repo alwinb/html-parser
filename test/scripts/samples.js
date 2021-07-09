@@ -115,6 +115,7 @@ window['html-suites'] = [
   {
     title: 'Foster parenting and Formatting',
     samples: [
+      '<table><b><td><s>bee<td>bar</table>buzz',
       '<table><caption><b>text<table>foo<b>bar<p>bee<td>baz<tr></table>γαμμα', 
     ]
   },
@@ -239,6 +240,7 @@ window['html-suites'] = [
     title: 'Select, Option and Optgroup',
     samples: [
       '<p>para<span>foo<select><dd>dd',
+      '<select><table><div>foo</div><div>bar',
       `<bar><p>as<select><li>foo`,
       `Foo bar<p>as<select><li>foo<li>bar<option>bee<li><option><p><h1><select>ad`,
       `Test nesting of option and optgroup (1).
@@ -258,11 +260,26 @@ window['html-suites'] = [
   {
     title: 'Select in Table',
     samples: [
-      'foo<table><td>bar<select><td>bee',
-      'foo<table><caption>bar<select><td>bee',
-      'foo<table><caption>bar<select><option><caption>bee',
-      'foo<table><caption>bar<select><option></caption>bee',
-      'foo<table><caption>bar<select><optgroup></caption>bee',
+      '<table><select>foo<select>bar',
+      '<table><td>bar<select><td>bee',
+      '<table><caption>bar<select><table>bee',
+      '<table><caption>bar<select><caption>bee',
+      '<table><caption>bar<select><colgroup>bee',
+      '<table><caption>bar<select><col>bee',
+      '<table><caption>bar<select><tbody>bee',
+      '<table><caption>bar<select><tr>bee',
+      '<table><caption>bar<select><td>bee',
+      '<table><caption>bar<select><option><caption>bee',
+      '<table><caption>bar<select><option></caption>bee',
+      '<table><caption>bar<select><optgroup></caption>bee',
+      '<table><select>foo<td>bar</td>bee',
+      '<table><select>foo<table>bar',
+      '<table><select>foo<caption>bar',
+      '<table><select>foo<colgroup>bar',
+      '<table><select>foo<col>bar',
+      '<table><select>foo<tbody>bar',
+      '<table><select>foo<tr>bar',
+      '<table><select>foo<td>bar',
     ]
   },
 
@@ -338,8 +355,10 @@ window['html-suites'] = [
     samples: [
       '<svg><a>foo',
       '<math><desc>foo<div>bar',
+      '<svg><foreignobject>foo<p>bar<p>baz</svg>bee',
+      '<svg><foreignObject>foo<p>bar<p>baz</svg>bee',
+      '<svg><foreigNObject>foo<p>bar<p>baz</svg>bee',
       '<svg><desc>foo<rect>foo<tr><div>bar</svg>bee',
-      '<svg><foreignObject>foo<rect>bar<tr><div>baz</svg>bee',
     ]
   },
 
@@ -367,6 +386,14 @@ window['html-suites'] = [
     ]
   },//*/
   
+  { 
+    title: 'Space in Tables',
+    samples: [
+      '<table><colgroup>a b<col> <col>',
+      '<table> s<td></td> </table>',
+    ]
+  },
+
   {
     title: 'Tables',
     samples: [
@@ -381,8 +408,8 @@ window['html-suites'] = [
       `<table><td>foo<button>one<button><p>two<button>three<td>cell`,
       `<table><td><p>Test<blockquote>Foo<p>bar<td>`,
       `<table><td>foo<button>one<button><p>two<button>three<td>cell`,
-      `Test close by cell
-      <table><colgroup><td>cell1<td>cell2`,
+      `<table><colgroup><td>cell1<td>cell2`,
+      `<table><tr><tr><td>cell1<td>cell2`,
       `<table><td>foo<tr><td>bar<col>`, 
       '<table><td><applet><td>',
     ]
