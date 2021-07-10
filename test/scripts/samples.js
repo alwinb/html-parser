@@ -68,10 +68,28 @@ window['html-suites'] = [
     ]
   },
 
-  /*
   {
     title: 'Formatting / AAA',
     samples: [
+      '<i><b><i>1<p><s><u>2<p>bar</b>3',
+
+      '<i><b><i>1<p>bar</b>3',
+      '<i><b><i>1<aside>bar</b>3',
+      '<i><b><i>1<div>bar</b>3',
+      '<i><b><i>1<address>bar</b>3',
+      '<i><b><i>1<blockquote>bar</b>3',
+      '<i><b><i>1<main>bar</b>3',
+      '<i><b><i>1<li>bar</b>3',
+      '<i><b><i>1<ul>bar</b>3',
+      '<i><b><i>1<dl>bar</b>3',
+      '<i><b><i>1<dd>bar</b>3',
+      '<i><b><i>1<object>bar</b>3',
+      '<i><b><i>1<h1>bar</b>3',
+      '<i><b><i>1<aside>bar</b>3',
+      '<i><b><i>1<other>bar</b>3',
+
+      '<i><b><s>foo<p>bar</b>bee',
+      '<b>foo<p>bar</b>bee',
       '<a>foo<p>bar<a>bee',
       '<a>asd<p><a>d',
       '<a>asd<h1><a>d',
@@ -86,13 +104,12 @@ window['html-suites'] = [
       '<b>foo<center>bar</b>bee',
       '<b>foo<blockquote>bar</b>bee',
       '<b>foo<li>bar</b>bee',
-      '<b>foo<p>bar</b>bee',
       '<b>foo<button>bar</b>bee',
       '<b>foo<article>bar</b>bee',
       '<b>foo<h1>bar</b>bee',
       '<tr><b>bold<i>italic<li></b>bee',
     ]
-  },//*/
+  },
 
   {
     title: 'Table content in caption',
