@@ -150,9 +150,10 @@ function showTree (domNode) {
     label = '<!-->'
 
   else if (domNode instanceof Element || domNode instanceof html.TreeBuilder.Node || domNode instanceof html.TreeBuilder.Leaf) {
-    label = (domNode.tagName||domNode.name).toLowerCase ()
+    label = (domNode.tagName||domNode.name)
     if (domNode.namespaceURI && domNode.namespaceURI !== htmlns)
       label = domNode.namespaceURI.split('/').pop () + ':' + label
+    else label = label.toLowerCase ()
   }
 
   // log (domNode.__proto__)
@@ -220,7 +221,9 @@ function* _traverse (node) {
   }
 
   else if (node instanceof Element) {
-    const tagName = node.tagName.toLowerCase ()
+    let tagName = node.tagName
+    if (node.namespaceURI && node.namespaceURI === htmlns)
+      tagName = tagName.toLowerCase ()
     yield [T.StartTag, tagName] // TODO also yield attrs
     for (let child of node.childNodes) yield* _traverse (child)
     yield [T.EndTag, tagName]

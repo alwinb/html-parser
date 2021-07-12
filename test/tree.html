@@ -35,16 +35,18 @@
 
   function runTests () {
     const suites = window ['html-suites']
+    let count = 0
     const failures = []
     for (const suite of suites) {
       for (const sample of suite.samples) {
+        count ++
         const native = nativeParse (sample)
         const parsed = html.parse (sample)
         if (printTree (native) !== printTree (parsed))
           failures.push (sample)
       }
     }
-    return failures
+    return { failures, total:count }
   }
 
   // Main 
@@ -53,9 +55,9 @@
   function main () {
 
     // Run all samples
-    const failures = runTests ()
+    const { failures, total } = runTests ()
     window ['html-suites'] .unshift ({
-      title: `🐞 Failed Tests (${failures.length})`,
+      title: `🐞 Failed Tests (${failures.length} / ${total})`,
       samples: failures,
     })
 

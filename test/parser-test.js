@@ -95,6 +95,10 @@ var samples = [
   '<button><table>aa<button>one<td>two<tr>three',
   '<main><table><caption><ul><li>a<li>text<table><p>foo<td>foo<tr></table>γαμμα',
   '<br>',
+  '<frame>',
+  '<frameset>',
+  '<br/>',
+  '<svg><path />',
 ]
 
 // var sample = '<html><head></head><body><h1>Foo</h1><p>Lorem<p>Ipsum'

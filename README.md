@@ -1,7 +1,7 @@
 Html Parser
 ===========
 
-**Version 0.5.0**
+**Version 0.7.0**
 
 This is a new HTML5 parser that I am working on.  
 The focus is on code size, speed and simplicity. 
@@ -11,6 +11,10 @@ The goal is to create a concise, accurate and elegant description of the HTML5 l
 
 Standard compliance is a goal.  
 I intend to produce, for all possible input, a parse tree that is equivalent to the one that is produced by the algorithm in the HTML5 Standard.
+
+There is a test page that I use for testing and debugging online [here][0].
+
+[0]: https://alwinb.github.io/html-parser/test/tree.html
 
 The Lexer
 ---------
@@ -25,6 +29,8 @@ For the implementation, I have painstakingly charted a transition table based on
 
 The Parser
 ----------
+
+**Note**: This is a preliminary description, it is not always in sync with the development versions (the 0.x.x. series). 
 
 I'm trying to come up with a declarative description and a more elegant algorithm than the one that is described in the standard. The algorithm is not quite compatible with the standard yet but the progress is good!
 
