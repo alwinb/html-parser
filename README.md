@@ -1,7 +1,7 @@
 Html Parser
 ===========
 
-**Version 0.6.5**
+**Version 0.7.0**
 
 This is a new HTML5 parser that I am working on.  
 The focus is on code size, speed and simplicity. 
@@ -29,6 +29,8 @@ For the implementation, I have painstakingly charted a transition table based on
 
 The Parser
 ----------
+
+**Note**: This is a preliminary description, it is not always in sync with the development versions (the 0.x.x. series). 
 
 I'm trying to come up with a declarative description and a more elegant algorithm than the one that is described in the standard. The algorithm is not quite compatible with the standard yet but the progress is good!
 
