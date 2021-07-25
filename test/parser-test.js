@@ -72,46 +72,46 @@ function run (sample) {
 // -------
 
 var samples = [
-  '<select><li>foo',
-  '<head><li>foo',
-  '</head> one two theee',
-  '<body> </head>',
-  '</body>',
-  '<b><li>test</b> nonbold',
   '  </html> foo',
-  ' eh',
   ' <a>',
+  ' foo',
+  '</body>',
+  '</head> one two theee',
+  '<b><li>test</b> nonbold',
   '<base>foo',
-  '<table><td>foo<col>',
-  '<table><td>foo<tfoot>',
-  '<table><td>foo<tr>',
-  '<table><caption>foo<td>',
-  '<table><colgroup><td>foo<tr><br>',
-  '<table><td>foo<td><col>',
-  '<select>Foo<option>boo<select>Bar',
-  '<main><table>text<td>foo<tr>',
-  '<main><table><div>text<td>foo<tr>',
-  '<main><table><ul><li>a<li>text<p>foo<td>foo<tr></table>γαμμα',
-  '<button><table>aa<button>one<td>two<tr>three',
-  '<main><table><caption><ul><li>a<li>text<table><p>foo<td>foo<tr></table>γαμμα',
+  '<body> </head>',
+  '<br/>',
   '<br>',
+  '<button><table>aa<button>one<td>two<tr>three',
   '<frame>',
   '<frameset>',
-  '<br/>',
+  '<h1> One Two </h1> bar',
+  '<h1><!-- comment -->some data</h6> <p>Hello <strong>World!</strong>',
+  '<head><li>foo',
+  '<html><head></head><body><h1>Foo</h1><p>Lorem<p>Ipsum',
+  '<main><table><caption><ul><li>a<li>text<table><p>foo<td>foo<tr></table>γαμμα',
+  '<main><table><div>text<td>foo<tr>',
+  '<main><table><ul><li>a<li>text<p>foo<td>foo<tr></table>γαμμα',
+  '<main><table>text<td>foo<tr>',
+  '<script src=foo>',
+  '<select><li>foo',
+  '<select><optgroup><option>one<option>two<optgroup>three<table><td>foo',
+  '<select>Foo<option>boo<select>Bar',
   '<svg><path />',
+  '<table><caption>foo<td>',
+  '<table><colgroup><td>foo<tr><br>',
+  '<table><td>foo<col>',
+  '<table><td>foo<td><col>',
+  '<table><td>foo<tfoot>',
+  '<table><td>foo<tr>',
 ]
 
-// var sample = '<html><head></head><body><h1>Foo</h1><p>Lorem<p>Ipsum'
-// var sample = '<script src=foo>'
-// var sample = '<h1> One Two </h1> bar'
-// var sample = '<select><optgroup><option>one<option>two<optgroup>three<table><td>foo'
-// var sample = '<h1><!-- comment -->some data</h6> <p>Hello <strong>World!</strong>'
-// var sample = fs.readFileSync ('../test/test.html', 'utf8')
-// var sample = '<script></script><foo>'
-// var sample = '<td>foo'
-// var sample = '<table><tr><td>1<td>2</table>'
-// var sample = '<table>orphan<tr><td>1<td>2</table>'
-// log ([...html.tags(sample)])
+var samples = [ 
+
+  // issues related to namespace handling
+  // '<table><svg><g>foo</g><g>bar</g><p>baz</table><p>quux',
+  // '<table><math><mi>foo</mi><mi>bar</mi><p>baz</table><p>quux'
+]
 
 for (const sample of samples)
   run (sample)
