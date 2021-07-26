@@ -39,11 +39,18 @@
     const failures = []
     for (const suite of suites) {
       for (const sample of suite.samples) {
-        count ++
-        const native = nativeParse (sample)
-        const parsed = html.parse (sample)
-        if (printTree (native) !== printTree (parsed))
+        try {
+          count ++
+          const native = nativeParse (sample)
+          const parsed = html.parse (sample)
+          if (printTree (native) !== printTree (parsed))
+            failures.push (sample)
+        }
+        catch (e) {
+          console.error ('Test threw:')
+          console.error (sample)
           failures.push (sample)
+        }
       }
     }
     return { failures, total:count }
@@ -57,7 +64,7 @@
     // Run all samples
     const { failures, total } = runTests ()
     window ['html-suites'] .unshift ({
-      title: `🐞 Failed Tests (${failures.length} / ${total})`,
+      title: `🐞 Failures: ${Math.round (failures.length / total * 100)}% (${failures.length} / ${total})`,
       samples: failures,
     })
 
