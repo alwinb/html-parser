@@ -392,6 +392,19 @@ window['html-suites'] = [
       '<div><table></svg><desc><td>',
       '<div><table><td><svg><desc><td>',
       '<div><other><svg><desc><td>',
+
+      // Breakout tags
+      '<svg><font size>foo',
+      '<svg><font color>foo',
+      '<svg><font face>foo',
+
+      // Non-breakout
+      '<svg><font Size>foo',
+      '<svg><font cOlor>foo',
+      '<svg><font faCe>foo',
+      '<svg><font>foo',
+      '<svg><font other>foo',
+
     ]
   },
 
@@ -543,6 +556,10 @@ window['html-suites'] = [
       `<table><tr><tr><td>cell1<td>cell2`,
       `<table><td>foo<tr><td>bar<col>`, 
       '<table><td><applet><td>',
+
+      // Hidden input
+      '<table><input type=hiddenfoo',
+      '<table><input type=hidden type=still-hidden>foo',
     ]
   },
 
