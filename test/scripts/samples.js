@@ -353,8 +353,6 @@ window['html-suites'] = [
   {
     title: 'Foreign content',
     samples: [
-      '<math><desc>foo<svg>foo<tr><div>bar</svg>bee',
-      '<svg><desc>foo<b>bar',
       '<svg><b>foo',
       '<svg>foo<sub>bar',
       '<svg>foo<other>bar',
@@ -364,6 +362,49 @@ window['html-suites'] = [
       '<svg>foo<rect><path><circle></rect>sd<center>bar',
       `<svg><path>text<bar>Foo<p>Test<rect></body><!--->`,
       '<svg>foo<blockquote>bar',
+
+      // Test self-closing flags
+      '<svg>foo<close/>bar',
+      '<svg>foo<desc><close/>bar',
+      '<svg>foo<foreignobject><close/>bar',
+      '<svg>foo<foreignObject><close/>bar',
+      '<svg>foo<close/>bar',
+
+      '<svg>foo<mi><close/>bar',
+      '<svg>foo<mo><close/>bar',
+      '<svg>foo<mn><close/>bar',
+      '<svg>foo<ms><close/>bar',
+
+      '<math>foo<close/>bar',
+      '<math>foo<desc><close/>bar',
+      '<math>foo<foreignobject><close/>bar',
+      '<math>foo<foreignObject><close/>bar',
+
+      '<math>foo<close/>bar',
+      '<math>foo<mi><close/>bar',
+      '<math>foo<mo><close/>bar',
+      '<math>foo<mn><close/>bar',
+      '<math>foo<ms><close/>bar',
+
+      // In tables...
+      
+      '<div><table><svg><desc><td>',
+      '<div><table></svg><desc><td>',
+      '<div><table><td><svg><desc><td>',
+      '<div><other><svg><desc><td>',
+
+      // Breakout tags
+      '<svg><font size>foo',
+      '<svg><font color>foo',
+      '<svg><font face>foo',
+
+      // Non-breakout
+      '<svg><font Size>foo',
+      '<svg><font cOlor>foo',
+      '<svg><font faCe>foo',
+      '<svg><font>foo',
+      '<svg><font other>foo',
+
     ]
   },
 
@@ -371,11 +412,78 @@ window['html-suites'] = [
     title: 'Integration points',
     samples: [
       '<svg><a>foo',
-      '<math><desc>foo<div>bar',
+      '<math>foo<desc>bar<div>bee',
+      '<svg><desc>foo<b>bar',
+      '<svg>foo<desc></svg>bar',
+      '<svg>foo<desc><selfClose/><br/>bar',
+      '<svg>foo<desc><selfClose/><other/>bar',
+
+      // test closing of <desc>
+      '<svg>foo<desc>bar</svg>bee',
+      '<svg>foo<desc>bar<a></svg>bee',
+      '<svg>foo<desc>bar<div></svg>bee',
+      '<svg>foo<desc>bar<ul></svg>bee',
+      '<svg>foo<desc>bar<p></svg>bee',
+      '<svg>foo<desc>bar<li></svg>bee',
+      '<svg>foo<desc>bar<select></svg>bee',
+      '<svg>foo<desc>bar<option></svg>bee',
+      '<svg>foo<desc>bar<select><option></svg>bee',
+      '<svg>foo<desc>bar<p><option></svg>bee',
+      '<svg>foo<desc>bar<p><button></svg>bee',
+      '<svg>foo<desc>bar<optgroup></svg>bee',
+      '<svg>foo<desc>bar<table></svg>bee',
+      '<svg>foo<desc>bar<table><tbody></svg>bee',
+      '<svg>foo<desc>bar<table><tr></svg>bee',
+      '<svg>foo<desc>bar<table><td></svg>bee',
+      '<svg>foo<desc>bar<table><caption></svg>bee',
+      '<svg>foo<desc>bar<table><colgroup></svg>bee',
+
+      // test closing of <foreignobject>
+      '<svg>foo<foreignobject>bar</svg>bee',
+      '<svg>foo<foreignobject>bar<a></svg>bee',
+      '<svg>foo<foreignobject>bar<div></svg>bee',
+      '<svg>foo<foreignobject>bar<ul></svg>bee',
+      '<svg>foo<foreignobject>bar<p></svg>bee',
+      '<svg>foo<foreignobject>bar<li></svg>bee',
+      '<svg>foo<foreignobject>bar<select></svg>bee',
+      '<svg>foo<foreignobject>bar<option></svg>bee',
+      '<svg>foo<foreignobject>bar<select><option></svg>bee',
+      '<svg>foo<foreignobject>bar<p><option></svg>bee',
+      '<svg>foo<foreignobject>bar<p><button></svg>bee',
+      '<svg>foo<foreignobject>bar<optgroup></svg>bee',
+      '<svg>foo<foreignobject>bar<table></svg>bee',
+      '<svg>foo<foreignobject>bar<table><tbody></svg>bee',
+      '<svg>foo<foreignobject>bar<table><tr></svg>bee',
+      '<svg>foo<foreignobject>bar<table><td></svg>bee',
+      '<svg>foo<foreignobject>bar<table><caption></svg>bee',
+      '<svg>foo<foreignobject>bar<table><colgroup></svg>bee',
+
+      // test closing of math from withing math-foreign tags
+      '<math>foo<mi>bar</math>bee',
+      '<math>foo<mi>bar<a></math>bee',
+      '<math>foo<mi>bar<div></math>bee',
+      '<math>foo<mi>bar<ul></math>bee',
+      '<math>foo<mi>bar<p></math>bee',
+      '<math>foo<mi>bar<li></math>bee',
+      '<math>foo<mi>bar<select></math>bee',
+      '<math>foo<mi>bar<option></math>bee',
+      '<math>foo<mi>bar<select><option></math>bee',
+      '<math>foo<mi>bar<p><option></math>bee',
+      '<math>foo<mi>bar<p><button></math>bee',
+      '<math>foo<mi>bar<optgroup></math>bee',
+      '<math>foo<mi>bar<table></math>bee',
+      '<math>foo<mi>bar<table><tbody></math>bee',
+      '<math>foo<mi>bar<table><tr></math>bee',
+      '<math>foo<mi>bar<table><td></math>bee',
+      '<math>foo<mi>bar<table><caption></math>bee',
+      '<math>foo<mi>bar<table><colgroup></math>bee',
+
+      // Other
       '<svg><foreignobject>foo<p>bar<p>baz</svg>bee',
       '<svg><foreignObject>foo<p>bar<p>baz</svg>bee',
       '<svg><foreigNObject>foo<p>bar<p>baz</svg>bee',
       '<svg><desc>foo<rect>foo<tr><div>bar</svg>bee',
+      '<math><desc>foo<svg>foo<tr><div>bar</svg>bee',
     ]
   },
 
@@ -392,6 +500,25 @@ window['html-suites'] = [
       `<head></head>After head</head>Foo`,
       `<head></head>After head</body>Foo`,
       `<head></head>After head</html>Foo`,
+
+      // Space handling
+      '</body><title>X</title>',
+      '</head> <head>',
+      '</head> <link>',
+      '</head> <p>',
+      '</head> <style></style>foo',
+      '</head> p',
+      '</head><link>',
+      '<body></body></html>',
+      '<head></head> <link>',
+      '<head></head> <p>',
+      '<head></head> <style></style>foo',
+      '<head></head><link>',
+      '<html> <head> <link> </head> <body> foo',
+      '<html></html>',
+      '<html><body></body>',
+      '<html><frameset></frameset></html> ',
+      '<table><th>',
     ]
   },
     
@@ -429,6 +556,10 @@ window['html-suites'] = [
       `<table><tr><tr><td>cell1<td>cell2`,
       `<table><td>foo<tr><td>bar<col>`, 
       '<table><td><applet><td>',
+
+      // Hidden input
+      '<table><input type=hiddenfoo',
+      '<table><input type=hidden type=still-hidden>foo',
     ]
   },
 

@@ -1,7 +1,7 @@
 Html Parser
 ===========
 
-**Version 0.7.0**
+**Version 0.8.0**
 
 This is a new HTML5 parser that I am working on.  
 The focus is on code size, speed and simplicity. 
@@ -116,11 +116,9 @@ The progress so far is very good, but a few issues remain.
 * Parser:
   - The tree construction rules for template tags.
   - Include attributes check in the implementation of 'Noah's Ark'.
-  - The Adoption Agency Algorithm for formatting tags is not covered yet.
   - There may be a few remaining exceptions that are not covered yet. 
   - Body to frameset switching (the 'frameset-ok' flag).
   - Easy, but the attributes are not attached to the elements yet ...
-  - Handle self closing tags in svg and math
 
 
 License

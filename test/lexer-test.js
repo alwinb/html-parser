@@ -1,6 +1,6 @@
 const log = console.log.bind (console)
 const { Lexer, tokens, chunks } = require ('../lib')
-const { tokenName, stateInfo } = Lexer
+const { typeName, stateInfo } = Lexer
 
 // Test
 // ====
@@ -11,7 +11,7 @@ function pr (input) {
   let stream = chunks (input)
   log (stateInfo (stream.state), '\n\n')
   for (let [t, v] of stream) {
-    log ([tokenName (t), v])
+    log ([typeName (t), v])
     log (stateInfo (stream.state), '\n\n')
   }
 
@@ -53,7 +53,7 @@ l.end ('<!--comment >')
 
 // log (l.state)
 for (let [t,v] of l.read ()) {
-  log ([tokenName(t), v])
+  log ([typeName(t), v])
   // log (stateInfo (l.state), stateInfo (l.state), '\n\n')
 }
 //*/
