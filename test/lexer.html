@@ -1,17 +1,24 @@
-<link rel="stylesheet" type="text/css" href="./style/base.css">
-<link rel="stylesheet" type="text/css" href="./style/tokens.css">
-<!-- -->
-<script>//</script>
-<!-- -->
-<script src="../dist/html.min.js"></script>
-<script src="../dist/domex.min.js"></script>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>HTML Lexer Test Page</title>
+  <link rel="stylesheet" type="text/css" href="./style/base.css">
+  <link rel="stylesheet" type="text/css" href="./style/tokens.css">
+  <!-- -->
+  <script>//</script>
+  <style> test </style>
+  <!-- -->
+  <script src="../dist/html.min.js"></script>
+  <script src="../dist/domex.min.js"></script>
+  </head>
+  <bgsound>
 </head>
-<bgsound>
-
 <body class=m1>
-<h1>HTML Lexer</h1>
-<p>
 
+<h1>HTML Lexer</h1>
+
+<p>
   This shows the code of this page (before the execution of scripts),
   as analysed by the lexer. 
 </p>
@@ -33,7 +40,7 @@
     <textarea>With </script> </textarea>
 
     <a b= value></a>
-    <br c= "fo<o>bar">
+    <br c= "fo<o> bar">
     
   <div id=charRefs>
 
@@ -152,7 +159,7 @@
   const log = console.log.bind (console)
   const doc = document
   const { html, domex: { domex, Domex } } = modules
-  const { tokenName, stateInfo } = html.Lexer
+  const { typeName, stateInfo } = html.Lexer
   
   const { defineProperty:define } = Object
 
@@ -200,14 +207,14 @@
       stateAfter = stateInfo (stream.state)
       const el = renderChunk (chunk)
       pre.append (el)
-      el [objectKey] = { token: { type: tokenName (chunk[0]), value: chunk[1] }, stateBefore, stateAfter }
+      el [objectKey] = { token: { type: typeName (chunk[0]), value: chunk[1] }, stateBefore, stateAfter }
       stateBefore = stateAfter
     }
   }
 
   function renderChunk ([type, value]) {
     const e = doc.createElement ('SPAN')
-      e.title = e.className = tokenName (type)
+      e.title = e.className = typeName (type)
       let tnode = doc.createTextNode(value)
       e.append (value)
       return e
