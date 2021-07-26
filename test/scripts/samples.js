@@ -385,6 +385,13 @@ window['html-suites'] = [
       '<math>foo<mo><close/>bar',
       '<math>foo<mn><close/>bar',
       '<math>foo<ms><close/>bar',
+
+      // In tables...
+      
+      '<div><table><svg><desc><td>',
+      '<div><table></svg><desc><td>',
+      '<div><table><td><svg><desc><td>',
+      '<div><other><svg><desc><td>',
     ]
   },
 
