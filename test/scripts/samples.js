@@ -487,6 +487,25 @@ window['html-suites'] = [
       `<head></head>After head</head>Foo`,
       `<head></head>After head</body>Foo`,
       `<head></head>After head</html>Foo`,
+
+      // Space handling
+      '</body><title>X</title>',
+      '</head> <head>',
+      '</head> <link>',
+      '</head> <p>',
+      '</head> <style></style>foo',
+      '</head> p',
+      '</head><link>',
+      '<body></body></html>',
+      '<head></head> <link>',
+      '<head></head> <p>',
+      '<head></head> <style></style>foo',
+      '<head></head><link>',
+      '<html> <head> <link> </head> <body> foo',
+      '<html></html>',
+      '<html><body></body>',
+      '<html><frameset></frameset></html> ',
+      '<table><th>',
     ]
   },
     
