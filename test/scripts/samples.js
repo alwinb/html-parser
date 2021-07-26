@@ -484,6 +484,17 @@ window['html-suites'] = [
       '<svg><foreigNObject>foo<p>bar<p>baz</svg>bee',
       '<svg><desc>foo<rect>foo<tr><div>bar</svg>bee',
       '<math><desc>foo<svg>foo<tr><div>bar</svg>bee',
+      
+      // Math annotation-xml
+      
+      '<math><annotation-xml><p><p>',
+      '<math><annotation-xml><other>',
+      '<math><annotation-xml encoding=TeXt/Html><p><p>',
+      '<math><annotation-xml encoding=TeXt/Html><other>',
+      '<annotation-xml><p><p>',
+      '<annotation-xml><other>',
+      '<annotation-xml encoding=TeXt/Html><p><p>',
+      '<annotation-xml encoding=TeXt/Html><other>',
     ]
   },
 

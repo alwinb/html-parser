@@ -10,7 +10,7 @@
 <body>
 
 <script>
-  window.console = new Console ()
+  window.pageConsole = window.console = new Console ()
   document.body.append (console.elem)
   window.addEventListener ('error', evt => console.errorHandler (evt), true)
 </script>
@@ -60,6 +60,7 @@
   // ----
 
   function main () {
+    const { domex } = modules.domex
 
     // Run all samples
     const { failures, total } = runTests ()
@@ -78,7 +79,7 @@
     // Event handlers...
     document.addEventListener ('click', evt => {
       if (objectKey in evt.target) {
-        log (evt.target [objectKey])
+        pageConsole.write (domex `@default` .render (evt.target [objectKey]).elem)
         window.$ = evt.target [objectKey]
       }
       if ('key' in evt.target.dataset)
