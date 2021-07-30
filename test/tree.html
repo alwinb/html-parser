@@ -36,24 +36,30 @@
   function runTests () {
     const suites = window ['html-suites']
     let count = 0
+    let time = 0
+    let nativeTime = 0
     const failures = []
     for (const suite of suites) {
       for (const sample of suite.samples) {
         try {
           count ++
-          const native = nativeParse (sample)
+          const d1 = new Date
+            const native = nativeParse (sample)
+          const d2 = new Date
+            nativeTime += (d2 - d1)
           const parsed = html.parse (sample)
+            time += (new Date - d2)
           if (printTree (native) !== printTree (parsed))
             failures.push (sample)
         }
         catch (e) {
-          console.error ('Test threw:')
-          console.error (sample)
+          // console.error ('Test threw:')
+          // console.error (sample)
           failures.push (sample)
         }
       }
     }
-    return { failures, total:count }
+    return { failures, total:count, time, nativeTime }
   }
 
   // Main 
@@ -63,23 +69,39 @@
     const { domex } = modules.domex
 
     // Run all samples
-    const { failures, total } = runTests ()
+    const results = runTests ()
+    const { failures, total, time, nativeTime } = results
+    
+
     window ['html-suites'] .unshift ({
       title: `🐞 Failures: ${Math.round (failures.length / total * 100)}% (${failures.length} / ${total})`,
       samples: failures,
     })
 
     // Set up Test UI
+
     const ui = new TestUI () .showSuite (0)
+    ui.showResults (results)
+
     const submit = byId ('submit')
     submit .addEventListener ('click', evt => {
       ui.showSampleValue (input.value)
     })
 
+    document.addEventListener ('mouseover', evt => {
+      if (evt.target.className === 'label' && objectKey in evt.target.parentNode) {
+        ui.inspect (evt.target.parentNode [objectKey])
+        // pageConsole.write (domex `@default` .render (evt.target [objectKey]).elem)
+      }
+      else 
+        ui.inspect (null)
+    })
+
     // Event handlers...
     document.addEventListener ('click', evt => {
       if (objectKey in evt.target) {
-        pageConsole.write (domex `@default` .render (evt.target [objectKey]).elem)
+        ui.inspect (evt.target [objectKey])
+        // pageConsole.write (domex `@default` .render (evt.target [objectKey]).elem)
         window.$ = evt.target [objectKey]
       }
       if ('key' in evt.target.dataset)

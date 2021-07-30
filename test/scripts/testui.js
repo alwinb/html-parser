@@ -39,12 +39,17 @@ class TestUI {
 
       main@main
         > h1 "HTML Parser"
-        + p "This is a test page for the HTML parser, version " %version
-        + @suites#suites ~suites
-        + @tabs#tabs ~samples
-        + textarea#input + button#submit "Run"
-        + div#view1 "Browser"
-        + div#view2 "Html Parser";
+        + p.br0 "This is a test page for the HTML parser, version " %version "."
+        + p #results "Results..."
+        + div
+        > @suites#suites ~suites
+          + @tabs#tabs ~samples
+          + div 
+            > (textarea#input + button#submit "Run")
+          + div.hstack.nowrap
+            > div.p1#view1 "Browser"
+            + div.p1#view2 "Html Parser"
+            + div.p1#view3 "Inspector";
   
       @main
     `
@@ -59,14 +64,23 @@ class TestUI {
     this.elem = TestUI.domex.render ({ suites, samples, version:html.version }) .elem
     document.body.append (this.elem)
 
-    const [input, tabs, view1, view2] = 
-      ['input', 'tabs', 'view1', 'view2'] .map (byId)
-    this.dom = { tabs, input, view1, view2 }
+    const [results, tabs, input, view1, view2, inspector] = 
+      ['results', 'tabs', 'input', 'view1', 'view2', 'view3'] .map (byId)
+    this.dom = { results, tabs, input, view1, view2, inspector }
 
     this.suite = {}
     this.sampleIndex = 0
   }
-  
+
+  showResults ({time, nativeTime}) {
+    const ratio = Math.round (100*time / nativeTime)
+    this.dom.results.innerHTML = ''
+    this.dom.results.append (domex `
+      span "Parsing took " %nativeTime "ms (native)"
+        " vs " %time "ms (html-parser) – " %ratio "%."`
+      .render ({time, nativeTime, ratio}).elems)
+  }
+
   showSuite (index) {
     this.suite = window ['html-suites'] [index]
     log ('suite', this.suite.title)
@@ -81,9 +95,9 @@ class TestUI {
   }
   
   showSampleValue (sample) {
-    window.console.clear ()
+    // window.console.clear ()
     this.dom.input.value = sample
-    this.dom.view1.innerHTML = view2.innerHTML = ''
+    this.dom.view1.innerHTML = this.dom.view2.innerHTML = ''
   
     const nativeResult = nativeParse (sample)
     const result = html.parse (sample)
@@ -102,9 +116,13 @@ class TestUI {
 
   showSample (index) {
     return this.showSampleValue (this.suite.samples [index])
-    
   }
   
+  inspect (obj) {
+    this.dom.inspector.innerHTML = ''
+    this.dom.inspector.append (domex `@default` .render (obj).elems)
+  }
+
   focus () {
     this.dom.input.focus ()
     return this
@@ -143,6 +161,7 @@ function showTree (domNode) {
   }
 
   elem = $('div')
+  elem.className = 'node'
   if (domNode instanceof Document || domNode instanceof html.TreeBuilder.Node && domNode.name === '#document')
     label = '#document'
 
@@ -157,7 +176,10 @@ function showTree (domNode) {
   }
 
   // log (domNode.__proto__)
-  elem.append (label)
+  var elel = $('span')
+  elel.className = 'label'
+  elel.append (label)
+  elem.append (elel)
   elem[objectKey] = domNode.frame ? domNode.frame.info : domNode
   
   if (clss) elem.classList.add(clss)
