@@ -143,7 +143,7 @@ function showTree (domNode) {
   }
 
   elem = $('div')
-  if (domNode instanceof Document || domNode instanceof html.TreeBuilder.Document)
+  if (domNode instanceof Document || domNode instanceof html.TreeBuilder.Node && domNode.name === '#document')
     label = '#document'
 
   else if (domNode instanceof Comment || domNode[0] === T.Comment)
@@ -158,7 +158,7 @@ function showTree (domNode) {
 
   // log (domNode.__proto__)
   elem.append (label)
-  elem[objectKey] = domNode.frame ? html.TreeBuilder.frameInfo (domNode.frame) : domNode
+  elem[objectKey] = domNode.frame ? domNode.frame.info : domNode
   
   if (clss) elem.classList.add(clss)
   let ul; elem.append ((ul = $('div')))
@@ -207,6 +207,9 @@ function* _traverse (node) {
   else if (node instanceof Text)
     yield node.data
 
+  else if (node instanceof html.TreeBuilder.Node && node.name[0] === '#')
+    for (let child of node.children) yield* _traverse (child)
+
   else if (node instanceof html.TreeBuilder.Node) {
     yield [T.StartTag, node.name] // TODO also yield attrs
     for (let child of node.children) yield* _traverse (child)
@@ -233,9 +236,6 @@ function* _traverse (node) {
     yield [T.StartTag, node.name] // TODO also print attrs
     yield [T.EndTag, node.name]
   }
-
-  else if (node instanceof html.TreeBuilder.Document)
-    for (let child of node.children) yield* _traverse (child)
 
   else if (node instanceof Document)
     for (let child of node.childNodes) yield* _traverse (child)
