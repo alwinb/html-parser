@@ -4,10 +4,10 @@ const util = require ('util')
 const log = console.log.bind (console)
 
 
-function Parser () {
+function Parser (options) {
   const l = new html.Lexer ()
   const t = new html.TokenBuilder ()
-  const p = new Director ()
+  const p = new Director (options)
 
   this.parse = function parse (str) {
     l.reset (); t.reset (); p.reset (); 
@@ -25,10 +25,11 @@ function Parser () {
 //*
 
 setTimeout (() => {
+  const verbose = true
   // var d = new Director ()
   // d.batchWrite (sample)
   // var builder = d.builder
-  var p = new Parser ()
+  var p = new Parser ({ verbose })
   var doc = p.parse (sample1) 
   log (util.inspect (doc, {depth:Infinity}))
 })

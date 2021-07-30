@@ -1,6 +1,6 @@
 .PHONY: all clean run
 
-files = browser.js lexer.js tokens.js parser.js index.js dom.js categories.js schema.js
+files = browser.js lexer.js tokens.js treebuilder.new.js index.js dom.js categories.js schema.js
 sources = $(addprefix lib/, $(files))
 
 all: dist/html.js dist/domex.min.js dist/html.min.js
