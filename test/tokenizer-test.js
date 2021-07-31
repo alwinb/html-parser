@@ -21,5 +21,6 @@ var sample = `foo bar`
 var sample = `<s o=& t>`
 var sample = `</s o=& t>`
 var sample = `<fo><br>bar</br><i foo=1>Italic</i>`
+var sample = '<!doctype html>'
 
 log (util.inspect(tokenize (sample), { depth:100 }))

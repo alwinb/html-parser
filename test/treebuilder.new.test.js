@@ -47,6 +47,12 @@ var sample1 = '<head></head>After head</head>Foo'
 var sample1 = '<html><head> <link> </head> <link>'
 var sample1 = '<html><frameset>'
 var sample1 = '</head> <p>'
-// var sample1 = '<math><annotation-xml encoding=TeXt/Html><p><p>'
-// var sample1 = '<svg><desc>test<div>'
-// var sample1 = '<font face>foo'
+var sample1 = '<math><annotation-xml encoding=TeXt/Html><p><p>'
+var sample1 = '<svg><desc>test<div>'
+var sample1 = '<font face>foo'
+var sample1 = '<!doctype>foo'
+var sample1 = '<table> g'
+var sample1 = '</body><title>X</title>'
+
+
+/* Compute the frameset OK flags **/
