@@ -54,7 +54,7 @@ var sample1 = '<!doctype>foo'
 var sample1 = '<table> g'
 var sample1 = '</body><title>X</title>'
 var sample1 = '<param><frameset>'
-var sample1 = 'Test'
+var sample1 = '<svg><foo/><bar>'
 
 
 /* Compute the frameset OK flags **/
