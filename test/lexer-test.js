@@ -18,8 +18,8 @@ function pr (input) {
   log (input, '\n\nTokens\n========')
   stream = tokens (input)
   log (stateInfo (stream.state), '\n\n')
-  for (let x of stream) {
-    log (x)
+  for (let [t,v] of stream) {
+    log ([typeName (t), v])
     log (stateInfo (stream.state), '\n\n')
   }
 }
