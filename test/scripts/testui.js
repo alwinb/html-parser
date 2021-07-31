@@ -183,7 +183,7 @@ function showTree (domNode) {
   else if (domNode instanceof DocumentType)
     label = '<!doctype>'
 
-  else if (domNode instanceof Comment || domNode instanceof html.TreeBuilder.Comment)
+  else if (domNode instanceof Comment || domNode instanceof html.TreeBuilder.Node && domNode.name === '#comment')
     label = '<!-->'
 
   else if (domNode instanceof Element) {
@@ -207,8 +207,11 @@ function showTree (domNode) {
   let ul; elem.append ((ul = $('div')))
   ul.className = 'children'
 
-  const children = domNode instanceof HTMLTemplateElement ?
-    domNode.content.childNodes : domNode.childNodes || domNode.children || []
+  const children = domNode instanceof HTMLTemplateElement
+    ? domNode.content.childNodes
+    : domNode.name === '#comment' ? []
+    : domNode.childNodes || domNode.children || []
+
   for (let x of children) {
     ul.append (showTree (x))
   }
@@ -252,6 +255,9 @@ function* _traverse (node) {
 
   else if (node instanceof Text)
     yield node.data
+
+  else if (node instanceof html.TreeBuilder.Node && node.name === '#comment')
+    null // TODO
 
   else if (node instanceof html.TreeBuilder.Node && node.name[0] === '#')
     for (let child of node.children) yield* _traverse (child)
