@@ -11,8 +11,8 @@ TM_RUN_TARGET = "${TM_PROJECT_DIRECTORY}/test/tokenizer-test.js"
 [ parser.js ]
 TM_RUN_TARGET = "${TM_PROJECT_DIRECTORY}/test/parser-test.js"
 
-[ {director.js,treebuilder.new.js} ]
-TM_RUN_TARGET = "${TM_PROJECT_DIRECTORY}/test/treebuilder.new.test.js"
+[ {director.js,treebuilder.js} ]
+TM_RUN_TARGET = "${TM_PROJECT_DIRECTORY}/test/director-test.js"
 
 [ {schema.js,categories.js} ]
 TM_RUN_TARGET = "${TM_PROJECT_DIRECTORY}/test/info-test.js"
