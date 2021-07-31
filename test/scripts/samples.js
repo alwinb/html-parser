@@ -208,6 +208,8 @@ window['html-suites'] = [
       `<p>Test<h1>Head<applet><h2>`,
       `<p>Test<h1>Head<h2><h2>`,
       `<p>Test<h1>Head`,
+      '<p>Test<h1>Head<div><h2>foo',
+      '<p>Test<h1>Head<div></h2>foo',
       '<li><h1>asd</li>asd',
       '<li><h1>asd<li>asd',
       '<p><h1>asd<p>asd',
@@ -315,8 +317,6 @@ window['html-suites'] = [
       '<p>Test<li>Head<p></li>foo',
       '<p>Test<li>Head<ul><li>foo',
       '<p>Test<li>Head<ul></li>foo',
-      '<p>Test<h1>Head<div><h2>foo',
-      '<p>Test<h1>Head<div></h2>foo',
       '<p>Test<li>Head<div><li>foo',
       '<p>Test<li>Head<div></li>foo',
       '<p>Test<li>Head<address><li>foo',
@@ -327,7 +327,7 @@ window['html-suites'] = [
   },
 
   {
-    title: 'List scopes (2)',
+    title: 'List scopes 2',
     samples: [
       '<li><dd><li>A</li>B',
       '<li><dd>A</li>B',

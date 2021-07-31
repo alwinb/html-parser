@@ -21,7 +21,6 @@
 <script src="./scripts/testui.js"></script>
 
 <script>(()=>{
-
   const log = console.log.bind (console)
 
   // For debugging
@@ -29,17 +28,18 @@
     get: function () { return this.constructor.name }
   })
 
-
   // Tests
   // -----
 
-  function runTests () {
+  function* runTests () {
     const suites = window ['html-suites']
     let count = 0
     let time = 0
     let nativeTime = 0
     const failures = []
-    for (const suite of suites) {
+    for (let i=0, l= suites.length; i<l; i++) {
+      const suite = suites[i]
+      let suiteFailures = []
       for (const sample of suite.samples) {
         try {
           count ++
@@ -49,18 +49,27 @@
             nativeTime += (d2 - d1)
           const parsed = html.parse (sample)
             time += (new Date - d2)
-          if (printTree (native) !== printTree (parsed))
+          if (printTree (native) !== printTree (parsed)) {
             failures.push (sample)
+            suiteFailures.push (sample)
+          }
         }
         catch (e) {
           // console.error ('Test threw:')
           // console.error (sample)
           failures.push (sample)
+          suiteFailures.push (sample)
         }
       }
+      if (suiteFailures.length) {
+        suite.title = `(${suiteFailures.length}/${suite.samples.length}) ${suite.title}`
+        suite.samples = suiteFailures
+      }
+      yield { failures, total:count, time, nativeTime }
     }
     return { failures, total:count, time, nativeTime }
   }
+
 
   // Main 
   // ----
@@ -68,25 +77,35 @@
   function main () {
     const { domex } = modules.domex
 
-    // Run all samples
-    const results = runTests ()
-    const { failures, total, time, nativeTime } = results
-    
-
-    window ['html-suites'] .unshift ({
-      title: `🐞 Failures: ${Math.round (failures.length / total * 100)}% (${failures.length} / ${total})`,
-      samples: failures,
-    })
-
     // Set up Test UI
 
-    const ui = new TestUI () .showSuite (0)
-    ui.showResults (results)
+    const ui = new TestUI (window ['html-suites']) .showSuite (0)
+    const todos = runTests ()
 
-    const submit = byId ('submit')
-    submit .addEventListener ('click', evt => {
-      ui.showSampleValue (input.value)
-    })
+    function loop () {
+      let start = new Date, done, results
+      do {
+        ({ value:results, done } = todos.next ())
+        ui.showResults (results)
+      }
+      while (!done && new Date - start < 150)
+      if (!done) return setTimeout (loop, 100)
+
+      console.clear ()
+      const { failures, total, time, nativeTime } = results
+
+      window ['html-suites'] .unshift ({
+        title: `🐞 Failures: ${Math.round (failures.length / total * 100)}% (${failures.length} / ${total})`,
+        samples: failures,
+      })
+      ui.update (window ['html-suites'])
+      ui.showResults (results)
+    }
+    
+    window.runAllTests = loop
+
+
+
 
     document.addEventListener ('mouseover', evt => {
       if (evt.target.className === 'label' && objectKey in evt.target.parentNode) {

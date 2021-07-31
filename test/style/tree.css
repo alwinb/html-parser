@@ -32,15 +32,21 @@ main {
 
 #input {
   width:calc(100vw - 20rem);
-  height:10rem;
+  height:5rem;
 /*  display:block;*/
 /*  float:left;*/
 	font-family:Hack, Menlo, Monaco, Monospace;
 }
 #view1, #view2, #view3 {
-  width:calc(28vw - 4em);
+  width:calc(22vw);
   overflow:hidden;
+  min-height:20rem;
 }
+#view3 {
+  width:15rem;
+  white-space:normal;
+}
+
 #tabs {
   display:block;
   padding:0;

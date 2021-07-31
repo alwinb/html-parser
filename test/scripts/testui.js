@@ -40,7 +40,7 @@ class TestUI {
       main@main
         > h1 "HTML Parser"
         + p.br0 "This is a test page for the HTML parser, version " %version "."
-        + p #results "Results..."
+        + (p #results > (a[href="javascript:runAllTests()"] "Run all tests") + ".")
         + div
         > @suites#suites ~suites
           + @tabs#tabs ~samples
@@ -57,19 +57,33 @@ class TestUI {
 
   // Init
 
-  constructor () {
-    const suites = window ['html-suites']
-    const samples = suites[0].samples
-
-    this.elem = TestUI.domex.render ({ suites, samples, version:html.version }) .elem
+  constructor (suites) {
+    this.elem = $('div')
     document.body.append (this.elem)
+    this.sample = suites[0].samples[0]
+    this.update (suites) .showSuite (0)
+  }
 
-    const [results, tabs, input, view1, view2, inspector] = 
-      ['results', 'tabs', 'input', 'view1', 'view2', 'view3'] .map (byId)
-    this.dom = { results, tabs, input, view1, view2, inspector }
+  update (suites) {
+    this.suites = suites
+    this.elem.innerHTML = ''
+    // this.suite = suites[0]
+    // this.sampleIndex = 0
+    const samples = this.samples = this.suites[0].samples
+    const sample = this.sample // = samples[0]
 
-    this.suite = {}
-    this.sampleIndex = 0
+    const elem_ = TestUI.domex.render ({ suites, samples, version:html.version }) .elem
+    this.elem.replaceWith (elem_)
+    this.elem = elem_
+
+    const [results, tabs, input, view1, view2, inspector, submit] =
+      ['results', 'tabs', 'input', 'view1', 'view2', 'view3', 'submit'] .map (byId)
+
+    this.dom = { results, tabs, input, view1, view2, inspector, submit }
+    submit.addEventListener ('click', evt => this.showSampleValue (input.value))
+    
+    this.showSampleValue (this.sample)
+    return this
   }
 
   showResults ({time, nativeTime}) {
@@ -82,7 +96,7 @@ class TestUI {
   }
 
   showSuite (index) {
-    this.suite = window ['html-suites'] [index]
+    this.suite = this.suites [index]
     log ('suite', this.suite.title)
     const el = domex `
       li@tab.-button [data-key=$] > "Sample " + $;
@@ -95,7 +109,7 @@ class TestUI {
   }
   
   showSampleValue (sample) {
-    // window.console.clear ()
+    window.console.clear ()
     this.dom.input.value = sample
     this.dom.view1.innerHTML = this.dom.view2.innerHTML = ''
   
@@ -115,12 +129,13 @@ class TestUI {
   }
 
   showSample (index) {
-    return this.showSampleValue (this.suite.samples [index])
+    this.sample = this.suite.samples [index]
+    return this.showSampleValue (this.sample)
   }
   
   inspect (obj) {
     this.dom.inspector.innerHTML = ''
-    this.dom.inspector.append (domex `@default` .render (obj).elems)
+    this.dom.inspector.append (domex `@default.vstack` .render (obj).elems)
   }
 
   focus () {
@@ -165,14 +180,20 @@ function showTree (domNode) {
   if (domNode instanceof Document || domNode instanceof html.TreeBuilder.Node && domNode.name === '#document')
     label = '#document'
 
-  else if (domNode instanceof Comment || domNode[0] === T.Comment)
+  else if (domNode instanceof DocumentType)
+    label = '<!doctype>'
+
+  else if (domNode instanceof Comment || domNode instanceof html.TreeBuilder.Comment)
     label = '<!-->'
 
-  else if (domNode instanceof Element || domNode instanceof html.TreeBuilder.Node || domNode instanceof html.TreeBuilder.Leaf) {
-    label = (domNode.tagName||domNode.name)
+  else if (domNode instanceof Element) {
     if (domNode.namespaceURI && domNode.namespaceURI !== htmlns)
-      label = domNode.namespaceURI.split('/').pop () + ':' + label
-    else label = label.toLowerCase ()
+      label = domNode.namespaceURI.split('/').pop () + ':' + domNode.tagName
+    else label = domNode.tagName.toLowerCase ()
+  }
+
+  else if (domNode instanceof html.TreeBuilder.Node || domNode instanceof html.TreeBuilder.Leaf) {
+    label = domNode.name
   }
 
   // log (domNode.__proto__)
@@ -219,6 +240,9 @@ function* _coalesce (stream) {
   if (last) yield last
 }
 
+
+// Traversal,
+// For both browser DOM and html-parser 'DOM'
 
 function* _traverse (node) {
   const T = modules.html.Lexer.tokenTypes
