@@ -1,4 +1,4 @@
-const { Director, START, END, LEAF } = require ('../lib/treebuilder.new')
+const { Director, START, END, LEAF } = require ('../lib/director')
 const html = require ('../lib')
 const util = require ('util')
 const log = console.log.bind (console)
@@ -53,6 +53,8 @@ var sample1 = '<font face>foo'
 var sample1 = '<!doctype>foo'
 var sample1 = '<table> g'
 var sample1 = '</body><title>X</title>'
+var sample1 = '<param><frameset>'
+var sample1 = 'Test'
 
 
 /* Compute the frameset OK flags **/
