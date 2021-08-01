@@ -37,6 +37,8 @@
     let time = 0
     let nativeTime = 0
     const failures = []
+    
+    const parser = new html.Parser
     for (let i=0, l= suites.length; i<l; i++) {
       const suite = suites[i]
       let suiteFailures = []
@@ -47,7 +49,7 @@
             const native = nativeParse (sample)
           const d2 = new Date
             nativeTime += (d2 - d1)
-          const parsed = html.parse (sample)
+          const parsed = parser.parse (sample)
             time += (new Date - d2)
           if (printTree (native) !== printTree (parsed)) {
             failures.push (sample)

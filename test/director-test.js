@@ -41,12 +41,12 @@ var sample = '</body><title>X</title>'
 var sample = '<param><frameset>'
 var sample = '<svg><foo/><bar>'
 var sample = '<head></head><title>X</title>'
-
+var sample = '<table><select><option>3</select></table>'
 
 // Test
 // ====
 
-const verbose = true
+const verbose = false
 // var d = new Director ()
 // d.batchWrite (sample)
 // var builder = d.builder

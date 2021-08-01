@@ -35,9 +35,9 @@ var sample = `<z/0  <>`
 var sample = '<a a=aa`>'
 var sample = `<h a='&COPY'>`
 var sample = `<!----->` // FIXME
-var sample = `<br>bar</br><i foo=1>Italic</i foo>`
 var sample = `<br>bar</br><i>Italic</i>`
 var sample = `<path/>`
+var sample = `<br>bar</br><i foo=1>Italic</i foo> &amp; <b a=" bar" > `
 
 pr (sample)
 //*/

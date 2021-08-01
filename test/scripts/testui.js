@@ -40,7 +40,7 @@ class TestUI {
       main@main
         > h1 "HTML Parser"
         + p.br0 "This is a test page for the HTML parser, version " %version "."
-        + (p #results > (a[href="javascript:runAllTests()"] "Run all tests") + ".")
+        + (p #results > (a[href="javascript:void(runAllTests())"] "Run all tests") + ".")
         + div
         > @suites#suites ~suites
           + @tabs#tabs ~samples
