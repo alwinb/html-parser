@@ -41,8 +41,8 @@ var sample = '</body><title>X</title>'
 var sample = '<param><frameset>'
 var sample = '<svg><foo/><bar>'
 var sample = '<head></head><title>X</title>'
-var sample =  '   <track><frameset></frameset>'
-var sample = '<head></head> <source><frameset>'
+var sample = '<head></head><title>X&amp;y</title>'
+
 
 // Test
 // ====
