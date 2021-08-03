@@ -598,6 +598,15 @@ window['html-suites'] = [
       '<button><div><p><applet><p>', 
     ]
   },
+  
+  {
+    title: 'Body -> Frameset'
+    samples: [
+      '<head> </head> <span> <source> <frameset>',
+      '<head> </head> <applet> <source> <frameset>',
+      '<head> </head> <div> <source> <frameset>',
+    ]
+  }
 
 ] // End Suites
 
