@@ -521,24 +521,39 @@ window ['html-suites'] = [
       // Space handling
       '</body><title>X</title>',
       '</head> <head>',
-      '</head> <link>',
       '</head> <p>',
-      '</head> <style></style>foo',
       '</head> p',
-      '</head><link>',
       '<body></body></html>',
       '<head></head> <link>',
       '<head></head> <p>',
-      '<head></head> <style></style>foo',
-      '<head></head><link>',
-      '<html> <head> <link> </head> <body> foo',
       '<html></html>',
       '<html><body></body>',
       '<html><frameset></frameset></html> ',
       '<table><th>',
     ]
   },
-    
+
+  {
+    title: 'After Head redirection',
+    samples: [
+      '</head> <link>',
+      '</head> <style></style>foo',
+      '</head> <style>bar</style>foo',
+      '</head> <link>',
+      '</head> <noscript>',
+      '</head> <title>',
+
+      '<head> </head> <style></style>foo',
+      '<head> </head> <style>bar</style>foo',
+      '<head> </head> <link>',
+      '<html> </head> <link> </head> <body> foo',
+      '<html> </head> <script> bar </script> </head> <body> foo',
+      '<html> </head> <noscript> bar </noscript> </head> <body> foo',
+      '<html> </head> <noframes> bar </noframes> </head> <body> foo',
+      '<html> </head> <title> bar </title> </head> <body> foo',
+    ]
+  },
+
   /*
   {
     title: 'Templates',
