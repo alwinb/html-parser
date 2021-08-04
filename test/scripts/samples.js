@@ -1,7 +1,7 @@
 // Samples
 // -------
 
-window['html-suites'] = [
+window ['html-suites'] = [
   
   /*
   {
@@ -606,11 +606,16 @@ window['html-suites'] = [
   },
   
   {
-    title: 'Body -> Frameset'
+    title: 'Body -> Frameset',
     samples: [
       '<head> </head> <span> <source> <frameset>',
       '<head> </head> <applet> <source> <frameset>',
       '<head> </head> <div> <source> <frameset>',
+
+      '<head> </head> <pre> <source> <frameset>',
+      '<head> </head> <listing> <source> <frameset>',
+      '<head> </head> <menu> <source> <frameset>',
+      '<head> </head> <main> <source> <frameset>',
     ]
   }
 
