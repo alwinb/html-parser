@@ -164,6 +164,12 @@ window['html-suites'] = [
       '<h1>foo<p>bar<h1>bee',
       '<h1>foo<p>bar</h2>bee',
       '<h1>foo<p>bar<h2>bee',
+      
+      // Special case end tag
+      '</p>foo',
+      '<html></p>foo',
+      's</p>foo',
+      '<body></p>foo',
     ]
   },
 
