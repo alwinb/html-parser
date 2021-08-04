@@ -23,36 +23,41 @@ function Parser (options) {
 // Samples
 // -------
 
+var samples = [
+  '<div>foo',
+  '<table><caption><select>foo<table><select>bar',
+  '<table><caption><select>foo<select>bar',
+  '<!doctype html><p>Test<h1>Head1<table>foo<div></h2>Text',
+  '<head></head>After head</head>Foo',
+  '<html><head> <link> </head> <link>',
+  '<html><frameset>',
+  '</head> <p>',
+  '<math><annotation-xml encoding=TeXt/Html><p><p>',
+  '<svg><desc>test<div>',
+  '<font face>foo',
+  '<!doctype>foo',
+  '<table> g',
+  '</body><title>X</title>',
+  '<param><frameset>',
+  '<svg><foo/><bar>',
+  '<head></head><title>X</title>',
+  '<head></head><title>X&amp;y</title>',
+  '<div><s><s><i><b><tt><s><s><s>foo</i><tt><tt><tt><tt></div>X',
+  '<applet test foo=a><b>bar</applet>foo',
+  'foo</body><!---->',
+  '<html></html>',
+  '<html><frameset></frameset></html>',
+  '<!doctype html><title>',
+]
 
-var sample = '<div>foo'
-var sample = '<table><caption><select>foo<table><select>bar'
-// var sample = '<table><caption><select>foo<select>bar'
-// var sample = '<!doctype html><p>Test<h1>Head1<table>foo<div></h2>Text'
-var sample = '<head></head>After head</head>Foo'
-var sample = '<html><head> <link> </head> <link>'
-var sample = '<html><frameset>'
-var sample = '</head> <p>'
-var sample = '<math><annotation-xml encoding=TeXt/Html><p><p>'
-var sample = '<svg><desc>test<div>'
-var sample = '<font face>foo'
-var sample = '<!doctype>foo'
-var sample = '<table> g'
-var sample = '</body><title>X</title>'
-var sample = '<param><frameset>'
-var sample = '<svg><foo/><bar>'
-var sample = '<head></head><title>X</title>'
-var sample = '<head></head><title>X&amp;y</title>'
-var sample = '<div><s><s><i><b><tt><s><s><s>foo</i><tt><tt><tt><tt></div>X'
-var sample = '<applet test foo=a><b>bar</applet>foo'
-var sample = 'foo</body><!---->'
+var sample =
+  samples[samples.length-1]
+
 
 // Test
 // ====
 
-const verbose = false
-// var d = new Director ()
-// d.batchWrite (sample)
-// var builder = d.builder
+const verbose = true
 var p = new Parser ({ verbose })
 var doc = p.parse (sample) 
 log (util.inspect (doc, {depth:Infinity}))
