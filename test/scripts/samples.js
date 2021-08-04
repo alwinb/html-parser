@@ -534,7 +534,7 @@ window ['html-suites'] = [
   },
 
   {
-    title: 'After Head redirection',
+    title: 'After Head',
     samples: [
       '</head> <link>',
       '</head> <style></style>foo',
@@ -551,6 +551,21 @@ window ['html-suites'] = [
       '<html> </head> <noscript> bar </noscript> </head> <body> foo',
       '<html> </head> <noframes> bar </noframes> </head> <body> foo',
       '<html> </head> <title> bar </title> </head> <body> foo',
+    ]
+  },
+
+  {
+    title: 'After Body',
+    samples: [
+      'foo</body><!--->',
+      'foo</body><!---> ',
+      'foo</body> <!--->',
+      'foo</body>bar<!--->',
+      'foo</body><other><!--->',
+      'foo</body><body><!--->',
+      'foo</body><!---></body><!--->',
+      'foo</body><!---> </body><!--->',
+      'foo</body> <!---></body> <!--->',
     ]
   },
 

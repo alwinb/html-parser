@@ -42,7 +42,9 @@ var sample = '<param><frameset>'
 var sample = '<svg><foo/><bar>'
 var sample = '<head></head><title>X</title>'
 var sample = '<head></head><title>X&amp;y</title>'
-
+var sample = '<div><s><s><i><b><tt><s><s><s>foo</i><tt><tt><tt><tt></div>X'
+var sample = '<applet test foo=a><b>bar</applet>foo'
+var sample = 'foo</body><!---->'
 
 // Test
 // ====
