@@ -1,7 +1,7 @@
 Html Parser
 ===========
 
-**Version 0.7.0**
+**Version 0.9.0-dev**
 
 This is a new HTML5 parser that I am working on.  
 The focus is on code size, speed and simplicity. 
