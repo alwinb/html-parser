@@ -46,6 +46,12 @@ var samples = [
   '<html><body><noframes>foo',
   '<!doctype html><input type="hidden"><frameset>',
   '<title><!-- foo --></title><svg><title><!-- bar --></title>',
+  'foo</body><!--> bar<!--> bee',
+  '<html><frameset></frameset></html> ',
+  '<html><frameset></frameset></html>\n<!-->\n<!-->\n<!-->',
+  '<html><frameset></frameset></html><noframes>foo</noframes>',
+  'foo</html><!-->',
+  '<html></head><script> bar </script>',
 ]
 
 var sample =

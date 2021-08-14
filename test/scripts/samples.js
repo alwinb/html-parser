@@ -405,6 +405,14 @@ window ['html-suites'] = [
       '<svg><font color>foo',
       '<svg><font face>foo',
 
+      // Yet more
+      '<svg></body>foo<!-->bar',
+      '<svg></html>foo<!-->bar',
+      '<svg><body></body>foo<!-->bar',
+      '<svg><body></body>foo<!-->bar',
+      '<svg><html></html>foo<!-->bar',
+      '<svg><html></html>foo<!-->bar',
+
       // Non-breakout
       '<svg><font Size>foo',
       '<svg><font cOlor>foo',
@@ -502,6 +510,7 @@ window ['html-suites'] = [
       '<annotation-xml><other>',
       '<annotation-xml encoding=TeXt/Html><p><p>',
       '<annotation-xml encoding=TeXt/Html><other>',
+      
     ]
   },
 
@@ -519,7 +528,7 @@ window ['html-suites'] = [
       `<head></head>After head</body>Foo`,
       `<head></head>After head</html>Foo`,
 
-      // Space handling
+      // After body, after frameset, after html
       '</body><title>X</title>',
       '</head> <head>',
       '</head> <p>',
@@ -531,6 +540,10 @@ window ['html-suites'] = [
       '<html><body></body>',
       '<html><frameset></frameset></html> ',
       '<table><th>',
+      'foo</body><!--> bar<!--> bee',
+      '<html><frameset></frameset></html><noframes>foo</noframes>',
+      'foo</html><!-->',
+      '</body><!-->bar',
     ]
   },
 
