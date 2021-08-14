@@ -5,16 +5,11 @@ const log = console.log.bind (console)
 
 
 function Parser (options) {
-  const l = new html.Lexer ()
-  const t = new html.TokenBuilder ()
   const p = new Director (options)
 
   this.parse = function parse (str) {
-    l.reset (); t.reset (); p.reset (); 
-    for (let x of l.write (str) .end () .batchRead (32)) {
-      t.batchWrite (x)
-      p.batchWrite (t.readAll ())
-    }
+    p.reset ()
+    p.write (str)
     p.end ()
     return p.document
   }
@@ -49,7 +44,8 @@ var samples = [
   '<html><frameset></frameset></html>',
   '<!doctype html><title>',
   '<html><body><noframes>foo',
-  '<!doctype html><input type="hidden"><frameset>'
+  '<!doctype html><input type="hidden"><frameset>',
+  '<title><!-- foo --></title><svg><title><!-- bar --></title>',
 ]
 
 var sample =
