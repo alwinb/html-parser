@@ -28,28 +28,39 @@ class TestUI {
   static get domex () {
 
     return domex `
-      li@tab.-button [data-key=$]
+
+      ul.scrolly @tabs
+        > @tab.link*;
+
+      li @tab [data-key=$]
         > "Sample " + $;
 
-      ul@tabs
-        > @tab*;
+      ul.scrolly @suites
+        > li.link [data-suite=$]* %title;
 
-      ul@suites
-        > li.-button [data-suite=$]* %title;
+      div.Input @input
+        > textarea #input.m0
+        + button #submit "Run";
+        
+      div.Output @output
+        > (div.p1 > h3 "browser"     + div #view1)
+        + (div.p1 > h3 "html-parser" + div #view2);
+
+      div.Inspector @inspector 
+        > h3 "inspector" + div #view3;
+
+      span @results #results
+        > (a [href="javascript:void(runAllTests())"] "Run all tests")
+        + ".";
 
       main@main
         > h1 "HTML Parser"
-        + p.br0 "This is a test page for the HTML parser, version " %version "."
-        + (p #results > (a[href="javascript:void(runAllTests())"] "Run all tests") + ".")
-        + div
-        > @suites#suites ~suites
-          + @tabs#tabs ~samples
-          + div 
-            > (textarea#input + button#submit "Run")
-          + div.hstack.nowrap
-            > div.p1#view1 "Browser"
-            + div.p1#view2 "Html Parser"
-            + div.p1#view3 "Inspector";
+        + (p > "Version " + %version + ". " + @results)
+        + div.hstack.sep.nowrap
+          > @suites.vstack.xx18.hlines #suites ~suites
+          + @tabs.vstack.xx18.hlines #tabs ~samples
+          + (div > @input.layers + @output.scrolly.hstack.nowrap)
+          + @inspector.scrolly
   
       @main
     `
@@ -99,8 +110,8 @@ class TestUI {
     this.suite = this.suites [index]
     log ('suite', this.suite.title)
     const el = domex `
-      li@tab.-button [data-key=$] > "Sample " + $;
-      ul#tabs > @tab*`
+      li [data-key=$] @tab > "Sample " + $;
+      ul #tabs .vstack.xx18.hlines.scrolly > @tab.link*`
       .render (this.suite.samples) .elem
     this.dom.tabs.replaceWith (el)
     this.dom.tabs = el
@@ -116,8 +127,8 @@ class TestUI {
     const nativeResult = nativeParse (sample)
     const result = html.parse (sample)
 
-    this.dom.view1.append ('native', showTree (nativeResult))
-    this.dom.view2.append ('parser', showTree (result))
+    this.dom.view1.append (showTree (nativeResult))
+    this.dom.view2.append (showTree (result))
   
     const p1 = printTree (nativeResult)
     const p2 = printTree (result)

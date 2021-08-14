@@ -6,13 +6,14 @@ html, body {
   height:100vh;
   overflow:hidden;
   margin:0;
+  --border-color:#bbb;
 }
 
 main {
   position:absolute;
-  height:70vh;
+  height:80vh;
   width:100vw;
-  overflow:auto;
+  overflow:hidden;
   padding:1rem;
 }
 
@@ -24,62 +25,60 @@ main {
   --screen:#0002;
 }
 
-.-button {
-  background:var(--screen);
-  line-height:2rem;
-  height:2rem;
+.Input{
+  width:50vw;
 }
 
 #input {
-  width:calc(100vw - 20rem);
   height:5rem;
+  width:100%;
 /*  display:block;*/
 /*  float:left;*/
 	font-family:Hack, Menlo, Monaco, Monospace;
+  border-radius:4px;
+  border-color:var(--border-color);
+  background-color:#fcfcfc;
+  padding:.1rem .44em;
+  margin:-.1rem 0;
 }
-#view1, #view2, #view3 {
-  width:calc(22vw);
+.Input > button {
+  left:calc(100% - 3rem);
+  top:3.4rem;
+  width:3rem;
+  border-radius:0 0 4px 0;
+  border-style:none;
+  height:1.5rem;
+}
+.Output {
+  height:calc(100vh - 18rem);
+}
+
+#view1, #view2 {
+  width:22vw;
   overflow:hidden;
-  min-height:20rem;
 }
 #view3 {
-  width:15rem;
   white-space:normal;
 }
 
-#tabs {
-  display:block;
-  padding:0;
-  margin:0 1rem 0 0;
-  width:5rem;
-  height: 60vh;
-  overflow-y:auto;
-  float:left;
+.Inspector {
+  width:calc(50vw - 5rem - 7.5rem - 4rem);
+  height:calc(100vh - 13rem);
+  padding-right:1rem;
 }
-#suites {
-  display:block;
-  padding:0;
-  margin:0 1em 0 0;
-  width:9rem;
-  height: 60vh;
-  overflow-y:auto;
-  float:left;
+
+
+#tabs, #suites {
+  --link-color:black;
+  height:calc(100vh - 13rem);
 }
-#suites li {
-  overflow:hidden;
-  white-space:nowrap;
-}
+#tabs { width:5rem }
+#suites { width:7.5rem }
+
 #suites li, #tabs li {
-  display:block;
-  padding:0 1em 0;
-  height:1.5rem;
-  line-height:1.5rem;
-  border-bottom:2px solid white;
-  cursor:pointer;
+  padding:0 1em;
 }
-#tabs li:hover {
-  text-decoration:underline;
-}
+
 .error {
   color:#9D0006;
 }
@@ -90,7 +89,7 @@ main {
 }
 
 .label:hover {
-  outline:1px solid #ccc;
+  outline:1px solid var(--border-color, currentColor);
 }
 
 .DomTree {
@@ -123,7 +122,7 @@ div.children:after {
 .Console {
   background:#fffd;
   width:100vw;
-  height:30vh;
+  height:6rem;
   position:absolute;
   bottom:0; left:0;
   padding:0 1rem 1rem 1rem;

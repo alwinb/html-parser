@@ -97,7 +97,7 @@
       const { failures, total, time, nativeTime } = results
 
       window ['html-suites'] .unshift ({
-        title: `🐞 Failures: ${Math.round (failures.length / total * 100)}% (${failures.length} / ${total})`,
+        title: `🐞 Failed ${Math.round (failures.length / total * 100)}% (${failures.length}/ ${total})`,
         samples: failures,
       })
       ui.update (window ['html-suites'])
@@ -109,14 +109,24 @@
 
 
 
+    let inspected = null
+    let tid = 0
+
     document.addEventListener ('mouseover', evt => {
-      if (evt.target.className === 'label' && objectKey in evt.target.parentNode) {
-        ui.inspect (evt.target.parentNode [objectKey])
-        // pageConsole.write (domex `@default` .render (evt.target [objectKey]).elem)
-      }
-      else 
-        ui.inspect (null)
+      clearTimeout (tid)
+      if (evt.target.className === 'label' && objectKey in evt.target.parentNode)
+        tid = setTimeout (() => ui.inspect (evt.target.parentNode [objectKey]), 50)
     })
+
+    document.addEventListener ('click', evt => {
+      if (evt.target.className === 'label' && objectKey in evt.target.parentNode) {
+        inspected = evt.target.parentNode [objectKey]
+        ui.inspect (inspected)
+      }
+      else ui.inspect (inspected = null)
+    })
+
+
 
     // Event handlers...
     document.addEventListener ('click', evt => {

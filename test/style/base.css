@@ -1,6 +1,8 @@
 /* Vertical Rhythm
 /* =============== */
 
+/* 2021-08-14 */
+
 html.debug {
   /* show the 1rem baseline rhythm */
   background:repeating-linear-gradient(to bottom, #0000, #0000 calc(1rem - 1px), #e0e0e0 calc(1rem - 1px), #e0e0e0 1rem, #0000 1rem);
@@ -73,8 +75,8 @@ pre {
   /* white-space:pre-wrap; */
 }
 
-a[href], button { text-decoration:none; cursor:pointer; margin:0;}
-a[href]:hover, button:hover { text-decoration:underline; }
+a[href], button { text-decoration:none; cursor:pointer; margin:0 }
+a[href]:hover, button:hover { text-decoration:underline }
 
 /* NB reset */
 input { margin:0; }
@@ -96,8 +98,11 @@ di > dt, di > dd {
   margin-left:0;
 }
 
-*:is(ul,ol,dl) *:is(dl,ul) { list-style-type:circle }
-*:is(ul,ol,dl) *:is(ul,ol,dl) *:is(dl,ul) { list-style-type:square }
+*:is(ul,ol,dl) *:is(dl,ul)
+  { list-style-type:circle }
+
+*:is(ul,ol,dl) *:is(ul,ol,dl) *:is(dl,ul)
+  { list-style-type:square }
 
 td, th {
   padding-left:.5rem;
@@ -112,7 +117,11 @@ td, th {
 inline, block, inline-block,
 combine that with hlist, maybe */
 
-/* horizontal-lists */
+/* horizontal stacks */
+
+.debug .hstack {
+  outline:1px solid red;
+}
 .hstack {
   display:block;
   padding-left:0;
@@ -121,22 +130,36 @@ combine that with hlist, maybe */
   vertical-align:top;
   display:inline-block;
   line-height:inherit;
-  padding:0 .75ch; /* NB */
+  /* padding:0 .75ch; /* NB */
 }
 
-/* vertical lists */
+/* vertical stacks */
+
+.debug .vstack {
+  outline:1px solid blue;
+}
 .vstack {
   display:block;
   padding-left:0;
+}
+.hstack > .vstack {
+  display:inline-block;
 }
 .vstack > * {
   display:block;
 }
 
 /* display-table */
+
+.debug .tab {
+  outline:1px solid green;
+}
 .tab {
   display:table;
   border-spacing:0;
+}
+.hstack > *.tab {
+  display:inline-table;
 }
 .tab > * {
   display:table-row;
@@ -146,10 +169,26 @@ combine that with hlist, maybe */
   padding:0 .75ch; /* NB */
 }
 
+/* layers */
+
+.layers
+  { position:relative; }
+
+.layers > * {
+  position:absolute;
+  top:0; left:0;
+}
+
+.layers > *:first-child
+  { position:unset }
+
+
+
 /* Margins and Padding
 /* ------------------- */
 
 .m0   { margin: 0 }
+.m    { margin: 1rem }
 .m1   { margin: 1rem }
 .m2   { margin: 2rem }
 .m3   { margin: 3rem }
@@ -168,14 +207,15 @@ combine that with hlist, maybe */
 .mm12 { margin: calc(12rem/12) }
 
 /* margin-bottom */
-.br,
+.br0 { margin-bottom:0 }
+.br  { margin-bottom:1rem }
 .br1 { margin-bottom:1rem }
 .br2 { margin-bottom:2rem }
 .br3 { margin-bottom:3rem }
 .br4 { margin-bottom:4rem }
-.br0 { margin-bottom:0 }
 
 .p0   { padding: 0rem }
+.p    { padding: 1rem }
 .p1   { padding: 1rem }
 .p2   { padding: 2rem }
 .p3   { padding: 3rem }
@@ -193,29 +233,60 @@ combine that with hlist, maybe */
 .pp11 { padding: calc(11rem/12) }
 .pp12 { padding: calc(12rem/12) }
 
+/* line-heights */
+
+.x2 { line-height:2rem; }
+.x3 { line-height:3rem; }
+.x4 { line-height:4rem; }
+
+/* REVIEW the naming scheme */
+.xx6  { line-height:.5rem; }
+.xx18 { line-height:1.5rem; }
+
+
+/* space between - WIP */
+
+.hstack.sep > * { margin-right:1rem; }
+.hstack.sep > *:last-child { margin-right:none; }
+
+.vstack.sep > *:last-child { margin-bottom:1rem; }
+.vstack.sep > *:last-child { margin-bottom:none; }
+
+/* float */
+.fl { float:left }
+.fr { float:right }
+.clear { display:block; clear:both; }
+
 
 /* Interactivity
 /* ------------- */
 
-.scroll { overflow:auto }
+.clipped { overflow:hidden }
+.scroll  { overflow:auto }
 .scrollx { overflow:hidden; overflow-x:auto }
 .scrolly { overflow:hidden; overflow-y:auto }
 
 
-/* others */
-/* notifications */
+/* Notifications
+/* ------------- */
+
 .error { color:#9D0006; }
 /*.warn { color:orange; }*/
 /*
-TODO inline or inline-block?
+
 Want to add 'colors', 
 .err .info .warn
 .danger
-and selection/ focus
-dimmed,
-screened, 
-separators should be useful
+and selection/ focus,
+dimmed, screened, 
 */
+
+/* Allow setting inherited colors */
+
+:root {
+  --border-color: black;
+  --link-color: blue;
+}
 
 
 /* Type
@@ -231,36 +302,54 @@ separators should be useful
 
 .nowrap { white-space:nowrap }
 
+a, .link { text-decoration:none; cursor:pointer; margin:0; color:var(--link-color);}
+.link:hover { text-decoration:underline; }
+
 
 /* Lines and Borders
 /* ----------------- */
 
+.hlines > *,
 .tab.hlines > * > *
   { border-bottom:1px solid currentColor; }
 
+.hlines > *:last-child 
+  { border-bottom:none; }
+
+.vlines > *,
 .tab.vlines > * > *
   { border-right:1px solid currentColor; }
 
-.hstack.vlines > * 
-  { border-right:1px solid currentColor; }
-
-.hstack.vlines > *:last-child 
+.vlines > *:last-child 
   { border-right:none; }
 
+/**/
 
 table.lines th, table.hlines th,
 table.lines td, table.hlines td
   { border-right:1px solid currentColor; }
 
-table.lines th, table.vlines th,
-table.lines td, table.vlines td
-  { border-bottom:1px solid currentColor; }
-
 table.lines tr > th:last-child,
 table.lines tr > td:last-child
   { border-right:none; }
 
+table.lines th, table.vlines th,
+table.lines td, table.vlines td
+  { border-bottom:1px solid currentColor; }
+
 table.lines tr:last-child > td,
 table.lines tr:last-child > th
   { border-bottom:none; }
+
+
+/* Border color */
+
+.hlines > *,
+.vlines > *,
+.tab.hlines > * > *,
+.tab.vlines > * > *,
+table.lines th, table.lines td,
+table.hlines th, table.hlines td,
+table.vlines th, table.vlines td 
+  { border-color: var(--border-color, currentColor) }
 
