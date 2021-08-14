@@ -363,6 +363,7 @@ window ['html-suites'] = [
       '<svg>foo<sub>bar',
       '<svg>foo<other>bar',
       '<svg>foo<body>bar',
+      '<svg>foo<head>bar',
       '<svg>foo<center>bar',
       `<svg><big><rect></svg>`,
       '<svg>foo<rect><path><circle></rect>sd<center>bar',
