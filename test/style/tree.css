@@ -35,19 +35,35 @@ main {
 /*  display:block;*/
 /*  float:left;*/
 	font-family:Hack, Menlo, Monaco, Monospace;
+  border:1px solid var(--border-color);
   border-radius:4px;
-  border-color:var(--border-color);
   background-color:#fcfcfc;
   padding:.1rem .44em;
   margin:-.1rem 0;
 }
+#input:focus {
+  outline:2px auto #003BF3;
+  outline-offset:0px;
+}
+html.chrome #input:focus {
+  outline-offset:2px;
+}
+
 .Input > button {
   left:calc(100% - 3rem);
   top:3.4rem;
   width:3rem;
   border-radius:0 0 4px 0;
-  border-style:none;
+  border:1px solid var(--border-color);
   height:1.5rem;
+  background-color:#eee;
+}
+.Input > button::after {
+  content:' >';
+}
+.Input > button:active {
+  color:black;
+  background:#ccc;
 }
 .Output {
   height:calc(100vh - 18rem);
@@ -76,7 +92,7 @@ main {
 #suites { width:7.5rem }
 
 #suites li, #tabs li {
-  padding:0 1em;
+  padding:0 .5em;
 }
 
 .error {

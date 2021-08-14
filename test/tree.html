@@ -13,6 +13,8 @@
   window.pageConsole = window.console = new Console ()
   document.body.append (console.elem)
   window.addEventListener ('error', evt => console.errorHandler (evt), true)
+  var isChrome = !!window.chrome
+  if (isChrome) document.documentElement.classList.add ('chrome')
 </script>
 
 <script src="../dist/html.js"></script>
