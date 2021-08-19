@@ -4,6 +4,8 @@ const util = require ('util')
 const log = console.log.bind (console)
 
 
+const { fragmentRule } = require ('../lib/schema')
+
 function Parser (options) {
   const p = new Director (options)
 
@@ -54,7 +56,8 @@ var samples = [
   '<div><table>',
   '<table><td><svg><desc><td>',
   '<table><td>bar<col>',
-  '<html><head></head><body><svg><desc><tr>bee',
+  // '<html><head></head><body><svg><desc><tr>bee',
+  '<head></head><title>X</title>',
 ]
 
 var sample =
@@ -65,6 +68,6 @@ var sample =
 // ====
 
 const verbose = true
-var p = new Parser ({ verbose })
+var p = new Parser ({ context:fragmentRule, verbose })
 var doc = p.parse (sample) 
 log (util.inspect (doc, {depth:Infinity}))
