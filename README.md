@@ -1,7 +1,7 @@
 Html Parser
 ===========
 
-**Version 0.8.0**
+**Version 0.9.0**
 
 This is a new HTML5 parser that I am working on.  
 The focus is on code size, speed and simplicity. 
@@ -104,6 +104,15 @@ I precompute a single dictionary that maps tag-names to such an integer, thus re
 So far that's it. I will write more of it down later. 
 
 
+API
+---
+
+* Parser
+* TreeBuilder
+* Lexer
+* TokenBuilder
+
+
 Remaining work
 --------------
 
@@ -117,9 +126,7 @@ The progress so far is very good, but a few issues remain.
   - The tree construction rules for template tags.
   - Include attributes check in the implementation of 'Noah's Ark'.
   - There may be a few remaining exceptions that are not covered yet. 
-  - Body to frameset switching (the 'frameset-ok' flag).
-  - Easy, but the attributes are not attached to the elements yet ...
-
+  - I've not reimplemented the 'Adoption Agency' yet in the rewrite for 0.9.0.
 
 License
 --------

@@ -1,7 +1,7 @@
 // Samples
 // -------
 
-window['html-suites'] = [
+window ['html-suites'] = [
   
   /*
   {
@@ -164,6 +164,12 @@ window['html-suites'] = [
       '<h1>foo<p>bar<h1>bee',
       '<h1>foo<p>bar</h2>bee',
       '<h1>foo<p>bar<h2>bee',
+      
+      // Special case end tag
+      '</p>foo',
+      '<html></p>foo',
+      's</p>foo',
+      '<body></p>foo',
     ]
   },
 
@@ -208,6 +214,8 @@ window['html-suites'] = [
       `<p>Test<h1>Head<applet><h2>`,
       `<p>Test<h1>Head<h2><h2>`,
       `<p>Test<h1>Head`,
+      '<p>Test<h1>Head<div><h2>foo',
+      '<p>Test<h1>Head<div></h2>foo',
       '<li><h1>asd</li>asd',
       '<li><h1>asd<li>asd',
       '<p><h1>asd<p>asd',
@@ -315,8 +323,6 @@ window['html-suites'] = [
       '<p>Test<li>Head<p></li>foo',
       '<p>Test<li>Head<ul><li>foo',
       '<p>Test<li>Head<ul></li>foo',
-      '<p>Test<h1>Head<div><h2>foo',
-      '<p>Test<h1>Head<div></h2>foo',
       '<p>Test<li>Head<div><li>foo',
       '<p>Test<li>Head<div></li>foo',
       '<p>Test<li>Head<address><li>foo',
@@ -327,7 +333,7 @@ window['html-suites'] = [
   },
 
   {
-    title: 'List scopes (2)',
+    title: 'List scopes 2',
     samples: [
       '<li><dd><li>A</li>B',
       '<li><dd>A</li>B',
@@ -357,6 +363,7 @@ window['html-suites'] = [
       '<svg>foo<sub>bar',
       '<svg>foo<other>bar',
       '<svg>foo<body>bar',
+      '<svg>foo<head>bar',
       '<svg>foo<center>bar',
       `<svg><big><rect></svg>`,
       '<svg>foo<rect><path><circle></rect>sd<center>bar',
@@ -397,6 +404,14 @@ window['html-suites'] = [
       '<svg><font size>foo',
       '<svg><font color>foo',
       '<svg><font face>foo',
+
+      // Yet more
+      '<svg></body>foo<!-->bar',
+      '<svg></html>foo<!-->bar',
+      '<svg><body></body>foo<!-->bar',
+      '<svg><body></body>foo<!-->bar',
+      '<svg><html></html>foo<!-->bar',
+      '<svg><html></html>foo<!-->bar',
 
       // Non-breakout
       '<svg><font Size>foo',
@@ -484,6 +499,18 @@ window['html-suites'] = [
       '<svg><foreigNObject>foo<p>bar<p>baz</svg>bee',
       '<svg><desc>foo<rect>foo<tr><div>bar</svg>bee',
       '<math><desc>foo<svg>foo<tr><div>bar</svg>bee',
+      
+      // Math annotation-xml
+      
+      '<math><annotation-xml><p><p>',
+      '<math><annotation-xml><other>',
+      '<math><annotation-xml encoding=TeXt/Html><p><p>',
+      '<math><annotation-xml encoding=TeXt/Html><other>',
+      '<annotation-xml><p><p>',
+      '<annotation-xml><other>',
+      '<annotation-xml encoding=TeXt/Html><p><p>',
+      '<annotation-xml encoding=TeXt/Html><other>',
+      
     ]
   },
 
@@ -501,27 +528,81 @@ window['html-suites'] = [
       `<head></head>After head</body>Foo`,
       `<head></head>After head</html>Foo`,
 
-      // Space handling
+      // After body, after frameset, after html
       '</body><title>X</title>',
       '</head> <head>',
-      '</head> <link>',
       '</head> <p>',
-      '</head> <style></style>foo',
       '</head> p',
-      '</head><link>',
       '<body></body></html>',
       '<head></head> <link>',
       '<head></head> <p>',
-      '<head></head> <style></style>foo',
-      '<head></head><link>',
-      '<html> <head> <link> </head> <body> foo',
       '<html></html>',
       '<html><body></body>',
       '<html><frameset></frameset></html> ',
       '<table><th>',
+      'foo</body><!--> bar<!--> bee',
+      '<html><frameset></frameset></html><noframes>foo</noframes>',
+      'foo</html><!-->',
+      '</body><!-->bar',
     ]
   },
-    
+
+  {
+    title: 'After Head',
+    samples: [
+      '</head> <link>',
+      '</head> <style></style>foo',
+      '</head> <style>bar</style>foo',
+      '</head> <link>',
+      '</head> <noscript>',
+      '</head> <title>',
+
+      '<head> </head> <style></style>foo',
+      '<head> </head> <style>bar</style>foo',
+      '<head> </head> <link>',
+      '<html> </head> <link> </head> <body> foo',
+      '<html> </head> <script> bar </script> </head> <body> foo',
+      '<html> </head> <noscript> bar </noscript> </head> <body> foo',
+      '<html> </head> <noframes> bar </noframes> </head> <body> foo',
+      '<html> </head> <title> bar </title> </head> <body> foo',
+    ]
+  },
+
+  {
+    title: 'After Body',
+    samples: [
+      'foo</body><!--->',
+      'foo</body><!---> ',
+      'foo</body> <!--->',
+      'foo</body>bar<!--->',
+      'foo</body><other><!--->',
+      'foo</body><body><!--->',
+      'foo</body><!---></body><!--->',
+      'foo</body><!---> </body><!--->',
+      'foo</body> <!---></body> <!--->',
+      //
+      '<dl></body>foo',
+      '<div></body>foo',
+      '<address></body>foo',
+      '<listing></body>foo',
+      '<option></body>foo',
+      '<optgroup></body>foo',
+      '<button></body>foo',
+      '<p></body>foo',
+      '<li></body>foo',
+      //
+      '<dl></body><!-->foo',
+      '<div></body><!-->foo',
+      '<address></body><!-->foo',
+      '<listing></body><!-->foo',
+      '<option></body><!-->foo',
+      '<optgroup></body><!-->foo',
+      '<button></body><!-->foo',
+      '<p></body><!-->foo',
+      '<li></body><!-->foo',
+    ]
+  },
+
   /*
   {
     title: 'Templates',
@@ -587,6 +668,20 @@ window['html-suites'] = [
       '<button><div><p><applet><p>', 
     ]
   },
+  
+  {
+    title: 'Body -> Frameset',
+    samples: [
+      '<head> </head> <span> <source> <frameset>',
+      '<head> </head> <applet> <source> <frameset>',
+      '<head> </head> <div> <source> <frameset>',
+
+      '<head> </head> <pre> <source> <frameset>',
+      '<head> </head> <listing> <source> <frameset>',
+      '<head> </head> <menu> <source> <frameset>',
+      '<head> </head> <main> <source> <frameset>',
+    ]
+  }
 
 ] // End Suites
 

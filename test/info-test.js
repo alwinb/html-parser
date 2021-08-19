@@ -1,9 +1,9 @@
 const log = console.log.bind (console)
 const { entries } = Object
 const {
-  elements:E, tagNameSets:C,
+  E, C,
   defaultInfo, elementInfo, printInfo, 
-  rules, defaultRule } = require ('../lib/schema')
+  rules, defaultRule } = require ('../lib/categories')
 
 
 // TODO also list default

@@ -4,17 +4,17 @@ HTML5 Grammar
 A preliminary formal lexical grammar for HTML5. 
 
 NB. The tokeniser algorithm in the standard is specified in terms of unicode code points, and requires a pre-pass over the input to normalise newlines. 
-It is however possible to express the lexical grammar on any ASCII compatible encoding, directly on an octet-stream and without a pre-pass to normalise newlines, and I am aiming for that. Decoding can then be done in a latter phase. Support for ASCII incompatible encosings can be added later.
+It is however possible to express the lexical grammar on any ASCII compatible encoding, directly on an octet-stream and without a pre-pass to normalise newlines, and I am aiming for that. Decoding can then be done in a latter phase. Support for ASCII incompatible encodings can be added later.
 
 
 Character sets
 --------------
 
-any       := { %00…%FF }
-alpha     := { a…z, A…Z }
-digit     := { 0…9 }
+any       := { \x00-\xFF }
+alpha     := { a-z, A-Z }
+digit     := { 0-9 }
 alphad    := alpha | digit
-hexdigit  := { 0…9, a…f, A…F }
+hexdigit  := { 0-9, a-f, A-F }
 space     := { \t, \r, \n, \f, ' ' }
 s         := space // abbreviation
 sls       := space | { / }

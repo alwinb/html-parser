@@ -10,18 +10,19 @@
 <body>
 
 <script>
-  window.console = new Console ()
+  window.pageConsole = window.console = new Console ()
   document.body.append (console.elem)
   window.addEventListener ('error', evt => console.errorHandler (evt), true)
+  var isChrome = !!window.chrome
+  if (isChrome) document.documentElement.classList.add ('chrome')
 </script>
 
 <script src="../dist/html.js"></script>
 <script src="../dist/domex.min.js"></script>
-<script src="./scripts/samples.js"></script>
+<script src="./scripts/samples2.js"></script>
 <script src="./scripts/testui.js"></script>
 
 <script>(()=>{
-
   const log = console.log.bind (console)
 
   // For debugging
@@ -29,56 +30,111 @@
     get: function () { return this.constructor.name }
   })
 
-
   // Tests
   // -----
 
-  function runTests () {
+  function* runTests () {
     const suites = window ['html-suites']
     let count = 0
+    let time = 0
+    let nativeTime = 0
     const failures = []
-    for (const suite of suites) {
+    
+    const parser = new html.Parser
+    for (let i=0, l= suites.length; i<l; i++) {
+      const suite = suites[i]
+      let suiteFailures = []
       for (const sample of suite.samples) {
         try {
           count ++
-          const native = nativeParse (sample)
-          const parsed = html.parse (sample)
-          if (printTree (native) !== printTree (parsed))
+          const d1 = new Date
+            const native = nativeParse (sample)
+          const d2 = new Date
+            nativeTime += (d2 - d1)
+          const parsed = parser.parse (sample)
+            time += (new Date - d2)
+          if (printTree (native) !== printTree (parsed)) {
             failures.push (sample)
+            suiteFailures.push (sample)
+          }
         }
         catch (e) {
-          console.error ('Test threw:')
-          console.error (sample)
+          // console.error ('Test threw:')
+          // console.error (sample)
           failures.push (sample)
+          suiteFailures.push (sample)
         }
       }
+      if (suiteFailures.length) {
+        suite.title = `(${suiteFailures.length}/${suite.samples.length}) ${suite.title}`
+        suite.samples = suiteFailures
+      }
+      yield { failures, total:count, time, nativeTime }
     }
-    return { failures, total:count }
+    return { failures, total:count, time, nativeTime }
   }
+
 
   // Main 
   // ----
 
   function main () {
-
-    // Run all samples
-    const { failures, total } = runTests ()
-    window ['html-suites'] .unshift ({
-      title: `🐞 Failures: ${Math.round (failures.length / total * 100)}% (${failures.length} / ${total})`,
-      samples: failures,
-    })
+    const { domex } = modules.domex
 
     // Set up Test UI
-    const ui = new TestUI () .showSuite (0)
-    const submit = byId ('submit')
-    submit .addEventListener ('click', evt => {
-      ui.showSampleValue (input.value)
+
+    const ui = new TestUI (window ['html-suites']) .showSuite (0)
+    const todos = runTests ()
+
+    function loop () {
+      let start = new Date, done, results
+      do {
+        ({ value:results, done } = todos.next ())
+        ui.showResults (results)
+      }
+      while (!done && new Date - start < 150)
+      if (!done) return setTimeout (loop, 100)
+
+      console.clear ()
+      const { failures, total, time, nativeTime } = results
+
+      window ['html-suites'] .unshift ({
+        title: `🐞 Failed ${Math.round (failures.length / total * 100)}% (${failures.length}/ ${total})`,
+        samples: failures,
+      })
+      ui.update (window ['html-suites'])
+      ui.showResults (results)
+    }
+    
+    window.runAllTests = loop
+
+
+
+
+    let inspected = null
+    let tid = 0
+
+    document.addEventListener ('mouseover', evt => {
+      clearTimeout (tid)
+      if (evt.target.className === 'label' && objectKey in evt.target.parentNode)
+        tid = setTimeout (() => ui.inspect (evt.target.parentNode [objectKey]), 50)
     })
+
+    document.addEventListener ('click', evt => {
+      if (evt.target.className === 'label' && objectKey in evt.target.parentNode) {
+        inspected = evt.target.parentNode [objectKey]
+        ui.inspect (inspected)
+      }
+      else ui.inspect (inspected = null)
+    })
+
+
 
     // Event handlers...
     document.addEventListener ('click', evt => {
       if (objectKey in evt.target) {
-        log (evt.target [objectKey])
+        ui.inspect (evt.target [objectKey])
+        // pageConsole.write (domex `@default` .render (evt.target [objectKey]).elem)
         window.$ = evt.target [objectKey]
       }
       if ('key' in evt.target.dataset)

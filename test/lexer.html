@@ -16,6 +16,7 @@
 </head>
 <body class=m1>
 
+<title> Test <!---> </title>
 <h1>HTML Lexer</h1>
 
 <p>
@@ -159,7 +160,7 @@
   const log = console.log.bind (console)
   const doc = document
   const { html, domex: { domex, Domex } } = modules
-  const { tokenName, stateInfo } = html.Lexer
+  const { typeName, stateInfo } = html.Lexer
   
   const { defineProperty:define } = Object
 
@@ -207,14 +208,14 @@
       stateAfter = stateInfo (stream.state)
       const el = renderChunk (chunk)
       pre.append (el)
-      el [objectKey] = { token: { type: tokenName (chunk[0]), value: chunk[1] }, stateBefore, stateAfter }
+      el [objectKey] = { token: { type: typeName (chunk[0]), value: chunk[1] }, stateBefore, stateAfter }
       stateBefore = stateAfter
     }
   }
 
   function renderChunk ([type, value]) {
     const e = doc.createElement ('SPAN')
-      e.title = e.className = tokenName (type)
+      e.title = e.className = typeName (type)
       let tnode = doc.createTextNode(value)
       e.append (value)
       return e
