@@ -580,6 +580,26 @@ window ['html-suites'] = [
       'foo</body><!---></body><!--->',
       'foo</body><!---> </body><!--->',
       'foo</body> <!---></body> <!--->',
+      //
+      '<dl></body>foo',
+      '<div></body>foo',
+      '<address></body>foo',
+      '<listing></body>foo',
+      '<option></body>foo',
+      '<optgroup></body>foo',
+      '<button></body>foo',
+      '<p></body>foo',
+      '<li></body>foo',
+      //
+      '<dl></body><!-->foo',
+      '<div></body><!-->foo',
+      '<address></body><!-->foo',
+      '<listing></body><!-->foo',
+      '<option></body><!-->foo',
+      '<optgroup></body><!-->foo',
+      '<button></body><!-->foo',
+      '<p></body><!-->foo',
+      '<li></body><!-->foo',
     ]
   },
 
