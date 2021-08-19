@@ -6,13 +6,14 @@ html, body {
   height:100vh;
   overflow:hidden;
   margin:0;
+  --border-color:#bbb;
 }
 
 main {
   position:absolute;
-  height:70vh;
+  height:80vh;
   width:100vw;
-  overflow:auto;
+  overflow:hidden;
   padding:1rem;
 }
 
@@ -24,59 +25,89 @@ main {
   --screen:#0002;
 }
 
-.-button {
-  background:var(--screen);
-  line-height:2rem;
-  height:2rem;
+.Input{
+  width:50vw;
 }
 
 #input {
-  width:calc(100vw - 20rem);
-  height:10rem;
-  display:block;
-  float:left;
+  height:5rem;
+  width:100%;
+/*  display:block;*/
+/*  float:left;*/
 	font-family:Hack, Menlo, Monaco, Monospace;
+  border:1px solid var(--border-color);
+  border-radius:4px;
+  background-color:#fcfcfc;
+  padding:.1rem .44em;
+  margin:-.1rem 0;
 }
-#view1, #view2 {
-  width:calc(30vw - 4em);
-  float:left;
+#input:focus {
+  outline:2px auto #003BF3;
+  outline-offset:0px;
 }
-#tabs {
-  display:block;
-  padding:0;
-  margin:0 1rem 0 0;
-  width:5rem;
-  height: 60vh;
-  overflow-y:auto;
-  float:left;
+html.chrome #input:focus {
+  outline-offset:2px;
 }
-#suites {
-  display:block;
-  padding:0;
-  margin:0 1em 0 0;
-  width:9rem;
-  height: 60vh;
-  overflow-y:auto;
-  float:left;
-}
-#suites li {
-  overflow:hidden;
-  white-space:nowrap;
-}
-#suites li, #tabs li {
-  display:block;
-  padding:0 1em 0;
+
+.Input > button {
+  left:calc(100% - 3rem);
+  top:3.4rem;
+  width:3rem;
+  border-radius:0 0 4px 0;
+  border:1px solid var(--border-color);
   height:1.5rem;
-  line-height:1.5rem;
-  border-bottom:2px solid white;
-  cursor:pointer;
+  background-color:#eee;
 }
-#tabs li:hover {
-  text-decoration:underline;
+.Input > button::after {
+  content:' >';
 }
+.Input > button:active {
+  color:black;
+  background:#ccc;
+}
+.Output {
+  height:calc(100vh - 18rem);
+}
+
+#view1, #view2 {
+  width:22vw;
+  overflow:hidden;
+}
+#view3 {
+  white-space:normal;
+}
+
+.Inspector {
+  width:calc(50vw - 5rem - 7.5rem - 4rem);
+  height:calc(100vh - 13rem);
+  padding-right:1rem;
+}
+
+
+#tabs, #suites {
+  --link-color:black;
+  height:calc(100vh - 13rem);
+}
+#tabs { width:5rem }
+#suites { width:7.5rem }
+
+#suites li, #tabs li {
+  padding:0 .5em;
+}
+
 .error {
   color:#9D0006;
 }
+.label {
+  line-height:1rem;
+  padding:.1em .2em;
+  cursor:default;
+}
+
+.label:hover {
+  outline:1px solid var(--border-color, currentColor);
+}
+
 .DomTree {
   /*font-family:Hack, Monaco, Menlo, Monospace;*/
   /*font-size:12px;*/
@@ -107,7 +138,7 @@ div.children:after {
 .Console {
   background:#fffd;
   width:100vw;
-  height:30vh;
+  height:6rem;
   position:absolute;
   bottom:0; left:0;
   padding:0 1rem 1rem 1rem;
