@@ -51,7 +51,10 @@ var samples = [
   '<html><frameset></frameset></html>\n<!-->\n<!-->\n<!-->',
   '<html><frameset></frameset></html><noframes>foo</noframes>',
   'foo</html><!-->',
-  '<html></head><script> bar </script>',
+  '<div><table>',
+  '<table><td><svg><desc><td>',
+  '<table><td>bar<col>',
+  '<html><head></head><body><svg><desc><tr>bee',
 ]
 
 var sample =
