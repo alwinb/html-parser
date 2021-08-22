@@ -670,7 +670,7 @@ window ['html-suites'] = [
   },
   
   {
-    title: 'Body -> Frameset',
+    title: 'Body → Frameset',
     samples: [
       '<head> </head> <span> <source> <frameset>',
       '<head> </head> <applet> <source> <frameset>',

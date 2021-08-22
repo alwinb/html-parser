@@ -1,4 +1,4 @@
-html { font-size:22px; }
+html { font-size:24px; }
 body { font-size:14px; }
 
 html, body {
@@ -7,6 +7,9 @@ html, body {
   overflow:hidden;
   margin:0;
   --border-color:#bbb;
+  --link-color: blue;
+  --select-color:#444;
+  --select-text-color:white;
 }
 
 .Console {
@@ -20,21 +23,25 @@ html, body {
   overflow-y:scroll;
   border-top:1px solid currentColor;
 }
+.error.notification {
+  border-radius:.4rem;
+  border:1px solid #ccc;
+  top:1rem;
+  right:1rem;
+}
 
 main {
   position:absolute;
-  height:calc(100vh-6rem);
+  height:100vh;
   width:100vw;
   overflow:hidden;
   padding:1rem;
+  padding-left:8vw;
 }
 
 :root {
-/*  --acolor:#2B6679;
-  --bgcolor:#FFF9DE;
-  --screen:#CCBB9B66;
-*/
   --screen:#0002;
+/*  background-color:rgb(93.28% 93.45% 90.32%);*/
 }
 
 .Input{
@@ -49,7 +56,7 @@ main {
 	font-family:Hack, Menlo, Monaco, Monospace;
   border:1px solid var(--border-color);
   border-radius:4px;
-  background-color:#fcfcfc;
+  background-color:#fbfbfb;
   padding:.1rem .44em;
   margin:-.1rem 0;
 }
@@ -69,6 +76,9 @@ html.chrome #input:focus {
   border:1px solid var(--border-color);
   height:1.5rem;
   background-color:#eee;
+  /*background:var(--select-color);
+  border-color:#ccc;
+  color:white;*/
 }
 .Input > button::after {
   content:' >';
@@ -76,35 +86,79 @@ html.chrome #input:focus {
 .Input > button:active {
   color:black;
   background:#ccc;
-}
-.Output {
-  height:calc(100vh - 18rem);
+  /*color:#eee;
+  background:black;*/
 }
 
-#view1, #view2 {
-  width:22vw;
-  overflow:hidden;
+
+
+.Output {
+  height:calc(100vh - 12rem);
 }
-#view3 {
-  white-space:normal;
+h3 {
+  margin-top:.5rem;
+  margin-bottom:.5rem;
+}
+
+#view1, #view2, #view3 {
+  width:25vw;
 }
 
 .Inspector {
-  width:calc(50vw - 5rem - 7.5rem - 4rem);
-  height:calc(100vh - 13rem);
+  width:calc50vw;
   padding-right:1rem;
 }
-
+.Inspector di {
+  padding-bottom:.25rem;
+  margin-bottom:.25rem;
+  clear:left;
+  float:left;
+}
+.Inspector dt {
+  display:inline-block;
+  clear:both;
+}
+.Inspector dt::after {
+  content:':  ';
+}
+/*.close {
+  display:none;
+  float:right;
+  background:var(--select-color);
+  color:white;
+  border-radius:.5rem;
+  border:none;
+  width:1rem;
+  height:1rem;
+  line-height:.5rem;
+}
+*/
 
 #tabs, #suites {
   --link-color:black;
-  height:calc(100vh - 13rem);
+  height:calc(100vh - 7rem);
 }
-#tabs { width:5rem }
-#suites { width:7.5rem }
+#tabs { width:4rem; margin-right:.25rem; }
+#suites { width:8rem }
+
+#suites li:hover, #tabs li:hover {
+  background:var(--screen);
+}
 
 #suites li, #tabs li {
-  padding:0 .5em;
+  border-radius:.15rem;
+  padding:.05rem .7em 0 .7em;
+  margin:0 .25em -.05rem;
+  line-height:calc(15rem/12);
+
+  overflow : hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;  
+}
+
+#suites li.selected:hover, #tabs li.selected:hover {
+  background:var(--select-color);
+  color:var(--select-text-color);
 }
 
 .error {
@@ -113,12 +167,19 @@ html.chrome #input:focus {
 .label {
   line-height:1rem;
   padding:.1em .2em;
-  cursor:default;
 }
 
-.label:hover {
-  outline:1px solid var(--border-color, currentColor);
+#view2 .label:hover, .label.selected {
+  cursor:pointer;
+  color:white;
+  border-radius:.2rem;
+  background:var(--select-color);
+  color:var(--select-text-color);
+  border:.15rem solid var(--select-color);
 }
+
+/* Dom Tree Viz
+/* ------------ */
 
 .DomTree {
   /*font-family:Hack, Monaco, Menlo, Monospace;*/
@@ -127,23 +188,30 @@ html.chrome #input:focus {
   padding:1rem;
   font-weight:bold;
 }
+
 div.children {
-  margin-left:.8em;
-  padding-left:.5em;
+  margin-left:.55rem;
+  padding-left:.4rem;
   border-left:1.5px solid black;
   white-space:pre;
 }
+
 div.children:after {
   content:'';
   display:block;
   clear:both;
   height:0px;
 }
-.text {
+
+div.children .text, div.children .space {
   font-weight:normal;
   font-style:italic;
   background:var(--screen);
-  min-height:rem;
-  display:inline-block;
+  min-height:1rem;
+  line-height:1rem;
+  padding:.15rem 0;
 }
 
+div.children .data {
+  font-family:Hack, Mono;
+}

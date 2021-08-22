@@ -76,7 +76,7 @@ pre {
   /* white-space:pre-wrap; */
 }
 
-a[href], button { text-decoration:none; cursor:pointer; margin:0;}
+a[href], button { text-decoration:none; cursor:pointer; margin:0 }
 a[href]:hover, button:hover { text-decoration:underline; }
 
 /* NB reset */
@@ -131,7 +131,7 @@ combine that with hlist, maybe */
   vertical-align:top;
   display:inline-block;
   line-height:inherit;
-  padding:0 .75ch; /* NB */
+/*  padding:0 .75ch; /* NB */
 }
 
 /* vertical stacks */
@@ -171,6 +171,9 @@ combine that with hlist, maybe */
 }
 
 /* layers */
+
+.layer
+  { position:absolute; }
 
 .layers
   { position:relative; }
@@ -276,9 +279,9 @@ combine that with hlist, maybe */
 /* ------------- */
 
 .error { color:#9D0006; }
-.selected {
-  background:var(--link-color);
-  color:white;
+:root .selected {
+  background:var(--select-color);
+  color:var(--select-text-color);
 }
 /*.warn { color:orange; }*/
 /*
@@ -295,6 +298,8 @@ dimmed, screened,
 :root {
   --border-color: black;
   --link-color: blue;
+  --select-color: dodgerblue;
+  --select-text-color: white;
 }
 
 
@@ -309,7 +314,8 @@ dimmed, screened,
 .c { text-align:center; }
 .r { text-align:right; }
 
-.nowrap { white-space:nowrap }
+.nowrap, .nobr { white-space:nowrap }
+.nowrap > *, .nobr > * { white-space:normal }
 
 a, .link { text-decoration:none; cursor:pointer; margin:0; color:var(--link-color) }
 .link:hover { text-decoration:underline }
@@ -317,6 +323,9 @@ a, .link { text-decoration:none; cursor:pointer; margin:0; color:var(--link-colo
 
 /* Lines and Borders
 /* ----------------- */
+
+.frame
+  { border:1px solid var(--border-color, currentColor) }
 
 .hlines > *,
 .tab.hlines > * > *

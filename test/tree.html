@@ -5,20 +5,59 @@
   <title>Tree Builder Test Page</title>
   <link rel="stylesheet" href="style/base.css">
   <link rel="stylesheet" href="style/tree.css">
-  <script src="./scripts/console.js"></script>
+  <!-- <script src="./scripts/console.js"></script> -->
+  <script src="../dist/domex.min.js"></script>
 </head>
 <body>
+  <!-- error notifications -->
+  <script>(() => {
+    const { domex } = window.modules.domex
+    window.addEventListener ('error', showError)
+    
+    const dx = domex `
+      div@error
+        > h2.br0 %name ~error
+        + div.hstack.p0 > (a.error.m0 [href=%href title=%url] " » " %message " ")*stack; // FIXME
+    
+      div.layer.error.notification.m4.pp6[style="background:#fffd"]
+        > @error
+    `
 
-<script>
-  window.pageConsole = window.console = new Console ()
-  document.body.append (console.elem)
-  window.addEventListener ('error', evt => console.errorHandler (evt), true)
-  var isChrome = !!window.chrome
-  if (isChrome) document.documentElement.classList.add ('chrome')
-</script>
+    function showError (e) {
+      // const { domex } = window.modules.domex
+      const stack = parseStack (e.error.stack || e.error+'')
+      const obj = { message:e.message, url:e.filename, href:rewriteUrl (e.filename, e.lineno, e.colno).href, line:e.lineno, col:e.colno }
+      stack.push (obj)
+      document.body.appendChild (dx .render ({ error:e.error, message:e.message, stack }) .elem)
+    }
+
+  function parseStack (stack) {
+    const r = []
+    for (let sline of stack.split ('\n')) {
+      let msg, line, col, url, _
+      [msg, url] = (sline.split (/@?(?=\bfile:[/][/])/i)) // FF, Safari
+      if (url) {
+        [_, url, line, col] = /^(.*)[:](\d+)[:](\d+)$/.exec (url)
+        r.push ({ message:msg, url, href:rewriteUrl (url, line, col).href, line, col })
+      }
+    }
+    return r.reverse()
+  }
+
+  function rewriteUrl (url1, line = 1, column = 0) {
+    const url = new URL (url1, document.baseURI)
+    if (url.protocol === 'file:' || url.protocol === 'x-txmt-filehandle:') { // convert to txmt: URL
+      callbackUrl = new URL ('txmt://open?')
+      Object.entries ({ url, line, column }) .forEach (kv => callbackUrl.searchParams.set (...kv))
+      return callbackUrl
+    }
+    Object.entries ({ line, column }) .forEach (kv => url.searchParams.set (...kv))
+    return url1
+  }
+
+  })()</script>
 
 <script src="../dist/html.js"></script>
-<script src="../dist/domex.min.js"></script>
 <script src="./scripts/samples.js"></script>
 <script src="./scripts/testui.js"></script>
 
@@ -111,23 +150,34 @@
 
 
 
+    let sampleEl, suiteEl, inspEl // just quick..
     let inspected = null
+    let pinned = false
     let tid = 0
 
     document.addEventListener ('mouseover', evt => {
       clearTimeout (tid)
       if (evt.target.className === 'label' && objectKey in evt.target.parentNode)
-        tid = setTimeout (() => ui.inspect (evt.target.parentNode [objectKey]), 50)
+        tid = setTimeout (() => ui.inspect (evt.target.parentNode [objectKey]), 300)
+      else if (!pinned)
+        tid = setTimeout (() => ui.inspect (null), 300)
     })
 
     document.addEventListener ('click', evt => {
       if (evt.target.className === 'label' && objectKey in evt.target.parentNode) {
         inspected = evt.target.parentNode [objectKey]
+        pinned = true
         ui.inspect (inspected)
+        if (inspEl) inspEl.classList.remove ('selected')
+        inspEl = evt.target
+        inspEl.classList.add ('selected')
       }
-      else ui.inspect (inspected = null)
+      else {
+        ui.inspect ((pinned = false, inspected = null))
+        if (inspEl) inspEl.classList.remove ('selected')
+        inspEl = null
+      }
     })
-
 
 
     // Event handlers...
@@ -137,12 +187,22 @@
         // pageConsole.write (domex `@default` .render (evt.target [objectKey]).elem)
         window.$ = evt.target [objectKey]
       }
-      if ('key' in evt.target.dataset)
+      if ('key' in evt.target.dataset) {
         ui.showSample (+evt.target.dataset.key)
+        if (sampleEl)
+          sampleEl.classList.remove ('selected')
+        evt.target.classList.add ('selected')
+        sampleEl = evt.target
+      }
 
-      if ('suite' in evt.target.dataset)
+      if ('suite' in evt.target.dataset) {
         ui.showSuite (+evt.target.dataset.suite)
-
+        evt.target.classList.add ('selected')
+        if (suiteEl)
+          suiteEl.classList.remove ('selected')
+        evt.target.classList.add ('selected')
+        suiteEl = evt.target
+      }
     })
 
     window.addEventListener ('keydown', evt => {
