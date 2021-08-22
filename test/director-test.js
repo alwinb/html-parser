@@ -49,25 +49,38 @@ var samples = [
   '<!doctype html><input type="hidden"><frameset>',
   '<title><!-- foo --></title><svg><title><!-- bar --></title>',
   'foo</body><!--> bar<!--> bee',
-  '<html><frameset></frameset></html> ',
-  '<html><frameset></frameset></html>\n<!-->\n<!-->\n<!-->',
-  '<html><frameset></frameset></html><noframes>foo</noframes>',
   'foo</html><!-->',
   '<div><table>',
   '<table><td><svg><desc><td>',
   '<table><td>bar<col>',
   // '<html><head></head><body><svg><desc><tr>bee',
   '<head></head><title>X</title>',
+  '<head>asdasd<frameset>',
+  '<head> </head> <listing> <source> <frameset>',
 ]
 
-var sample =
-  samples[samples.length-1]
 
+var samples = [
+  '<html><frameset></frameset></html> ',
+  '<html><frameset></frameset></html>\n<!-->\n<!-->\n<!-->',
+  '<html><frameset></frameset></html><noframes>foo</noframes>',
+  '<frame></frame></frame><frameset>',//'<frame><frameset><frame></frameset><noframes></frameset><noframes>',
+  '<head> </head> <pre> <source> <frameset>',
+  '<!DOCTYPE html><frameset><svg><g></g><g></g><p><span>',
+]
 
 // Test
 // ====
 
 const verbose = true
-var p = new Parser ({ context:fragmentRule, verbose })
-var doc = p.parse (sample) 
-log (util.inspect (doc, {depth:Infinity}))
+var p = new Parser ({ verbose }) // context:fragmentRule
+
+for (const sample of samples) {
+  log ('\n', sample, '\n'+sample.replace (/[^\n]/g, '='))
+  var doc = p.parse (sample) 
+  log (util.inspect (doc, {depth:Infinity}))
+}
+
+
+
+
