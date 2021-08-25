@@ -1,0 +1,146 @@
+<!DOCTYPE 
+<html lang=en>
+<head>
+  <meta charset=utf-8>
+  <title>Lexer Test Page</title>
+
+  <link rel=stylesheet href=style/base.css>
+
+  <!-- lib -->
+  <script src=../dist/domex.min.js></script>
+
+  <!-- error notifications -->
+  <script>(() => {
+    const { domex } = window.modules.domex
+    window.addEventListener ('error', showError)
+    
+    const dx = domex `
+      div.error@error
+        > h3.br %name ~error
+        + ul.vstack > li*stack > (a.error %message [title=%url]+ " : " + span %line + " : " + span %col);
+    
+      div.layer.frame.m4.p[style="background:#fffd"]
+        > @error
+    `
+
+    function showError (e) {
+      // const { domex } = window.modules.domex
+      const stack = parseStack (e.error.stack || e.error+'')
+      const obj = { message:e.message, url:e.filename, line:e.lineno, col:e.colno }
+      stack.push (obj)
+      document.body.appendChild (dx .render ({ error:e.error, message:e.message, stack }) .elem)
+    }
+
+  function parseStack (stack) {
+    const r = []
+    for (let sline of stack.split ('\n')) {
+      let msg, line, col, url, _
+      [msg, url] = (sline.split (/@?(?=\bfile:[/][/])/i)) // FF, Safari
+      if (url) {
+        [_, url, line, col] = /^(.*)[:](\d+)[:](\d+)$/.exec (url)
+        r.push ({ message:msg, url, line, col })
+      }
+    }
+    return r.reverse()
+  }
+  // function _rewriteUrl (url1, line = 1, column = 0) {
+  //   const url = new URL (url1, document.baseURI)
+  //   if (url.protocol === 'file:' || url.protocol === 'x-txmt-filehandle:') { // convert to txmt: URL
+  //     callbackUrl = new URL ('txmt://open?')
+  //     Object.entries ({ url, line, column }) .forEach (kv => callbackUrl.searchParams.set (...kv))
+  //     return callbackUrl
+  //   }
+  //   Object.entries ({ line, column }) .forEach (kv => url.searchParams.set (...kv))
+  //   return url1
+  // }
+  })()</script>
+</head>
+<body>
+<script src=../lib/lexer.new.js></script>
+
+
+<textarea class="br mono" id=input cols=80 rows=5>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>HTML Lexer Test Page</title>
+  <link rel="stylesheet" type="text/css" href="./style/base.css">
+  <link rel="stylesheet" type="text/css" href="./style/tokens.css">
+  <script src="../dist/html.js"></script>
+  <script src="../dist/domex.min.js"></script>
+  </head>
+</head>
+<body class=m1>
+</textarea>  
+<div id=output><br></div>
+
+<script>(()=>{
+const { domex } = modules.domex
+// const log = console.log.bind (console)
+// const log = console.log.bind (console)
+
+let decode = new TextDecoder
+decode = decode.decode.bind (decode)
+let out = document.getElementById ('output')
+
+const dx = domex `
+  div.hstack@tokens
+    > @default.vstack.token.pp3*;
+  
+  div.vstack@state.fl
+    > h3 "State"
+    // + (dl
+    //   > (di > dt "tagStart" + dd %tagStart)
+    //   + (di > dt "anchor" + dd %anchor))
+    + @default.p;
+  
+  div.hstack.sep.vlines
+    > @state ~state
+    + @tokens ~tokens
+`
+
+document.getElementById ('input').addEventListener ('input', oninput)
+
+function oninput (evt) {
+  const _tokens = []
+  function write (tok) { _tokens.push (tok); if (tok.name === 'script' && !tok.type) return 1 }
+
+  const p = new Parser ({ write })
+
+  p.parse (evt.target.value)
+  tokens = _tokens.map (_ => _ instanceof Uint8Array ? decode (_) : _)
+  
+  const el = dx.render ({ tokens, state:p.state }) .elem
+  out.replaceWith (el)
+  out = el
+}
+
+input.focus ()
+
+var samples = [
+  '<script>φοο βαρ βαζ</foo>bar baz</'+'script>',
+  '<script></'+'script>\n<script src="../dist/domex.min.js"></'+'script>'
+]
+
+input.value = samples[1]
+oninput ({ target:input })
+
+
+})()</script>
+<style>
+  .token {
+    display:inline-block;
+    border-radius:.2rem;
+    border:1px solid #ccc;
+    min-height:1rem;
+    line-height:1rem;
+    white-space:pre-wrap;
+  }
+  .token::before {
+    content:'';
+    display:inline-block;
+    height:1rem;
+  }
+</style>
+</html>
