@@ -8,6 +8,7 @@
 
   <!-- lib -->
   <script src=../dist/domex.min.js></script>
+  <script src=../dist/html.min.js></script>
 
   <!-- error notifications -->
   <script>(() => {
@@ -17,7 +18,7 @@
     const dx = domex `
       div.error@error
         > h3.br %name ~error
-        + ul.vstack > li*stack > (a.error %message [title=%url]+ " : " + span %line + " : " + span %col);
+        + ul.vstack > li*stack > (a.error %message [href=%url]+ " : " + span %line + " : " + span %col);
     
       div.layer.frame.m4.p[style="background:#fffd"]
         > @error
@@ -57,26 +58,19 @@
 </head>
 <body>
 <script src=../lib/lexer.new.js></script>
+<script src=../lib/parser.new.js></script>
 
-
-<textarea class="br mono" id=input cols=80 rows=5>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>HTML Lexer Test Page</title>
-  <link rel="stylesheet" type="text/css" href="./style/base.css">
-  <link rel="stylesheet" type="text/css" href="./style/tokens.css">
-  <script src="../dist/html.js"></script>
-  <script src="../dist/domex.min.js"></script>
-  </head>
-</head>
-<body class=m1>
-</textarea>  
-<div id=output><br></div>
+<main>
+  <div class="Input br">
+    <textarea class="br mono" id=input cols=80 rows=5></textarea>
+  </div>
+  <div class=Output id=output><br></div>
+</main>
 
 <script>(()=>{
 const { domex } = modules.domex
+const html = modules.html
+
 // const log = console.log.bind (console)
 // const log = console.log.bind (console)
 
@@ -89,46 +83,193 @@ const dx = domex `
     > @default.vstack.token.pp3*;
   
   div.vstack@state.fl
-    > h3 "State"
+    > h3.br0 "Lexer State"
+    + @default.p;
     // + (dl
     //   > (di > dt "tagStart" + dd %tagStart)
     //   + (di > dt "anchor" + dd %anchor))
-    + @default.p;
   
-  div.hstack.sep.vlines
-    > @state ~state
-    + @tokens ~tokens
-`
+  div.hstack.vsep.vlines
+    > @state.scrolly.vstack ~state
+    + div
+      > (div.Tokens.p > h3 "Tokens" + @tokens) ~tokens
+      // + (div.Adjusted.p > h3 "Adjusted Tokens" + @tokens) ~tokens2
+      + div.Document.p
+        > h3 "TreeBuilder Stack"
+        + (ul.hstack.sep > li*stack %name) // @default.hstack ~stack
+        + h3 "TreeBuilder Document"
+        + div #tree`
 
 document.getElementById ('input').addEventListener ('input', oninput)
 
-function oninput (evt) {
+function TokenCatcher (delegate) {
   const _tokens = []
-  function write (tok) { _tokens.push (tok); if (tok.name === 'script' && !tok.type) return 1 }
 
-  const p = new Parser ({ write })
+  return {
+    get tokens () {
+      return _tokens
+    },
 
-  p.parse (evt.target.value)
-  tokens = _tokens.map (_ => _ instanceof Uint8Array ? decode (_) : _)
+    writeTag (tok) {
+      _tokens.push (tok)
+      if (delegate)
+        delegate.writeTag (tok)
+      if (tok.name === 'script' || tok.name === 'style')
+        return 1 // raw
+    },
+
+    writeEndTag (tok) {
+      _tokens.push (tok)
+      if (delegate)
+        delegate.writeEndTag (tok)
+    },
+
+    writeData (buff) {
+      _tokens.push (buff)
+      if (delegate)
+        delegate.writeData (buff)
+    },
   
-  const el = dx.render ({ tokens, state:p.state }) .elem
-  out.replaceWith (el)
-  out = el
+    writeSpace (buff) {
+      _tokens.push (buff)
+      if (delegate)
+        delegate.writeSpace (buff)
+    },
+  
+    writeNulls (buff) {
+      _tokens.push (buff)
+      if (delegate)
+        delegate.writeNulls (buff)
+    }
+  }
+  
 }
 
-input.focus ()
+function oninput (evt) {
+  const p = new Parser ()
+  // const r2 = TokenCatcher (p)
+  // const pp = new Preprocessor (r2)
+  const r1 = TokenCatcher (p)
+  const l = new Lexer (r1)
 
-var samples = [
-  '<script>φοο βαρ βαζ</foo>bar baz</'+'script>',
-  '<script></'+'script>\n<script src="../dist/domex.min.js"></'+'script>'
-]
+  l.parse (evt.target.value)
+  tokens = r1.tokens.map (_ => _ instanceof Uint8Array ? decode (_) : _)
+  // tokens2 = r2.tokens.map (_ => _ instanceof Uint8Array ? decode (_) : _)
+  
+  const el = dx.render ({ tokens, state:l.state, stack:p.stack, result:p.document }) .elem
+  out.replaceWith (el)
+  out = el
+  document.getElementById ('tree')
+    .replaceWith (showTree (p.document))
+}
 
-input.value = samples[1]
-oninput ({ target:input })
+function main () {
+  input.focus ()
 
+  var samples = [
+    '<script>φοο βαρ βαζ</foo>bar baz</'+'script>',
+    '<script></'+'script>\n<script src="../dist/domex.min.js"></'+'script>'
+  ]
+
+  input.value = samples[1]
+  oninput ({ target:input })
+}
+
+
+// Quick
+
+const objectKey =
+  Symbol ()
+
+const $ = name =>
+  document.createElement (name)
+
+const log = console.log.bind (console)
+
+function showTree (domNode) {
+  let elem, label, clss
+
+  if (domNode instanceof Text) {
+    clss = (/^\s*$/.test (domNode.data)) ? 'space' : 'text'
+    elem = $('span')
+    elem.append (domNode.data)
+    elem.className = clss
+    // elem[objectKey] = domNode
+    return elem
+  }
+
+  if (domNode instanceof Uint8Array) {
+    elem = $('span')
+    clss = (domNode[0] === 0x20 || domNode[0] === 0x9) ? 'space' : 'text'
+    log (clss)
+    elem.className = clss
+    elem.append (decode (domNode))
+    return elem
+  }
+  // if (typeof domNode === 'string' || domNode instanceof String) {
+  //   clss = (/^\s*$/.test (domNode)) ? 'space' : 'text'
+  //   elem = $('span')
+  //   elem.append (domNode)
+  //   elem.className = clss
+  //   elem[objectKey] = domNode
+  //   return elem
+  // }
+
+  elem = $('div')
+  elem.className = 'node'
+
+  if (domNode instanceof Document || domNode instanceof html.TreeBuilder.Node && domNode.name === '#document')
+    label = '#document'
+
+  else if (domNode instanceof DocumentType)
+    label = '<!doctype>'
+
+  else if (domNode instanceof Comment || domNode instanceof html.TreeBuilder.Node && domNode.name === '#comment')
+    label = '<!-->'
+
+  else if (domNode instanceof Element) {
+    if (domNode.namespaceURI && domNode.namespaceURI !== htmlns)
+      label = domNode.namespaceURI.split ('/') .pop () + ':' + domNode.tagName
+    else label = domNode.tagName.toLowerCase ()
+  }
+
+  else if (domNode instanceof html.TreeBuilder.Node || domNode instanceof html.TreeBuilder.Leaf) {
+    label = domNode.name
+  }
+
+  // log (domNode.__proto__)
+  var elel = $('span')
+  elel.className = 'label'
+  elel.append (label)
+  elem.append (elel)
+  elem[objectKey] = domNode.frame ? domNode.frame.info : domNode
+  
+  if (clss) elem.classList.add(clss)
+  let ul; elem.append ((ul = $('div')))
+  ul.className = 'children'
+
+  const children = domNode instanceof HTMLTemplateElement
+    ? domNode.content.childNodes
+    : domNode.name === '#comment' ? []
+    : domNode.childNodes || domNode.children || []
+
+  for (let x of children) {
+    ul.append (showTree (x))
+  }
+  return elem
+}
+
+
+//
+main ()
 
 })()</script>
 <style>
+  
+  :root {
+    --screen:#0002;
+  }
+
   .token {
     display:inline-block;
     border-radius:.2rem;
@@ -137,10 +278,44 @@ oninput ({ target:input })
     line-height:1rem;
     white-space:pre-wrap;
   }
-  .token::before {
-    content:'';
-    display:inline-block;
-    height:1rem;
-  }
+
+
+/* Dom Tree Viz
+/* ------------ */
+
+.DomTree {
+  /*font-family:Hack, Monaco, Menlo, Monospace;*/
+  /*font-size:12px;*/
+  overflow:scroll;
+  padding:1rem;
+  font-weight:bold;
+}
+
+div.children {
+  margin-left:.55rem;
+  padding-left:.4rem;
+  border-left:1.5px solid black;
+  white-space:pre;
+}
+
+div.children:after {
+  content:'';
+  display:block;
+  clear:both;
+  height:0px;
+}
+
+div.children .text, div.children .space {
+  font-weight:normal;
+  font-style:italic;
+  background:var(--screen);
+  min-height:1rem;
+  line-height:1rem;
+  padding:.15rem 0;
+}
+
+div.children .data {
+  font-family:Hack, Mono;
+}
 </style>
 </html>
