@@ -93,7 +93,7 @@ const dx = domex `
     > @state.scrolly.vstack ~state
     + div
       > (div.Tokens.p > h3 "Tokens" + @tokens) ~tokens
-      // + (div.Adjusted.p > h3 "Adjusted Tokens" + @tokens) ~tokens2
+      + (div.Adjusted.p > h3 "Adjusted Tokens" + @tokens) ~adjustedTokens
       + div.Document.p
         > h3 "TreeBuilder Stack"
         + (ul.hstack.sep > li*stack %name) // @default.hstack ~stack
@@ -111,6 +111,9 @@ function TokenCatcher (delegate) {
     },
 
     writeTag (tok) {
+      // Hack it, for the testpage\
+      // though, should tokens be mutated or not?
+        delete tok.type
       _tokens.push (tok)
       if (delegate)
         delegate.writeTag (tok)
@@ -120,26 +123,29 @@ function TokenCatcher (delegate) {
 
     writeEndTag (tok) {
       _tokens.push (tok)
+      // Hack it, for the testpage\
+      // though, should tokens be mutated or not?
+        tok.type = 'EndTag'
       if (delegate)
-        delegate.writeEndTag (tok)
+        return delegate.writeEndTag (tok)
     },
 
     writeData (buff) {
       _tokens.push (buff)
       if (delegate)
-        delegate.writeData (buff)
+        return delegate.writeData (buff)
     },
   
     writeSpace (buff) {
       _tokens.push (buff)
       if (delegate)
-        delegate.writeSpace (buff)
+        return delegate.writeSpace (buff)
     },
   
     writeNulls (buff) {
       _tokens.push (buff)
       if (delegate)
-        delegate.writeNulls (buff)
+        return delegate.writeNulls (buff)
     }
   }
   
@@ -147,16 +153,16 @@ function TokenCatcher (delegate) {
 
 function oninput (evt) {
   const p = new Parser ()
-  // const r2 = TokenCatcher (p)
-  // const pp = new Preprocessor (r2)
-  const r1 = TokenCatcher (p)
+  const r2 = new TokenCatcher (p)
+  const pp = new Preprocessor (r2)
+  const r1 = new TokenCatcher (pp)
   const l = new Lexer (r1)
 
   l.parse (evt.target.value)
-  tokens = r1.tokens.map (_ => _ instanceof Uint8Array ? decode (_) : _)
-  // tokens2 = r2.tokens.map (_ => _ instanceof Uint8Array ? decode (_) : _)
+  const tokens = r1.tokens.map (_ => _ instanceof Uint8Array ? decode (_) : _)
+  const adjustedTokens = r2.tokens.map (_ => _ instanceof Uint8Array ? decode (_) : _)
   
-  const el = dx.render ({ tokens, state:l.state, stack:p.stack, result:p.document }) .elem
+  const el = dx.render ({ tokens, adjustedTokens, state:l.state, stack:p.stack, result:p.document }) .elem
   out.replaceWith (el)
   out = el
   document.getElementById ('tree')
@@ -168,10 +174,11 @@ function main () {
 
   var samples = [
     '<script>φοο βαρ βαζ</foo>bar baz</'+'script>',
-    '<script></'+'script>\n<script src="../dist/domex.min.js"></'+'script>'
+    '<script></'+'script>\n<script src="../dist/domex.min.js"></'+'script>',
+    '<select>foo<select>bar',
   ]
 
-  input.value = samples[1]
+  input.value = samples[samples.length-1]
   oninput ({ target:input })
 }
 
@@ -201,7 +208,6 @@ function showTree (domNode) {
   if (domNode instanceof Uint8Array) {
     elem = $('span')
     clss = (domNode[0] === 0x20 || domNode[0] === 0x9) ? 'space' : 'text'
-    log (clss)
     elem.className = clss
     elem.append (decode (domNode))
     return elem
