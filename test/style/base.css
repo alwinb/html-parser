@@ -1,7 +1,8 @@
 /* Vertical Rhythm
 /* =============== */
 
-/* 2021-08-14 */
+/* 2021-08-12 */
+/* 2021-08-18 */
 
 html.debug {
   /* show the 1rem baseline rhythm */
@@ -76,7 +77,7 @@ pre {
 }
 
 a[href], button { text-decoration:none; cursor:pointer; margin:0 }
-a[href]:hover, button:hover { text-decoration:underline }
+a[href]:hover, button:hover { text-decoration:underline; }
 
 /* NB reset */
 input { margin:0; }
@@ -130,7 +131,7 @@ combine that with hlist, maybe */
   vertical-align:top;
   display:inline-block;
   line-height:inherit;
-  /* padding:0 .75ch; /* NB */
+/*  padding:0 .75ch; /* NB */
 }
 
 /* vertical stacks */
@@ -171,6 +172,9 @@ combine that with hlist, maybe */
 
 /* layers */
 
+.layer
+  { position:absolute; }
+
 .layers
   { position:relative; }
 
@@ -178,11 +182,9 @@ combine that with hlist, maybe */
   position:absolute;
   top:0; left:0;
 }
-
-.layers > *:first-child
-  { position:unset }
-
-
+.layers > *:first-child {
+  position:unset;
+}
 
 /* Margins and Padding
 /* ------------------- */
@@ -233,15 +235,17 @@ combine that with hlist, maybe */
 .pp11 { padding: calc(11rem/12) }
 .pp12 { padding: calc(12rem/12) }
 
+/**/
+
+.hpad { padding: 0 1rem }
+.vpad { padding: 1rem 0 }
+
 /* line-heights */
 
 .x2 { line-height:2rem; }
 .x3 { line-height:3rem; }
 .x4 { line-height:4rem; }
-
-/* REVIEW the naming scheme */
-.xx6  { line-height:.5rem; }
-.xx18 { line-height:1.5rem; }
+.xx18 { line-height:calc(18rem/12) }
 
 
 /* space between - WIP */
@@ -265,12 +269,20 @@ combine that with hlist, maybe */
 .scroll  { overflow:auto }
 .scrollx { overflow:hidden; overflow-x:auto }
 .scrolly { overflow:hidden; overflow-y:auto }
+.noev { pointer-events:none }
+.ptr { cursor:pointer }
 
+.btn { text-decoration:none; cursor:pointer; margin:0;}
+.btn:hover { text-decoration:underline; }
 
 /* Notifications
 /* ------------- */
 
 .error { color:#9D0006; }
+:root .selected {
+  background:var(--select-color);
+  color:var(--select-text-color);
+}
 /*.warn { color:orange; }*/
 /*
 
@@ -286,13 +298,15 @@ dimmed, screened,
 :root {
   --border-color: black;
   --link-color: blue;
+  --select-color: dodgerblue;
+  --select-text-color: white;
 }
 
 
 /* Type
 /* ---- */
 
-.sans { font-family: Sans-serif; }
+.sans { font-family: Sans-Serif; }
 .serif { font-family: Serif; }
 .mono { font-family: MonoSpace; }
 
@@ -300,25 +314,29 @@ dimmed, screened,
 .c { text-align:center; }
 .r { text-align:right; }
 
-.nowrap { white-space:nowrap }
+.nowrap, .nobr { white-space:nowrap }
+.nowrap > *, .nobr > * { white-space:normal }
 
-a, .link { text-decoration:none; cursor:pointer; margin:0; color:var(--link-color);}
-.link:hover { text-decoration:underline; }
+a, .link { text-decoration:none; cursor:pointer; margin:0; color:var(--link-color) }
+.link:hover { text-decoration:underline }
 
 
 /* Lines and Borders
 /* ----------------- */
 
+.frame
+  { border:1px solid var(--border-color, currentColor) }
+
 .hlines > *,
 .tab.hlines > * > *
-  { border-bottom:1px solid currentColor; }
+  { border-bottom:1px solid var(--border-color, currentColor) }
 
 .hlines > *:last-child 
   { border-bottom:none; }
 
 .vlines > *,
 .tab.vlines > * > *
-  { border-right:1px solid currentColor; }
+  { border-right:1px solid var(--border-color, currentColor) }
 
 .vlines > *:last-child 
   { border-right:none; }
@@ -327,7 +345,7 @@ a, .link { text-decoration:none; cursor:pointer; margin:0; color:var(--link-colo
 
 table.lines th, table.hlines th,
 table.lines td, table.hlines td
-  { border-right:1px solid currentColor; }
+  { border-right:1px solid var(--border-color, currentColor) }
 
 table.lines tr > th:last-child,
 table.lines tr > td:last-child
@@ -335,7 +353,7 @@ table.lines tr > td:last-child
 
 table.lines th, table.vlines th,
 table.lines td, table.vlines td
-  { border-bottom:1px solid currentColor; }
+  { border-bottom:1px solid var(--border-color, currentColor) }
 
 table.lines tr:last-child > td,
 table.lines tr:last-child > th
