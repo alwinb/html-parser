@@ -1,18 +1,21 @@
 .PHONY: all clean run
 
-files = browser.js lexer.js tokens.js treebuilder.js parser.js index.js dom.js categories.js schema.js
+files = lexer.js tokens.js treebuilder.js parser.js index.js dom.js categories.js schema.js
 sources = $(addprefix lib/, $(files))
 
-all: dist/html.js dist/domex.min.js dist/html.min.js Makefile
+all: dist/domex.min.js dist/html.min.js dist/html.new.min.js Makefile
 
-dist/domex.min.js: test/domex-browser.js
-	esbuild test/domex-browser.js --bundle --minify --outfile=dist/domex.min.js
+dist/domex.min.js: test/domex-browser.js Makefile
+	@ echo "Making domex browser module"
+	@ esbuild test/domex-browser.js --bundle --minify --outfile=dist/domex.min.js
 
-dist/html.min.js: dist/ $(sources)
-	esbuild lib/browser.js --bundle --minify --outfile=dist/html.min.js
+dist/html.min.js: dist/ $(sources) Makefile
+	@ echo "Making html-parser ES module"
+	@ esbuild lib/index.js --bundle --format=esm --minify --outfile=dist/html.min.js
 
-dist/html.js: dist/ $(sources)
-	esbuild lib/browser.js --bundle --outfile=dist/html.js
+dist/html.new.min.js: dist/ $(sources) Makefile lib/lexer.new.js lib/parser.new.js
+	@ echo "Making html-parser ES module"
+	@ esbuild lib/parser.new.js --bundle --format=esm --minify --outfile=dist/html.new.min.js
 
 dist/:
 	mkdir dist/

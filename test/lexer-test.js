@@ -1,5 +1,5 @@
 const log = console.log.bind (console)
-const { Lexer, tokens, chunks } = require ('../lib')
+import { Lexer, tokens, chunks } from '../lib/index.js'
 const { typeName, stateInfo } = Lexer
 
 // Test

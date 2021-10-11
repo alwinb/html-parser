@@ -1,8 +1,9 @@
 {
   "name": "html-parser",
-  "version": "0.10.0-dev",
+  "version": "0.9.5",
   "description": "HTML5 Parser",
   "main": "lib/index.js",
+  "type": "module",
   "directories": {
     "lib": "lib",
     "test": "test"

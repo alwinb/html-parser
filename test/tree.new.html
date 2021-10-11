@@ -2,74 +2,28 @@
 <html lang=en>
 <head>
   <meta charset=utf-8>
-  <title>Lexer Test Page</title>
-
+  <title>HTML Parser Test Page</title>
   <link rel=stylesheet href=style/base.css>
-
-  <!-- lib -->
   <script src=../dist/domex.min.js></script>
-  <script src=../dist/html.min.js></script>
-
-  <!-- error notifications -->
-  <script>(() => {
-    const { domex } = window.modules.domex
-    window.addEventListener ('error', showError)
-    
-    const dx = domex `
-      div.error@error
-        > h3.br %name ~error
-        + ul.vstack > li*stack > (a.error %message [href=%url]+ " : " + span %line + " : " + span %col);
-    
-      div.layer.frame.m4.p[style="background:#fffd"]
-        > @error
-    `
-
-    function showError (e) {
-      // const { domex } = window.modules.domex
-      const stack = parseStack (e.error.stack || e.error+'')
-      const obj = { message:e.message, url:e.filename, line:e.lineno, col:e.colno }
-      stack.push (obj)
-      document.body.appendChild (dx .render ({ error:e.error, message:e.message, stack }) .elem)
-    }
-
-  function parseStack (stack) {
-    const r = []
-    for (let sline of stack.split ('\n')) {
-      let msg, line, col, url, _
-      [msg, url] = (sline.split (/@?(?=\bfile:[/][/])/i)) // FF, Safari
-      if (url) {
-        [_, url, line, col] = /^(.*)[:](\d+)[:](\d+)$/.exec (url)
-        r.push ({ message:msg, url, line, col })
-      }
-    }
-    return r.reverse()
-  }
-  // function _rewriteUrl (url1, line = 1, column = 0) {
-  //   const url = new URL (url1, document.baseURI)
-  //   if (url.protocol === 'file:' || url.protocol === 'x-txmt-filehandle:') { // convert to txmt: URL
-  //     callbackUrl = new URL ('txmt://open?')
-  //     Object.entries ({ url, line, column }) .forEach (kv => callbackUrl.searchParams.set (...kv))
-  //     return callbackUrl
-  //   }
-  //   Object.entries ({ line, column }) .forEach (kv => url.searchParams.set (...kv))
-  //   return url1
-  // }
-  })()</script>
 </head>
 <body>
-<script src=../lib/lexer.new.js></script>
-<script src=../lib/parser.new.js></script>
+<script src=scripts/error-handler.js></script>
 
 <main>
+  <h1>HTML Parser</h1>
   <div class="Input br">
     <textarea class="br mono" id=input cols=80 rows=5></textarea>
   </div>
   <div class=Output id=output><br></div>
 </main>
 
-<script>(()=>{
+<script type=module>
+// import * as categories  from '../lib/categories.js'
+// import * as schema      from '../lib/schema.js'
+import * as treebuilder from '../lib/treebuilder.js'
+import Lexer from '../lib/lexer.new.js'
+import { Parser, Preprocessor } from '../lib/parser.new.js'
 const { domex } = modules.domex
-const html = modules.html
 
 // const log = console.log.bind (console)
 // const log = console.log.bind (console)
@@ -79,10 +33,10 @@ decode = decode.decode.bind (decode)
 let out = document.getElementById ('output')
 
 const dx = domex `
-  div.hstack@tokens
+  div.hstack @tokens
     > @default.vstack.token.pp3*;
   
-  div.vstack@state.fl
+  div @state
     > h3.br0 "Lexer State"
     + @default.p;
     // + (dl
@@ -90,9 +44,9 @@ const dx = domex `
     //   + (di > dt "anchor" + dd %anchor))
   
   div.hstack.vsep.vlines
-    > @state.scrolly.vstack ~state
+    > @state.scrolly.vstack.fl ~state
     + div
-      > (div.Tokens.p > h3 "Tokens" + @tokens) ~tokens
+      > (div.Tokens.p   > h3 "Tokens"          + @tokens) ~tokens
       + (div.Adjusted.p > h3 "Adjusted Tokens" + @tokens) ~adjustedTokens
       + div.Document.p
         > h3 "TreeBuilder Stack"
@@ -125,7 +79,7 @@ function TokenCatcher (delegate) {
       _tokens.push (tok)
       // Hack it, for the testpage\
       // though, should tokens be mutated or not?
-        tok.type = 'EndTag'
+      tok.type = 'EndTag'
       if (delegate)
         return delegate.writeEndTag (tok)
     },
@@ -146,17 +100,24 @@ function TokenCatcher (delegate) {
       _tokens.push (buff)
       if (delegate)
         return delegate.writeNulls (buff)
+    },
+
+    writeMDecl (buff) {
+      _tokens.push (buff)
+      if (delegate)
+        return delegate.writeMDecl (buff)
     }
+
   }
   
 }
 
 function oninput (evt) {
-  const p = new Parser ()
+  const p  = new Parser ()
   const r2 = new TokenCatcher (p)
   const pp = new Preprocessor (r2)
   const r1 = new TokenCatcher (pp)
-  const l = new Lexer (r1)
+  const l  = new Lexer (r1)
 
   l.parse (evt.target.value)
   const tokens = r1.tokens.map (_ => _ instanceof Uint8Array ? decode (_) : _)
@@ -224,13 +185,13 @@ function showTree (domNode) {
   elem = $('div')
   elem.className = 'node'
 
-  if (domNode instanceof Document || domNode instanceof html.TreeBuilder.Node && domNode.name === '#document')
+  if (domNode instanceof Document || domNode instanceof treebuilder.Node && domNode.name === '#document')
     label = '#document'
 
   else if (domNode instanceof DocumentType)
     label = '<!doctype>'
 
-  else if (domNode instanceof Comment || domNode instanceof html.TreeBuilder.Node && domNode.name === '#comment')
+  else if (domNode instanceof Comment || domNode instanceof treebuilder.Node && domNode.name === '#comment')
     label = '<!-->'
 
   else if (domNode instanceof Element) {
@@ -239,7 +200,7 @@ function showTree (domNode) {
     else label = domNode.tagName.toLowerCase ()
   }
 
-  else if (domNode instanceof html.TreeBuilder.Node || domNode instanceof html.TreeBuilder.Leaf) {
+  else if (domNode instanceof treebuilder.Node || domNode instanceof treebuilder.Leaf) {
     label = domNode.name
   }
 
@@ -269,7 +230,7 @@ function showTree (domNode) {
 //
 main ()
 
-})()</script>
+</script>
 <style>
   
   :root {

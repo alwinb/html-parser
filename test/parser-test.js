@@ -1,7 +1,7 @@
-const { Parser, START, END, LEAF } = require ('../lib')
-const { fragmentRule } = require ('../lib/schema')
+import { Parser } from '../lib/index.js'
+import { fragmentRule } from '../lib/schema.js'
+import * as util from 'util'
 const log = console.log.bind (console)
-const util = require ('util')
 
 
 // Serialise Test Result
