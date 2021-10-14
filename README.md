@@ -1,7 +1,7 @@
 Html Parser
 ===========
 
-**[ Version 0.9.0 ] [ [Test Page][0] ]**
+**[ Version 0.9.5 ] [ [Test Page][0] ] [ [WIP][1] ]**
 
 This is a new HTML5 parser that I am working on.  
 The focus is on code size, speed and simplicity. 
@@ -15,18 +15,20 @@ I intend to produce, for all possible input, a parse tree that is equivalent to 
 There is a test page that I use for testing and debugging online [here][0].
 
 [0]: https://alwinb.github.io/html-parser/test/tree.html
+[1]: https://alwinb.github.io/html-parser/test/tree.new.html
+
 
 The Lexer
 ---------
 
-There is a preliminary attempt at a lexical grammar for HTML5 in [notes][2]. 
+There is a preliminary attempt at a lexical grammar for HTML5 in [notes][lex]. 
 
-For the implementation, I have painstakingly charted a transition table based on the standard and then used a technique outlined in this [gist][1] to encode the state machine in very few lines. The lexer is almost complete.
+For the implementation, I have painstakingly charted a transition table based on the standard and then used a technique outlined in this [gist] to encode the state machine in very few lines. The lexer is almost complete.
 
 **Update** I've decided to rewrite the lexer, once again. 
 
-[1]: https://gist.github.com/alwinb/d2787f4cde1f7aadd197f40806cb08ef#file-statemachine-js
-[2]: ./notes/lexical-grammar.txt
+[gist]: https://gist.github.com/alwinb/d2787f4cde1f7aadd197f40806cb08ef#file-statemachine-js
+[lex]: ./notes/lexical-grammar.txt
 
 
 The Parser
@@ -111,8 +113,7 @@ API
 
 * Parser
 * TreeBuilder
-* Lexer
-* TokenBuilder
+* Tokeniser
 
 
 Remaining work

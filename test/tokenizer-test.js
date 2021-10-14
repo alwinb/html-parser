@@ -1,6 +1,5 @@
-const html = require ('../lib/')
-const { TokenBuilder, Lexer } = html
-const util = require ('util')
+import { Lexer, TokenBuilder } from '../lib/index.js'
+import * as util from 'util'
 const log = console.log.bind (console)
 
 function tokenize (str) {

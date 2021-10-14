@@ -1,9 +1,10 @@
-const html = require ('../lib/')
+import * as html from '../lib/index.js'
 const { TokenBuilder, Lexer, tokenTypes:T } = html
-const Tests = require ('./test-runner')
-const util = require ('util')
-const fs = require ('fs')
-const { deepEqual } = require ('assert').strict
+import Tests from './test-runner.js'
+import * as util from 'util'
+import * as fs from 'fs'
+import * as assert from 'assert'
+const { deepEqual } = assert.strict
 const log = console.log.bind (console)
 
 // Token Builder Tests

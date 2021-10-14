@@ -1,8 +1,9 @@
 
 // Imports
-const { html, domex: { domex, DomEx, Domex } } = modules
+import * as html from '../../lib/index.js'
+const { domex: { domex, DomEx, Domex } } = modules
 const log = console.log.bind (console)
-const T = modules.html.Lexer.tokenTypes
+const T = html.Lexer.tokenTypes
 
 // DOM tools
 const htmlns = 'http://www.w3.org/1999/xhtml'
@@ -29,25 +30,23 @@ class TestUI {
 
     return domex `
 
-      ul.scrolly @tabs
-        > @tab.link*;
+      ul.scrolly @samples
+        > @tab.nowrap.link*;
 
       li @tab [data-key=$]
         > "Sample " + $;
 
       ul.scrolly @suites
-        > li.link [data-suite=$]* %title;
+        > li.link.nowrap [data-suite=$]* %title;
 
       div.Input @input
         > textarea #input.m0
         + button #submit "Run";
         
       div.Output @output
-        > (div.p1 > h3 "browser"     + div #view1)
-        + (div.p1 > h3 "html-parser" + div #view2);
-
-      div.Inspector @inspector 
-        > h3 "inspector" + div #view3;
+        > (div.p1 #view2 > h3 "html-parser" + div)
+        + (div.p1 #view1 > h3 "browser"     + div)
+        + (div.p1 #view3 .Inspector [style="display:none"] > h3 "inspector"   + div);
 
       span @results #results
         > (a [href="javascript:void(runAllTests())"] "Run all tests")
@@ -56,13 +55,21 @@ class TestUI {
       main@main
         > h1 "HTML Parser"
         + (p > "Version " + %version + ". " + @results)
-        + div.hstack.sep.nowrap
-          > @suites.vstack.xx18.hlines #suites ~suites
-          + @tabs.vstack.xx18.hlines #tabs ~samples
-          + (div > @input.layers + @output.scrolly.hstack.nowrap)
-          + @inspector.scrolly
+        + div.hstack.nowrap
+          > @suites.vstack.xx18 #suites ~suites
+          + @samples.vstack.xx18 #tabs ~samples
+          + (div > @input.layers + @output.scrolly.hstack.nowrap);
   
       @main
+    `
+  }
+  
+  static get inspectorDx () {
+    return domex `
+      div > (hgroup.br:name
+        > h4 "<" %name ">"
+        + i %kind)
+      + @default.vstack.vsep.hlines
     `
   }
 
@@ -87,10 +94,10 @@ class TestUI {
     this.elem.replaceWith (elem_)
     this.elem = elem_
 
-    const [results, tabs, input, view1, view2, inspector, submit] =
+    const [results, tabs, input, view1, view2, view3, submit] =
       ['results', 'tabs', 'input', 'view1', 'view2', 'view3', 'submit'] .map (byId)
 
-    this.dom = { results, tabs, input, view1, view2, inspector, submit }
+    this.dom = { results, tabs, input, view1, view2, view3, submit }
     submit.addEventListener ('click', evt => this.showSampleValue (input.value))
     
     this.showSampleValue (this.sample)
@@ -111,7 +118,7 @@ class TestUI {
     log ('suite', this.suite.title)
     const el = domex `
       li [data-key=$] @tab > "Sample " + $;
-      ul #tabs .vstack.xx18.hlines.scrolly > @tab.link*`
+      ul #tabs .vstack.xx18.scrolly > @tab.link.nowrap*`
       .render (this.suite.samples) .elem
     this.dom.tabs.replaceWith (el)
     this.dom.tabs = el
@@ -122,13 +129,12 @@ class TestUI {
   showSampleValue (sample) {
     window.console.clear ()
     this.dom.input.value = sample
-    this.dom.view1.innerHTML = this.dom.view2.innerHTML = ''
   
     const nativeResult = nativeParse (sample)
     const result = html.parse (sample)
 
-    this.dom.view1.append (showTree (nativeResult))
-    this.dom.view2.append (showTree (result))
+    this.dom.view1.lastChild.replaceWith (showTree (nativeResult))
+    this.dom.view2.lastChild.replaceWith (showTree (result))
   
     const p1 = printTree (nativeResult)
     const p2 = printTree (result)
@@ -145,8 +151,15 @@ class TestUI {
   }
   
   inspect (obj) {
-    this.dom.inspector.innerHTML = ''
-    this.dom.inspector.append (domex `@default.vstack` .render (obj).elems)
+    if (obj != null) {
+      this.dom.view3.lastChild.replaceWith (TestUI.inspectorDx.render (obj).elems)
+      this.dom.view3.style.display = null
+      this.dom.view1.style.display = 'none'
+    }
+    else {
+      this.dom.view3.style.display = 'none'
+      this.dom.view1.style.display = null
+    }
   }
 
   focus () {
@@ -174,7 +187,7 @@ function showTree (domNode) {
     elem = $('span')
     elem.append (domNode.data)
     elem.className = clss
-    elem[objectKey] = domNode
+    // elem[objectKey] = domNode
     return elem
   }
   if (typeof domNode === 'string' || domNode instanceof String) {
@@ -188,22 +201,22 @@ function showTree (domNode) {
 
   elem = $('div')
   elem.className = 'node'
-  if (domNode instanceof Document || domNode instanceof html.TreeBuilder.Node && domNode.name === '#document')
+  if (domNode instanceof Document || domNode instanceof html.treebuilder.Node && domNode.name === '#document')
     label = '#document'
 
   else if (domNode instanceof DocumentType)
     label = '<!doctype>'
 
-  else if (domNode instanceof Comment || domNode instanceof html.TreeBuilder.Node && domNode.name === '#comment')
+  else if (domNode instanceof Comment || domNode instanceof html.treebuilder.Node && domNode.name === '#comment')
     label = '<!-->'
 
   else if (domNode instanceof Element) {
     if (domNode.namespaceURI && domNode.namespaceURI !== htmlns)
-      label = domNode.namespaceURI.split('/').pop () + ':' + domNode.tagName
+      label = domNode.namespaceURI.split ('/') .pop () + ':' + domNode.tagName
     else label = domNode.tagName.toLowerCase ()
   }
 
-  else if (domNode instanceof html.TreeBuilder.Node || domNode instanceof html.TreeBuilder.Leaf) {
+  else if (domNode instanceof html.treebuilder.Node || domNode instanceof html.treebuilder.Leaf) {
     label = domNode.name
   }
 
@@ -259,7 +272,7 @@ function* _coalesce (stream) {
 // For both browser DOM and html-parser 'DOM'
 
 function* _traverse (node) {
-  const T = modules.html.Lexer.tokenTypes
+  const T = html.Lexer.tokenTypes
 
   if (typeof node === 'string' || node instanceof String)
     yield node
@@ -267,13 +280,13 @@ function* _traverse (node) {
   else if (node instanceof Text)
     yield node.data
 
-  else if (node instanceof html.TreeBuilder.Node && node.name === '#comment')
+  else if (node instanceof html.treebuilder.Node && node.name === '#comment')
     null // TODO
 
-  else if (node instanceof html.TreeBuilder.Node && node.name[0] === '#')
+  else if (node instanceof html.treebuilder.Node && node.name[0] === '#')
     for (let child of node.children) yield* _traverse (child)
 
-  else if (node instanceof html.TreeBuilder.Node) {
+  else if (node instanceof html.treebuilder.Node) {
     yield [T.StartTag, node.name] // TODO also yield attrs
     for (let child of node.children) yield* _traverse (child)
     yield [T.EndTag, node.name]
@@ -295,7 +308,7 @@ function* _traverse (node) {
     yield [T.EndTag, tagName]
   }
 
-  else if (node instanceof html.TreeBuilder.Leaf) {
+  else if (node instanceof html.treebuilder.Leaf) {
     yield [T.StartTag, node.name] // TODO also print attrs
     yield [T.EndTag, node.name]
   }
@@ -323,3 +336,9 @@ function* _print (stream, depth = 0) {
     }
   }
 }
+
+
+// Exports
+// -------
+
+export { TestUI, nativeParse, printTree, objectKey }

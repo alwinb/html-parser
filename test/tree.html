@@ -1,47 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang=en>
 <head>
-  <meta charset="utf-8">
+  <meta charset=utf-8>
   <title>Tree Builder Test Page</title>
-  <link rel="stylesheet" href="style/base.css">
-  <link rel="stylesheet" href="style/tree.css">
-  <script src="./scripts/console.js"></script>
+  <link rel=stylesheet href=style/base.css>
+  <link rel=stylesheet href=style/tree.css>
+  <script src=../dist/domex.min.js></script>
 </head>
 <body>
+<script src=scripts/error-handler.js></script>
+<script type=module src=scripts/samples.js></script>
+<script type=module>
 
-<script>
-  window.pageConsole = window.console = new Console ()
-  document.body.append (console.elem)
-  window.addEventListener ('error', evt => console.errorHandler (evt), true)
-  var isChrome = !!window.chrome
-  if (isChrome) document.documentElement.classList.add ('chrome')
-</script>
-
-<script src="../dist/html.js"></script>
-<script src="../dist/domex.min.js"></script>
-<script src="./scripts/samples2.js"></script>
-<script src="./scripts/testui.js"></script>
-
-<script>(()=>{
+  import { Parser } from '../lib/index.js'
+  import { TestUI, objectKey, nativeParse, printTree } from './scripts/testui.js'
+  import suites from './scripts/samples.js'
+  const { domex } = modules.domex
   const log = console.log.bind (console)
 
-  // For debugging
-  Object.defineProperty (Object.prototype, Symbol.toStringTag, {
-    get: function () { return this.constructor.name }
-  })
-
-  // Tests
-  // -----
+  // Test runner
+  // -----------
 
   function* runTests () {
-    const suites = window ['html-suites']
-    let count = 0
-    let time = 0
-    let nativeTime = 0
     const failures = []
-    
-    const parser = new html.Parser
-    for (let i=0, l= suites.length; i<l; i++) {
+    const parser = new Parser ()
+    let count = 0, time = 0, nativeTime = 0
+
+    for (let i=0, l=suites.length; i<l; i++) {
       const suite = suites[i]
       let suiteFailures = []
       for (const sample of suite.samples) {
@@ -59,7 +44,8 @@
           }
         }
         catch (e) {
-          // console.error ('Test threw:')
+          console.error ('Test threw:')
+          throw (e)
           // console.error (sample)
           failures.push (sample)
           suiteFailures.push (sample)
@@ -78,13 +64,16 @@
   // Main 
   // ----
 
+  // Set up TestUI
+
   function main () {
-    const { domex } = modules.domex
 
-    // Set up Test UI
-
-    const ui = new TestUI (window ['html-suites']) .showSuite (0)
+    const ui = new TestUI (suites) .showSuite (0)
     const todos = runTests ()
+
+    let sampleEl, suiteEl, inspEl
+    let inspected = null
+    let pinned = false
 
     function loop () {
       let start = new Date, done, results
@@ -98,50 +87,65 @@
       console.clear ()
       const { failures, total, time, nativeTime } = results
 
-      window ['html-suites'] .unshift ({
+      suites.unshift ({
         title: `🐞 Failed ${Math.round (failures.length / total * 100)}% (${failures.length}/ ${total})`,
         samples: failures,
       })
-      ui.update (window ['html-suites'])
+      ui.update (suites)
       ui.showResults (results)
     }
     
     window.runAllTests = loop
 
+    // just quick ...
 
-
-
-    let inspected = null
     let tid = 0
-
     document.addEventListener ('mouseover', evt => {
       clearTimeout (tid)
       if (evt.target.className === 'label' && objectKey in evt.target.parentNode)
-        tid = setTimeout (() => ui.inspect (evt.target.parentNode [objectKey]), 50)
+        tid = setTimeout (() => ui.inspect (evt.target.parentNode [objectKey]), 300)
+      else if (!pinned)
+        tid = setTimeout (() => ui.inspect (null), 300)
     })
 
     document.addEventListener ('click', evt => {
       if (evt.target.className === 'label' && objectKey in evt.target.parentNode) {
         inspected = evt.target.parentNode [objectKey]
+        pinned = true
         ui.inspect (inspected)
+        if (inspEl) inspEl.classList.remove ('selected')
+        inspEl = evt.target
+        inspEl.classList.add ('selected')
       }
-      else ui.inspect (inspected = null)
+      else {
+        ui.inspect ((pinned = false, inspected = null))
+        if (inspEl) inspEl.classList.remove ('selected')
+        inspEl = null
+      }
     })
 
-
-
-    // Event handlers...
     document.addEventListener ('click', evt => {
+
       if (objectKey in evt.target) {
         ui.inspect (evt.target [objectKey])
-        // pageConsole.write (domex `@default` .render (evt.target [objectKey]).elem)
         window.$ = evt.target [objectKey]
       }
-      if ('key' in evt.target.dataset)
-        ui.showSample (+evt.target.dataset.key)
 
-      if ('suite' in evt.target.dataset)
+      if ('key' in evt.target.dataset) {
+        ui.showSample (+evt.target.dataset.key)
+        if (sampleEl)
+          sampleEl.classList.remove ('selected')
+        evt.target.classList.add ('selected')
+        sampleEl = evt.target
+      }
+
+      if ('suite' in evt.target.dataset) {
         ui.showSuite (+evt.target.dataset.suite)
+        evt.target.classList.add ('selected')
+        if (suiteEl) suiteEl.classList.remove ('selected')
+        evt.target.classList.add ('selected')
+        suiteEl = evt.target
+      }
 
     })
 
@@ -154,4 +158,4 @@
   }
 
  setTimeout (main)
-})()</script>
+</script>
