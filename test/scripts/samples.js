@@ -1,7 +1,7 @@
 // Samples
 // -------
 
-window ['html-suites'] = [
+export default [
   
   /*
   {

@@ -1,8 +1,9 @@
 
 // Imports
-const { html, domex: { domex, DomEx, Domex } } = modules
+import * as html from '../../lib/index.js'
+const { domex: { domex, DomEx, Domex } } = modules
 const log = console.log.bind (console)
-const T = modules.html.Lexer.tokenTypes
+const T = html.Lexer.tokenTypes
 
 // DOM tools
 const htmlns = 'http://www.w3.org/1999/xhtml'
@@ -200,13 +201,13 @@ function showTree (domNode) {
 
   elem = $('div')
   elem.className = 'node'
-  if (domNode instanceof Document || domNode instanceof html.TreeBuilder.Node && domNode.name === '#document')
+  if (domNode instanceof Document || domNode instanceof html.treebuilder.Node && domNode.name === '#document')
     label = '#document'
 
   else if (domNode instanceof DocumentType)
     label = '<!doctype>'
 
-  else if (domNode instanceof Comment || domNode instanceof html.TreeBuilder.Node && domNode.name === '#comment')
+  else if (domNode instanceof Comment || domNode instanceof html.treebuilder.Node && domNode.name === '#comment')
     label = '<!-->'
 
   else if (domNode instanceof Element) {
@@ -215,7 +216,7 @@ function showTree (domNode) {
     else label = domNode.tagName.toLowerCase ()
   }
 
-  else if (domNode instanceof html.TreeBuilder.Node || domNode instanceof html.TreeBuilder.Leaf) {
+  else if (domNode instanceof html.treebuilder.Node || domNode instanceof html.treebuilder.Leaf) {
     label = domNode.name
   }
 
@@ -271,7 +272,7 @@ function* _coalesce (stream) {
 // For both browser DOM and html-parser 'DOM'
 
 function* _traverse (node) {
-  const T = modules.html.Lexer.tokenTypes
+  const T = html.Lexer.tokenTypes
 
   if (typeof node === 'string' || node instanceof String)
     yield node
@@ -279,13 +280,13 @@ function* _traverse (node) {
   else if (node instanceof Text)
     yield node.data
 
-  else if (node instanceof html.TreeBuilder.Node && node.name === '#comment')
+  else if (node instanceof html.treebuilder.Node && node.name === '#comment')
     null // TODO
 
-  else if (node instanceof html.TreeBuilder.Node && node.name[0] === '#')
+  else if (node instanceof html.treebuilder.Node && node.name[0] === '#')
     for (let child of node.children) yield* _traverse (child)
 
-  else if (node instanceof html.TreeBuilder.Node) {
+  else if (node instanceof html.treebuilder.Node) {
     yield [T.StartTag, node.name] // TODO also yield attrs
     for (let child of node.children) yield* _traverse (child)
     yield [T.EndTag, node.name]
@@ -307,7 +308,7 @@ function* _traverse (node) {
     yield [T.EndTag, tagName]
   }
 
-  else if (node instanceof html.TreeBuilder.Leaf) {
+  else if (node instanceof html.treebuilder.Leaf) {
     yield [T.StartTag, node.name] // TODO also print attrs
     yield [T.EndTag, node.name]
   }
@@ -335,3 +336,9 @@ function* _print (stream, depth = 0) {
     }
   }
 }
+
+
+// Exports
+// -------
+
+export { TestUI, nativeParse, printTree, objectKey }

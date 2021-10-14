@@ -1,0 +1,288 @@
+<!DOCTYPE 
+<html lang=en>
+<head>
+  <meta charset=utf-8>
+  <title>HTML Parser Test Page</title>
+  <link rel=stylesheet href=style/base.css>
+  <script src=../dist/domex.min.js></script>
+</head>
+<body>
+<script src=scripts/error-handler.js></script>
+
+<main>
+  <h1>HTML Parser</h1>
+  <div class="Input br">
+    <textarea class="br mono" id=input cols=80 rows=5></textarea>
+  </div>
+  <div class=Output id=output><br></div>
+</main>
+
+<script type=module>
+// import * as categories  from '../lib/categories.js'
+// import * as schema      from '../lib/schema.js'
+import * as treebuilder from '../lib/treebuilder.js'
+import Lexer from '../lib/lexer.new.js'
+import { Parser, Preprocessor } from '../lib/parser.new.js'
+const { domex } = modules.domex
+
+// const log = console.log.bind (console)
+// const log = console.log.bind (console)
+
+let decode = new TextDecoder
+decode = decode.decode.bind (decode)
+let out = document.getElementById ('output')
+
+const dx = domex `
+  div.hstack @tokens
+    > @default.vstack.token.pp3*;
+  
+  div @state
+    > h3.br0 "Lexer State"
+    + @default.p;
+    // + (dl
+    //   > (di > dt "tagStart" + dd %tagStart)
+    //   + (di > dt "anchor" + dd %anchor))
+  
+  div.hstack.vsep.vlines
+    > @state.scrolly.vstack.fl ~state
+    + div
+      > (div.Tokens.p   > h3 "Tokens"          + @tokens) ~tokens
+      + (div.Adjusted.p > h3 "Adjusted Tokens" + @tokens) ~adjustedTokens
+      + div.Document.p
+        > h3 "TreeBuilder Stack"
+        + (ul.hstack.sep > li*stack %name) // @default.hstack ~stack
+        + h3 "TreeBuilder Document"
+        + div #tree`
+
+document.getElementById ('input').addEventListener ('input', oninput)
+
+function TokenCatcher (delegate) {
+  const _tokens = []
+
+  return {
+    get tokens () {
+      return _tokens
+    },
+
+    writeTag (tok) {
+      // Hack it, for the testpage\
+      // though, should tokens be mutated or not?
+        delete tok.type
+      _tokens.push (tok)
+      if (delegate)
+        delegate.writeTag (tok)
+      if (tok.name === 'script' || tok.name === 'style')
+        return 1 // raw
+    },
+
+    writeEndTag (tok) {
+      _tokens.push (tok)
+      // Hack it, for the testpage\
+      // though, should tokens be mutated or not?
+      tok.type = 'EndTag'
+      if (delegate)
+        return delegate.writeEndTag (tok)
+    },
+
+    writeData (buff) {
+      _tokens.push (buff)
+      if (delegate)
+        return delegate.writeData (buff)
+    },
+  
+    writeSpace (buff) {
+      _tokens.push (buff)
+      if (delegate)
+        return delegate.writeSpace (buff)
+    },
+  
+    writeNulls (buff) {
+      _tokens.push (buff)
+      if (delegate)
+        return delegate.writeNulls (buff)
+    },
+
+    writeMDecl (buff) {
+      _tokens.push (buff)
+      if (delegate)
+        return delegate.writeMDecl (buff)
+    }
+
+  }
+  
+}
+
+function oninput (evt) {
+  const p  = new Parser ()
+  const r2 = new TokenCatcher (p)
+  const pp = new Preprocessor (r2)
+  const r1 = new TokenCatcher (pp)
+  const l  = new Lexer (r1)
+
+  l.parse (evt.target.value)
+  const tokens = r1.tokens.map (_ => _ instanceof Uint8Array ? decode (_) : _)
+  const adjustedTokens = r2.tokens.map (_ => _ instanceof Uint8Array ? decode (_) : _)
+  
+  const el = dx.render ({ tokens, adjustedTokens, state:l.state, stack:p.stack, result:p.document }) .elem
+  out.replaceWith (el)
+  out = el
+  document.getElementById ('tree')
+    .replaceWith (showTree (p.document))
+}
+
+function main () {
+  input.focus ()
+
+  var samples = [
+    '<script>φοο βαρ βαζ</foo>bar baz</'+'script>',
+    '<script></'+'script>\n<script src="../dist/domex.min.js"></'+'script>',
+    '<select>foo<select>bar',
+  ]
+
+  input.value = samples[samples.length-1]
+  oninput ({ target:input })
+}
+
+
+// Quick
+
+const objectKey =
+  Symbol ()
+
+const $ = name =>
+  document.createElement (name)
+
+const log = console.log.bind (console)
+
+function showTree (domNode) {
+  let elem, label, clss
+
+  if (domNode instanceof Text) {
+    clss = (/^\s*$/.test (domNode.data)) ? 'space' : 'text'
+    elem = $('span')
+    elem.append (domNode.data)
+    elem.className = clss
+    // elem[objectKey] = domNode
+    return elem
+  }
+
+  if (domNode instanceof Uint8Array) {
+    elem = $('span')
+    clss = (domNode[0] === 0x20 || domNode[0] === 0x9) ? 'space' : 'text'
+    elem.className = clss
+    elem.append (decode (domNode))
+    return elem
+  }
+  // if (typeof domNode === 'string' || domNode instanceof String) {
+  //   clss = (/^\s*$/.test (domNode)) ? 'space' : 'text'
+  //   elem = $('span')
+  //   elem.append (domNode)
+  //   elem.className = clss
+  //   elem[objectKey] = domNode
+  //   return elem
+  // }
+
+  elem = $('div')
+  elem.className = 'node'
+
+  if (domNode instanceof Document || domNode instanceof treebuilder.Node && domNode.name === '#document')
+    label = '#document'
+
+  else if (domNode instanceof DocumentType)
+    label = '<!doctype>'
+
+  else if (domNode instanceof Comment || domNode instanceof treebuilder.Node && domNode.name === '#comment')
+    label = '<!-->'
+
+  else if (domNode instanceof Element) {
+    if (domNode.namespaceURI && domNode.namespaceURI !== htmlns)
+      label = domNode.namespaceURI.split ('/') .pop () + ':' + domNode.tagName
+    else label = domNode.tagName.toLowerCase ()
+  }
+
+  else if (domNode instanceof treebuilder.Node || domNode instanceof treebuilder.Leaf) {
+    label = domNode.name
+  }
+
+  // log (domNode.__proto__)
+  var elel = $('span')
+  elel.className = 'label'
+  elel.append (label)
+  elem.append (elel)
+  elem[objectKey] = domNode.frame ? domNode.frame.info : domNode
+  
+  if (clss) elem.classList.add(clss)
+  let ul; elem.append ((ul = $('div')))
+  ul.className = 'children'
+
+  const children = domNode instanceof HTMLTemplateElement
+    ? domNode.content.childNodes
+    : domNode.name === '#comment' ? []
+    : domNode.childNodes || domNode.children || []
+
+  for (let x of children) {
+    ul.append (showTree (x))
+  }
+  return elem
+}
+
+
+//
+main ()
+
+</script>
+<style>
+  
+  :root {
+    --screen:#0002;
+  }
+
+  .token {
+    display:inline-block;
+    border-radius:.2rem;
+    border:1px solid #ccc;
+    min-height:1rem;
+    line-height:1rem;
+    white-space:pre-wrap;
+  }
+
+
+/* Dom Tree Viz
+/* ------------ */
+
+.DomTree {
+  /*font-family:Hack, Monaco, Menlo, Monospace;*/
+  /*font-size:12px;*/
+  overflow:scroll;
+  padding:1rem;
+  font-weight:bold;
+}
+
+div.children {
+  margin-left:.55rem;
+  padding-left:.4rem;
+  border-left:1.5px solid black;
+  white-space:pre;
+}
+
+div.children:after {
+  content:'';
+  display:block;
+  clear:both;
+  height:0px;
+}
+
+div.children .text, div.children .space {
+  font-weight:normal;
+  font-style:italic;
+  background:var(--screen);
+  min-height:1rem;
+  line-height:1rem;
+  padding:.15rem 0;
+}
+
+div.children .data {
+  font-family:Hack, Mono;
+}
+</style>
+</html>
