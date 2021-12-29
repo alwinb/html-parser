@@ -1,7 +1,7 @@
 
 // Imports
 import * as html from '../../lib/index.js'
-const { domex: { domex, DomEx, Domex } } = modules
+import { domex, Domex } from '../../dist/domex.min.js'
 const log = console.log.bind (console)
 const T = html.Lexer.tokenTypes
 

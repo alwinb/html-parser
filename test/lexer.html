@@ -8,9 +8,6 @@
   <!-- -->
   <script>//</script>
   <style> test </style>
-  <!-- -->
-  <script src="../dist/html.js"></script>
-  <script src="../dist/domex.min.js"></script>
   </head>
   <bgsound>
 </head>
@@ -156,12 +153,12 @@
   <pre id=colors></pre>
 </div>
 
-<script>
+<script type=module>
   const log = console.log.bind (console)
   const doc = document
-  const { html, domex: { domex, Domex } } = modules
+  import { domex, Domex } from '../dist/domex.min.js'
+  import * as html from '../dist/html.min.js'
   const { typeName, stateInfo } = html.Lexer
-  
   const { defineProperty:define } = Object
 
   const pre = doc.getElementById ('colors')
@@ -202,10 +199,12 @@
   }
 
   function show (data) {
-    const stream = html.chunks (data)
-    let stateBefore = stateInfo (stream.state), stateAfter
+    const lexer = new html.Lexer ()
+    lexer .write (data) .end ()
+    let stateBefore = stateInfo (lexer.state), stateAfter
+    const stream = lexer.read ()
     for (let chunk of stream) {
-      stateAfter = stateInfo (stream.state)
+      stateAfter = stateInfo (lexer.state)
       const el = renderChunk (chunk)
       pre.append (el)
       el [objectKey] = { token: { type: typeName (chunk[0]), value: chunk[1] }, stateBefore, stateAfter }
@@ -236,7 +235,8 @@
     req.open ('GET', document.location)
     req.send ()
   }
+
+  // Main
+  // ----
+  main ()
 </script>
-<script>main()</script>
-
-

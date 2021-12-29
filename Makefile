@@ -7,7 +7,7 @@ all: dist/domex.min.js dist/html.min.js dist/html.new.min.js Makefile
 
 dist/domex.min.js: test/domex-browser.js Makefile
 	@ echo "Making domex browser module"
-	@ esbuild test/domex-browser.js --bundle --minify --outfile=dist/domex.min.js
+	@ esbuild node_modules/domex/src/browser.js --bundle --format=esm --minify --outfile=dist/domex.min.js
 
 dist/html.min.js: dist/ $(sources) Makefile
 	@ echo "Making html-parser ES module"

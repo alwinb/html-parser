@@ -4,10 +4,9 @@
   <meta charset=utf-8>
   <title>HTML Parser Test Page</title>
   <link rel=stylesheet href=style/base.css>
-  <script src=../dist/domex.min.js></script>
 </head>
 <body>
-<script src=scripts/error-handler.js></script>
+<script type=module src=scripts/error-handler.js></script>
 
 <main>
   <h1>HTML Parser</h1>
@@ -23,7 +22,7 @@
 import * as treebuilder from '../lib/treebuilder.js'
 import Lexer from '../lib/lexer.new.js'
 import { Parser, Preprocessor } from '../lib/parser.new.js'
-const { domex } = modules.domex
+import { domex, Domex } from '../dist/domex.min.js'
 
 // const log = console.log.bind (console)
 // const log = console.log.bind (console)

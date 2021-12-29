@@ -1,5 +1,4 @@
-(() => {
-const { domex } = window.modules.domex
+import { domex, Domex } from '../../dist/domex.min.js'
 const { entries } = Object
 
 // Use Symbol.toStringTag to always return constructor.name
@@ -57,4 +56,3 @@ function rewriteUrl (url1, line = 1, column = 0) {
 // Main
 
 window.addEventListener ('error', showError)
-})()
