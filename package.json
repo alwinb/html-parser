@@ -28,5 +28,8 @@
   "bugs": {
     "url": "https://github.com/alwinb/html-parser/issues"
   },
-  "homepage": "https://github.com/alwinb/html-parser#readme"
+  "homepage": "https://github.com/alwinb/html-parser#readme",
+  "dependencies": {
+    "domex": "github:alwinb/domex#v0.9.0"
+  }
 }

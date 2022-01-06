@@ -5,17 +5,16 @@
   <title>Tree Builder Test Page</title>
   <link rel=stylesheet href=style/base.css>
   <link rel=stylesheet href=style/tree.css>
-  <script src=../dist/domex.min.js></script>
 </head>
 <body>
-<script src=scripts/error-handler.js></script>
+<script type=module src=scripts/error-handler.js></script>
 <script type=module src=scripts/samples.js></script>
 <script type=module>
 
+  import { domex, Domex } from '../dist/domex.min.js'
   import { Parser } from '../lib/index.js'
   import { TestUI, objectKey, nativeParse, printTree } from './scripts/testui.js'
   import suites from './scripts/samples.js'
-  const { domex } = modules.domex
   const log = console.log.bind (console)
 
   // Test runner
