@@ -16,7 +16,7 @@ const errorDx = domex `
     > h2.br0 %name ~error
     + div.hstack.p0 > @frame *stack;
 
-  div.layer.error.notification.m4.pp6 [style="background:#fffd"]
+  div.layer.error.notification.m4.pp6 [style="background:#fffd;top:0;right:0"]
     > @error`
 
 function showError (evt) {
@@ -30,7 +30,7 @@ function showError (evt) {
 function parseStack (stack) {
   const result = []
   for (let sline of stack.split ('\n')) {
-    let message, line, col, url, _;
+    let message, rest, line, col, url, _;
     [message, rest] = sline.split (/@?(?=\bfile:[/][/])/i) // FF, Safari
     if (url) {
       const [_, url, line, col] = /^(.*)[:](\d+)[:](\d+)$/ .exec (rest)
@@ -45,7 +45,7 @@ function parseStack (stack) {
 function rewriteUrl (url1, line = 1, column = 0) {
   const url = new URL (url1, document.baseURI)
   if (url.protocol === 'file:' || url.protocol === 'x-txmt-filehandle:') {
-    callbackUrl = new URL ('txmt://open?')
+    const callbackUrl = new URL ('txmt://open?')
     entries ({ url, line, column }) .forEach (kv => callbackUrl.searchParams.set (...kv))
     return callbackUrl
   }
