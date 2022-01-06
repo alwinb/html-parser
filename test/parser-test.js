@@ -1,36 +1,8 @@
-import { Parser } from '../lib/index.js'
 import { fragmentRule } from '../lib/schema.js'
+import { parse } from '../lib/index.js'
+import { printTree } from '../lib/traversal.js'
 import * as util from 'util'
 const log = console.log.bind (console)
-
-
-// Serialise Test Result
-// ---------------------
-
-function print (node) {
-  return [... _print (node)] .join ('')
-}
-
-function* _print (node, depth=0) {
-  let indent = ''
-  for (let i=0; i<depth; i++) indent += '  '
-  if (typeof node === 'string')
-    yield `| ${indent}"${node}"\n`
-
-  else if (node instanceof Node) {
-    yield `| ${indent}<${node.name}>\n`
-    // TODO also print attrs, and coalesce text nodes
-    for (let child of node.children) yield* _print (child, depth+1)
-  }
-
-  else if (node instanceof Leaf) {
-    yield `| ${indent}<${node.name}>\n`
-    // TODO also print attrs, and add quotes around text
-  }
-
-  else if (node instanceof Document)
-    for (let child of node.children) yield* _print (child, depth)
-}
 
 
 // Samples
@@ -83,20 +55,19 @@ var samples = [
   '<frame></frame></frame><frameset>',//'<frame><frameset><frame></frameset><noframes></frameset><noframes>',
   '<head> </head> <pre> <source> <frameset>',
   '<!DOCTYPE html><frameset><svg><g></g><g></g><p><span>',
+  '<i><b><i>1<p><s><u>2<p>bar</b>3',
 ]
 
 // Test
 // ====
 
-const verbose = true
-var p = new Parser ({ verbose }) // context:fragmentRule
+const options = { verbose: true }
 
 for (const sample of samples) {
   log ('\n', sample, '\n'+sample.replace (/[^\n]/g, '='))
-  var doc = p.parse (sample) 
+  var doc = parse (sample, options) 
   log (util.inspect (doc, {depth:Infinity}))
+  log ('\n Result')
+  log (printTree (doc))
 }
-
-
-
 

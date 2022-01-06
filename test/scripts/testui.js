@@ -1,11 +1,13 @@
 
 // Imports
-import * as html from '../../lib/index.js'
+
+import { parse, Node as _Node, MDecl, version } from '../../lib/index.js'
+import { printTree } from '../../lib/traversal.js'
 import { domex, Domex } from '../../dist/domex.min.js'
 const log = console.log.bind (console)
-const T = html.Lexer.tokenTypes
 
 // DOM tools
+
 const htmlns = 'http://www.w3.org/1999/xhtml'
 const byId = document.getElementById.bind (document)
 const $ = name => document.createElement (name)
@@ -17,6 +19,7 @@ const setProps = (el, props) => {
 function nativeParse (input) {
   return new DOMParser () .parseFromString (input, 'text/html')
 }
+
 
 
 // Test UI
@@ -90,7 +93,7 @@ class TestUI {
     const samples = this.samples = this.suites[0].samples
     const sample = this.sample // = samples[0]
 
-    const elem_ = TestUI.domex.render ({ suites, samples, version:html.version }) .elem
+    const elem_ = TestUI.domex.render ({ suites, samples, version }) .elem
     this.elem.replaceWith (elem_)
     this.elem = elem_
 
@@ -131,7 +134,7 @@ class TestUI {
     this.dom.input.value = sample
   
     const nativeResult = nativeParse (sample)
-    const result = html.parse (sample)
+    const result = parse (sample)
 
     this.dom.view1.lastChild.replaceWith (showTree (nativeResult))
     this.dom.view2.lastChild.replaceWith (showTree (result))
@@ -179,6 +182,9 @@ class TestUI {
 
 // domNode may either be a browser DOM node or a light-weight html-parser 'DOM' node. 
 
+let decode = new TextDecoder ()
+decode = decode.decode.bind (decode)
+
 function showTree (domNode) {
   let elem, label, clss
 
@@ -190,7 +196,11 @@ function showTree (domNode) {
     // elem[objectKey] = domNode
     return elem
   }
-  if (typeof domNode === 'string' || domNode instanceof String) {
+
+  if (domNode instanceof Uint8Array)
+    domNode = decode (domNode)
+
+  if (typeof domNode === 'string') {
     clss = (/^\s*$/.test (domNode)) ? 'space' : 'text'
     elem = $('span')
     elem.append (domNode)
@@ -201,13 +211,13 @@ function showTree (domNode) {
 
   elem = $('div')
   elem.className = 'node'
-  if (domNode instanceof Document || domNode instanceof html.treebuilder.Node && domNode.name === '#document')
+  if (domNode instanceof Document || domNode instanceof _Node && domNode.name === '#document')
     label = '#document'
 
-  else if (domNode instanceof DocumentType)
+  else if (domNode instanceof DocumentType || domNode instanceof MDecl)
     label = '<!doctype>'
 
-  else if (domNode instanceof Comment || domNode instanceof html.treebuilder.Node && domNode.name === '#comment')
+  else if (domNode instanceof Comment || domNode instanceof _Node && domNode.name === '#comment')
     label = '<!-->'
 
   else if (domNode instanceof Element) {
@@ -216,18 +226,20 @@ function showTree (domNode) {
     else label = domNode.tagName.toLowerCase ()
   }
 
-  else if (domNode instanceof html.treebuilder.Node || domNode instanceof html.treebuilder.Leaf) {
+  else //if (domNode instanceof _Node) {
     label = domNode.name
-  }
+  //}
+  
+  // else log (domNode, domNode instanceof _Node, label)
 
   // log (domNode.__proto__)
   var elel = $('span')
-  elel.className = 'label'
-  elel.append (label)
-  elem.append (elel)
-  elem[objectKey] = domNode.frame ? domNode.frame.info : domNode
+    elel.className = 'label'
+    elel.append (label)
+    elem.append (elel)
+    elem [objectKey] = domNode.frame ? domNode.frame.info : domNode
   
-  if (clss) elem.classList.add(clss)
+  if (clss) elem.classList.add (clss)
   let ul; elem.append ((ul = $('div')))
   ul.className = 'children'
 
@@ -242,103 +254,7 @@ function showTree (domNode) {
   return elem
 }
 
-
-// Tree Serialisation
-// ------------------
-
-function printTree (node) {
-  const toks = _coalesce (_traverse (node))
-  return [..._print (toks)] .join ('')
-}
-
-function* _coalesce (stream) {
-  let last
-  for (const x of stream) {
-    
-    if (typeof x === 'string' || x instanceof String) {
-      if (last != null) last += x
-      else last = x
-    }
-    else {
-      if (last) { yield last; last = null }
-      yield x
-    }
-  }
-  if (last) yield last
-}
-
-
-// Traversal,
-// For both browser DOM and html-parser 'DOM'
-
-function* _traverse (node) {
-  const T = html.Lexer.tokenTypes
-
-  if (typeof node === 'string' || node instanceof String)
-    yield node
-
-  else if (node instanceof Text)
-    yield node.data
-
-  else if (node instanceof html.treebuilder.Node && node.name === '#comment')
-    null // TODO
-
-  else if (node instanceof html.treebuilder.Node && node.name[0] === '#')
-    for (let child of node.children) yield* _traverse (child)
-
-  else if (node instanceof html.treebuilder.Node) {
-    yield [T.StartTag, node.name] // TODO also yield attrs
-    for (let child of node.children) yield* _traverse (child)
-    yield [T.EndTag, node.name]
-  }
-
-  else if (node instanceof HTMLTemplateElement) {
-    const tagName = 'template'
-    yield [T.StartTag, tagName] // TODO also yield attrs
-    for (let child of node.content.childNodes) yield* _traverse (child)
-    yield [T.EndTag, tagName]
-  }
-
-  else if (node instanceof Element) {
-    let tagName = node.tagName
-    if (node.namespaceURI && node.namespaceURI === htmlns)
-      tagName = tagName.toLowerCase ()
-    yield [T.StartTag, tagName] // TODO also yield attrs
-    for (let child of node.childNodes) yield* _traverse (child)
-    yield [T.EndTag, tagName]
-  }
-
-  else if (node instanceof html.treebuilder.Leaf) {
-    yield [T.StartTag, node.name] // TODO also print attrs
-    yield [T.EndTag, node.name]
-  }
-
-  else if (node instanceof Document)
-    for (let child of node.childNodes) yield* _traverse (child)
-}
-
-
-function* _print (stream, depth = 0) {
-  for (const token of stream) {
-    let indent = ''
-    for (let i=0; i<depth; i++) indent += '  '
-
-    if (typeof token === 'string' || token instanceof String)
-      yield `| ${indent}"${token}"\n`
-
-    else if (token[0] === T.StartTag) {
-      yield `| ${indent}<${token[1]}>\n`
-      depth++
-    }
-
-    else if (token[0] === T.EndTag) {
-      depth--
-    }
-  }
-}
-
-
 // Exports
 // -------
 
-export { TestUI, nativeParse, printTree, objectKey }
+export { TestUI, nativeParse, objectKey }
