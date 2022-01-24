@@ -1,14 +1,13 @@
 
 // Imports
 
-import { parse, Node as _Node, MDecl, version } from '../../lib/index.js'
+import { parse, dom, version } from '../../lib/index.js'
 import { printTree } from '../../lib/traversal.js'
 import { domex, Domex } from '../../dist/domex.min.js'
 const log = console.log.bind (console)
 
 // DOM tools
 
-const htmlns = 'http://www.w3.org/1999/xhtml'
 const byId = document.getElementById.bind (document)
 const $ = name => document.createElement (name)
 const setProps = (el, props) => {
@@ -186,60 +185,63 @@ let decode = new TextDecoder ()
 decode = decode.decode.bind (decode)
 
 function showTree (domNode) {
-  let elem, label, clss
+  let elem, label, className
 
   if (domNode instanceof Text) {
-    clss = (/^\s*$/.test (domNode.data)) ? 'space' : 'text'
+    className = (/^\s*$/.test (domNode.data)) ? 'space' : 'text'
     elem = $('span')
     elem.append (domNode.data)
-    elem.className = clss
+    elem.className = className
     // elem[objectKey] = domNode
     return elem
   }
 
-  if (domNode instanceof Uint8Array)
-    domNode = decode (domNode)
-
-  if (typeof domNode === 'string') {
-    clss = (/^\s*$/.test (domNode)) ? 'space' : 'text'
+  if (domNode instanceof Uint8Array) {
     elem = $('span')
-    elem.append (domNode)
-    elem.className = clss
-    elem[objectKey] = domNode
+    className = (domNode[0] === 0x20 || domNode[0] === 0x9) ? 'space' : 'text'
+    elem.className = className
+    elem.append (decode (domNode))
     return elem
   }
+  // if (typeof domNode === 'string') {
+  //   className = (/^\s*$/.test (domNode)) ? 'space' : 'text'
+  //   elem = $('span')
+  //   elem.append (domNode)
+  //   elem.className = className
+  //   elem[objectKey] = domNode
+  //   return elem
+  // }
 
   elem = $('div')
   elem.className = 'node'
-  if (domNode instanceof Document || domNode instanceof _Node && domNode.name === '#document')
+
+  if (domNode instanceof Document || domNode instanceof dom.Document)
     label = '#document'
 
-  else if (domNode instanceof DocumentType || domNode instanceof MDecl)
+  else if (domNode instanceof DocumentType || domNode instanceof dom.MDecl && domNode.name === 'doctype')
     label = '<!doctype>'
 
-  else if (domNode instanceof Comment || domNode instanceof _Node && domNode.name === '#comment')
+  else if (domNode instanceof Comment || domNode instanceof dom.MDecl) // && domNode.name === '#comment')
     label = '<!-->'
 
   else if (domNode instanceof Element) {
-    if (domNode.namespaceURI && domNode.namespaceURI !== htmlns)
+    if (domNode.namespaceURI && domNode.namespaceURI !== dom.htmlns)
       label = domNode.namespaceURI.split ('/') .pop () + ':' + domNode.tagName
     else label = domNode.tagName.toLowerCase ()
   }
 
-  else //if (domNode instanceof _Node) {
+  else if (domNode instanceof dom.Node) {
     label = domNode.name
-  //}
-  
-  // else log (domNode, domNode instanceof _Node, label)
+  }
 
   // log (domNode.__proto__)
   var elel = $('span')
-    elel.className = 'label'
-    elel.append (label)
-    elem.append (elel)
-    elem [objectKey] = domNode.frame ? domNode.frame.info : domNode
-  
-  if (clss) elem.classList.add (clss)
+  elel.className = 'label'
+  elel.append (label)
+  elem.append (elel)
+  elem[objectKey] = domNode.frame ? domNode.frame.info : domNode
+
+  if (className) elem.classList.add (className)
   let ul; elem.append ((ul = $('div')))
   ul.className = 'children'
 
@@ -257,4 +259,4 @@ function showTree (domNode) {
 // Exports
 // -------
 
-export { TestUI, nativeParse, objectKey }
+export { TestUI, nativeParse, objectKey, showTree }

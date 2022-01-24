@@ -1,6 +1,6 @@
 import { fragmentRule } from '../lib/schema.js'
 import { parse } from '../lib/index.js'
-import { printTree } from '../lib/traversal.js'
+import { traverse, printTree } from '../lib/traversal.js'
 import * as util from 'util'
 const log = console.log.bind (console)
 
@@ -56,6 +56,7 @@ var samples = [
   '<head> </head> <pre> <source> <frameset>',
   '<!DOCTYPE html><frameset><svg><g></g><g></g><p><span>',
   '<i><b><i>1<p><s><u>2<p>bar</b>3',
+  'Hello <!-- foo --> Bar',
 ]
 
 // Test
@@ -66,8 +67,11 @@ const options = { verbose: true }
 for (const sample of samples) {
   log ('\n', sample, '\n'+sample.replace (/[^\n]/g, '='))
   var doc = parse (sample, options) 
+
   log (util.inspect (doc, {depth:Infinity}))
-  log ('\n Result')
+  log ('---')
+  for (const tok of traverse (doc)) log (tok)
+  log ('---')
   log (printTree (doc))
 }
 
