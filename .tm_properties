@@ -1,17 +1,17 @@
 
-excludeInFolderSearch = "{$exclude,dist/*}"
-excludeInFileChooser = "{$exclude,dist/*}"
+excludeInFolderSearch = "{$exclude,dist,node_modules,private}"
+excludeInFileChooser = "{$exclude,dist,node_modules.private}"
 
 [ lexer.js ]
-TM_RUN_TARGET = "${TM_PROJECT_DIRECTORY}/test/lexer-test.js"
-
-[ tokens.js ]
 TM_RUN_TARGET = "${TM_PROJECT_DIRECTORY}/test/tokenizer-test.js"
 
 [ parser.js ]
 TM_RUN_TARGET = "${TM_PROJECT_DIRECTORY}/test/parser-test.js"
 
-[ {director.js,treebuilder.js,schema.js} ]
+[ schema.js ]
+TM_RUN_TARGET = "${TM_PROJECT_DIRECTORY}/test/parser-test.js"
+
+[ treebuilder.js ]
 TM_RUN_TARGET = "${TM_PROJECT_DIRECTORY}/test/parser-test.js"
 
 [ categories.js ]
