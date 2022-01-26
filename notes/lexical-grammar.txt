@@ -1,0 +1,128 @@
+HTML5 Grammar
+=============
+
+A preliminary formal lexical grammar for HTML5. 
+
+NB. The tokeniser algorithm in the standard is specified in terms of unicode code points, and requires a pre-pass over the input to normalise newlines. 
+It is however possible to express the lexical grammar on any ASCII compatible encoding, directly on an octet-stream and without a pre-pass to normalise newlines, and I am aiming for that. Decoding can then be done in a latter phase. Support for ASCII incompatible encodings can be added later.
+
+
+Character sets
+--------------
+
+any       := { \x00-\xFF }
+alpha     := { a-z, A-Z }
+digit     := { 0-9 }
+alphad    := alpha | digit
+hexdigit  := { 0-9, a-f, A-F }
+space     := { \t, \r, \n, \f, ' ' }
+s         := space // abbreviation
+sls       := space | { / }
+nonsq     := any \ { ' }
+nondq     := any \ { " }
+nonq      := any \ s \ { > }
+anstart   := any \ s \ { >, / }
+anchar    := any \ s \ { >, /, = }
+tnchar    := any \ s \ { >, / }
+
+
+Grammar
+-------
+
+html5 := token*
+
+token := 
+  | doctype // TODO
+  | comment // TODO
+  | bogusComment // TODO
+  | rcdataElement
+  | rawtextElement
+  | plaintextElement
+  | startTag
+  | endTag
+  | charRef
+  | charRefLegacy
+  | space
+  | data
+
+newline := 
+  | \n
+  | \r\n // NB ambiguous. This rule takes precedence over the next. 
+  | \r
+
+charRef :=
+  | '&#' digit+ ';'
+  | '&#' ('x'|'X') hexdigit+ ';' // TODO, check count
+  | '&' alpha alphad* ';'
+
+charRefLegacy :=
+  | '&' alpha alphad* // TODO constraints
+
+
+### Tags
+
+tagName :=
+  alpha tnchar*
+
+c :=
+  '' | sls* s | autoClose
+
+autoClose :=
+  sls* '/'
+
+startTag :=
+  '<' tagName attributes c '>'
+
+endTag :=
+  '</' tagName attributes c '>'
+
+
+### Attributes
+
+attributes = 
+  (sls+ attrs)?
+
+attrs :=
+  | name
+  | name s* '=' s* value
+  | name sls+ attrs
+  | name s* '=' s* value (s sls*) attrs
+
+name :=
+  anstart anchar*
+
+value := 
+  unquoted | singlequoted | doublequoted
+
+unquoted := 
+  (charRef | nonq)*
+
+doublequoted :=
+  " (charRef | nondq)* "
+
+singlequoted :=
+  ' (charRef | nonsq)* '
+
+
+### Rawtext, RCData and PlainText elements
+
+rawtextElement := 
+  | '<script'   attributes c '>' rawtext '</script'   attributes c '>'
+  | '<style'    attributes c '>' rawtext '</style'    attributes c '>'
+  | '<xmp'      attributes c '>' rawtext '</xmp'      attributes c '>'
+  | '<noembed'  attributes c '>' rawtext '</noembed'  attributes c '>'
+  | '<iframe'   attributes c '>' rawtext '</iframe'   attributes c '>'
+  | '<noscript' attributes c '>' rawtext '</noscript' attributes c '>'
+  // The last rule (noscript) only applies if scripting is enabled in the UA. 
+
+rcdataElement := 
+  | '<textarea' attributes c '>' rcdata '</textarea' attributes c '>'
+  | '<title'    attributes c '>' rcdata '</title'    attributes c '>'
+
+plaintextElement := 
+  | '<plaintext' attributes c '>' plaintext
+
+rawtext := any* // FIXME This is ambiguous/ overlaps with the rawText end tag
+rcdata := // TODO
+plaintext := any*
+

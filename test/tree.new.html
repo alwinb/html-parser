@@ -4,10 +4,9 @@
   <meta charset=utf-8>
   <title>HTML Parser Test Page</title>
   <link rel=stylesheet href=style/base.css>
-  <script src=../dist/domex.min.js></script>
 </head>
 <body>
-<script src=scripts/error-handler.js></script>
+<script type=module src=scripts/error-handler.js></script>
 
 <main>
   <h1>HTML Parser</h1>
@@ -18,15 +17,13 @@
 </main>
 
 <script type=module>
-// import * as categories  from '../lib/categories.js'
-// import * as schema      from '../lib/schema.js'
-import * as treebuilder from '../lib/treebuilder.js'
-import Lexer from '../lib/lexer.new.js'
-import { Parser, Preprocessor } from '../lib/parser.new.js'
-const { domex } = modules.domex
 
-// const log = console.log.bind (console)
-// const log = console.log.bind (console)
+import { dom, Lexer, Preprocessor, Parser } from '../lib/index.js'
+import { showTree } from './scripts/testui.js'
+import { domex, Domex } from '../dist/domex.min.js'
+const log = console.log.bind (console)
+
+//
 
 let decode = new TextDecoder
 decode = decode.decode.bind (decode)
@@ -44,19 +41,18 @@ const dx = domex `
     //   + (di > dt "anchor" + dd %anchor))
   
   div.hstack.vsep.vlines
-    > @state.scrolly.vstack.fl ~state
+    > @state.scrolly.vstack.fl ~lexerState
     + div
       > (div.Tokens.p   > h3 "Tokens"          + @tokens) ~tokens
       + (div.Adjusted.p > h3 "Adjusted Tokens" + @tokens) ~adjustedTokens
       + div.Document.p
         > h3 "TreeBuilder Stack"
-        + (ul.hstack.sep > li*stack %name) // @default.hstack ~stack
+        + (ul.hstack.sep > li*parserStack %name) // @default.hstack ~parserStack
         + h3 "TreeBuilder Document"
         + div #tree`
 
-document.getElementById ('input').addEventListener ('input', oninput)
 
-function TokenCatcher (delegate) {
+function Logger (delegate) {
   const _tokens = []
 
   return {
@@ -65,72 +61,72 @@ function TokenCatcher (delegate) {
     },
 
     writeTag (tok) {
-      // Hack it, for the testpage\
-      // though, should tokens be mutated or not?
-        delete tok.type
       _tokens.push (tok)
-      if (delegate)
-        delegate.writeTag (tok)
-      if (tok.name === 'script' || tok.name === 'style')
-        return 1 // raw
+      return delegate.writeTag (tok)
     },
 
     writeEndTag (tok) {
       _tokens.push (tok)
-      // Hack it, for the testpage\
-      // though, should tokens be mutated or not?
-      tok.type = 'EndTag'
-      if (delegate)
-        return delegate.writeEndTag (tok)
+      return delegate.writeEndTag (tok)
     },
 
     writeData (buff) {
       _tokens.push (buff)
-      if (delegate)
-        return delegate.writeData (buff)
+      return delegate.writeData (buff)
     },
   
     writeSpace (buff) {
       _tokens.push (buff)
-      if (delegate)
-        return delegate.writeSpace (buff)
+      return delegate.writeSpace (buff)
     },
   
     writeNulls (buff) {
       _tokens.push (buff)
-      if (delegate)
-        return delegate.writeNulls (buff)
+      return delegate.writeNulls (buff)
     },
 
     writeMDecl (buff) {
       _tokens.push (buff)
-      if (delegate)
-        return delegate.writeMDecl (buff)
+      return delegate.writeMDecl (buff)
+    },
+    
+    writeEOF () {
+      return delegate.writeEOF ()
     }
 
   }
   
 }
 
-function oninput (evt) {
+
+// Main
+
+function debugParse (input) {
   const p  = new Parser ()
-  const r2 = new TokenCatcher (p)
+  const r2 = new Logger (p)
   const pp = new Preprocessor (r2)
-  const r1 = new TokenCatcher (pp)
+  const r1 = new Logger (pp)
   const l  = new Lexer (r1)
 
-  l.parse (evt.target.value)
+  l.parse (input)
   const tokens = r1.tokens.map (_ => _ instanceof Uint8Array ? decode (_) : _)
   const adjustedTokens = r2.tokens.map (_ => _ instanceof Uint8Array ? decode (_) : _)
-  
-  const el = dx.render ({ tokens, adjustedTokens, state:l.state, stack:p.stack, result:p.document }) .elem
+  return { lexerState:l.state, tokens, adjustedTokens, parserStack:p.stack, document:p.document }
+}
+
+function oninput (evt) {
+  const obj = debugParse (evt.target.value)
+  const el = dx.render (obj) .elem
   out.replaceWith (el)
   out = el
   document.getElementById ('tree')
-    .replaceWith (showTree (p.document))
+    .replaceWith (showTree (obj.document))
 }
 
 function main () {
+  const input = document.getElementById ('input')
+  input.addEventListener ('input', oninput)
+
   input.focus ()
 
   var samples = [
@@ -143,91 +139,6 @@ function main () {
   oninput ({ target:input })
 }
 
-
-// Quick
-
-const objectKey =
-  Symbol ()
-
-const $ = name =>
-  document.createElement (name)
-
-const log = console.log.bind (console)
-
-function showTree (domNode) {
-  let elem, label, clss
-
-  if (domNode instanceof Text) {
-    clss = (/^\s*$/.test (domNode.data)) ? 'space' : 'text'
-    elem = $('span')
-    elem.append (domNode.data)
-    elem.className = clss
-    // elem[objectKey] = domNode
-    return elem
-  }
-
-  if (domNode instanceof Uint8Array) {
-    elem = $('span')
-    clss = (domNode[0] === 0x20 || domNode[0] === 0x9) ? 'space' : 'text'
-    elem.className = clss
-    elem.append (decode (domNode))
-    return elem
-  }
-  // if (typeof domNode === 'string' || domNode instanceof String) {
-  //   clss = (/^\s*$/.test (domNode)) ? 'space' : 'text'
-  //   elem = $('span')
-  //   elem.append (domNode)
-  //   elem.className = clss
-  //   elem[objectKey] = domNode
-  //   return elem
-  // }
-
-  elem = $('div')
-  elem.className = 'node'
-
-  if (domNode instanceof Document || domNode instanceof treebuilder.Node && domNode.name === '#document')
-    label = '#document'
-
-  else if (domNode instanceof DocumentType)
-    label = '<!doctype>'
-
-  else if (domNode instanceof Comment || domNode instanceof treebuilder.Node && domNode.name === '#comment')
-    label = '<!-->'
-
-  else if (domNode instanceof Element) {
-    if (domNode.namespaceURI && domNode.namespaceURI !== htmlns)
-      label = domNode.namespaceURI.split ('/') .pop () + ':' + domNode.tagName
-    else label = domNode.tagName.toLowerCase ()
-  }
-
-  else if (domNode instanceof treebuilder.Node || domNode instanceof treebuilder.Leaf) {
-    label = domNode.name
-  }
-
-  // log (domNode.__proto__)
-  var elel = $('span')
-  elel.className = 'label'
-  elel.append (label)
-  elem.append (elel)
-  elem[objectKey] = domNode.frame ? domNode.frame.info : domNode
-  
-  if (clss) elem.classList.add(clss)
-  let ul; elem.append ((ul = $('div')))
-  ul.className = 'children'
-
-  const children = domNode instanceof HTMLTemplateElement
-    ? domNode.content.childNodes
-    : domNode.name === '#comment' ? []
-    : domNode.childNodes || domNode.children || []
-
-  for (let x of children) {
-    ul.append (showTree (x))
-  }
-  return elem
-}
-
-
-//
 main ()
 
 </script>

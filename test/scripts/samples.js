@@ -612,6 +612,19 @@ export default [
   },//*/
   
   { 
+    title: 'NULL characters',
+    samples: [
+      'Hello\0World',
+      '<svg>Hello\0World',
+      '<math>Hello\0World',
+      '<select>foo\0bar',
+      '<select><option>foo\0bar',
+      '<svg><select>foo\0bar',
+      '<svg><select><option>foo\0bar',
+    ]
+  },
+
+  { 
     title: 'Space in Tables',
     samples: [
       '<table><colgroup>a b<col> <col>',
