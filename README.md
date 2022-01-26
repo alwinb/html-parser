@@ -1,7 +1,7 @@
 Html Parser
 ===========
 
-**[ Version 0.9.5 ] [ [Test Page][0] ] [ [WIP][1] ]**
+**[ Version 0.10.0 ] [ [Test Page][0] ] [ [Playground][1] ]**
 
 This is a new HTML5 parser that I am working on.  
 The focus is on code size, speed and simplicity. 
@@ -68,11 +68,13 @@ The Preprocessor makes slight adjustments to the token stream. Inconsistent beha
 
 implements _TokenHandler_
 
-The Parser wraps around a TreeBuilder and takes care of more complex parsing behaviour such as 'foster parenting" and body to frameset switching. 
+The Parser wraps around a TreeBuilder and takes care of more complex parsing behaviour that cannot be expressed by a TreeBuilder schema. Examples are 'foster parenting' and body to frameset switching. 
 
 - constructor ()
 
 ### class TreeBuilder
+
+The TreeBuilder class is derived from a delarative schema that specifies invariants on the resuting DOM tree and also specifies how to handle misplaced and mismatched tokens.
 
 - constructor (…)
 - reset ()
