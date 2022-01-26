@@ -230,7 +230,7 @@ function showTree (domNode) {
     else label = domNode.tagName.toLowerCase ()
   }
 
-  else if (domNode instanceof dom.Node) {
+  else if (domNode instanceof dom.Element) {
     label = domNode.name
   }
 
