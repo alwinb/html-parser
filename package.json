@@ -1,6 +1,6 @@
 {
   "name": "html-parser",
-  "version": "0.9.5",
+  "version": "0.10.0",
   "description": "HTML5 Parser",
   "main": "lib/index.js",
   "type": "module",
@@ -28,5 +28,8 @@
   "bugs": {
     "url": "https://github.com/alwinb/html-parser/issues"
   },
-  "homepage": "https://github.com/alwinb/html-parser#readme"
+  "homepage": "https://github.com/alwinb/html-parser#readme",
+  "devDependencies": {
+    "domex": "github:alwinb/domex"
+  }
 }
