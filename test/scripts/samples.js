@@ -505,7 +505,6 @@ export default [
       '<math><desc>foo<svg>foo<tr><div>bar</svg>bee',
       
       // Math annotation-xml
-      
       '<math><annotation-xml><p><p>',
       '<math><annotation-xml><other>',
       '<math><annotation-xml encoding=TeXt/Html><p><p>',
@@ -514,7 +513,21 @@ export default [
       '<annotation-xml><other>',
       '<annotation-xml encoding=TeXt/Html><p><p>',
       '<annotation-xml encoding=TeXt/Html><other>',
-      
+    ]
+  },
+
+  {
+    title: 'Tagname adjustments',
+    samples: [
+      '<div><img>',
+      '<div><image>',
+      '<div><RaDiAlGradient>',
+      '<svg><img>',
+      '<svg><image>',
+      '<svg><RaDiAlGradient>',
+      '<math><img>',
+      '<math><image>',
+      '<math><RaDiAlGradient>',
     ]
   },
 
