@@ -774,6 +774,10 @@ export default [
       '<head> </head> <listing> <source> <frameset>',
       '<head> </head> <menu> <source> <frameset>',
       '<head> </head> <main> <source> <frameset>',
+
+      '<svg></svg><frameset>',
+      '<math></math><frameset>',
+      '<div></div><frameset>',
     ]
   },
 
