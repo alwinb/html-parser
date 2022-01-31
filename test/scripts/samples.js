@@ -44,6 +44,8 @@ export default [
       '<a><i><b>foo</i><br>one',
       '<a><i><b>foo</i><input>one',
       '<a><i><b>foo</i><sdiv>one',
+      '<a><i><b>\0</i><nobr>\0',
+      '<a><i><b>\0</i><a>\0',
     ]
   },
 
@@ -407,11 +409,10 @@ export default [
 
       // Yet more
       '<svg></body>foo<!-->bar',
-      '<svg></html>foo<!-->bar',
       '<svg><body></body>foo<!-->bar',
       '<svg><body></body>foo<!-->bar',
-      '<svg><html></html>foo<!-->bar',
-      '<svg><html></html>foo<!-->bar',
+      '<svg><html></html>',
+      '<svg><html></html>',
 
       // Non-breakout
       '<svg><font Size>foo',
@@ -420,6 +421,9 @@ export default [
       '<svg><font>foo',
       '<svg><font other>foo',
 
+      //
+      '<table><tr><td><svg><desc><td>',
+      '<table><tr><td><svg><desc></svg><td>',
     ]
   },
 
@@ -501,7 +505,6 @@ export default [
       '<math><desc>foo<svg>foo<tr><div>bar</svg>bee',
       
       // Math annotation-xml
-      
       '<math><annotation-xml><p><p>',
       '<math><annotation-xml><other>',
       '<math><annotation-xml encoding=TeXt/Html><p><p>',
@@ -510,7 +513,21 @@ export default [
       '<annotation-xml><other>',
       '<annotation-xml encoding=TeXt/Html><p><p>',
       '<annotation-xml encoding=TeXt/Html><other>',
-      
+    ]
+  },
+
+  {
+    title: 'Tagname adjustments',
+    samples: [
+      '<div><img>',
+      '<div><image>',
+      '<div><RaDiAlGradient>',
+      '<svg><img>',
+      '<svg><image>',
+      '<svg><RaDiAlGradient>',
+      '<math><img>',
+      '<math><image>',
+      '<math><RaDiAlGradient>',
     ]
   },
 
@@ -524,11 +541,11 @@ export default [
       `</head>Foo`,
       `</body>Foo`,
       `</html>Foo`,
-      `<head></head>After head</head>Foo`,
-      `<head></head>After head</body>Foo`,
-      `<head></head>After head</html>Foo`,
+      `<head></head>After head</head>`,
+      `<head></head>After head</body>`,
+      `<head></head>After head</html>`,
 
-      // After body, after frameset, after html
+      // After body, after html
       '</body><title>X</title>',
       '</head> <head>',
       '</head> <p>',
@@ -538,11 +555,8 @@ export default [
       '<head></head> <p>',
       '<html></html>',
       '<html><body></body>',
-      '<html><frameset></frameset></html> ',
       '<table><th>',
       'foo</body><!--> bar<!--> bee',
-      '<html><frameset></frameset></html><noframes>foo</noframes>',
-      'foo</html><!-->',
       '</body><!-->bar',
     ]
   },
@@ -550,13 +564,21 @@ export default [
   {
     title: 'After Head',
     samples: [
+      '</head><link>',
+      '</head><style></style>foo',
+      '</head><style>bar</style>foo',
+      '</head><link>',
+      '</head><noscript>',
+      '</head><title>',
+      '<head></head><style></style>foo',
+      '<head></head><style>bar</style>foo',
+      '<head></head><link>',
       '</head> <link>',
       '</head> <style></style>foo',
       '</head> <style>bar</style>foo',
       '</head> <link>',
       '</head> <noscript>',
       '</head> <title>',
-
       '<head> </head> <style></style>foo',
       '<head> </head> <style>bar</style>foo',
       '<head> </head> <link>',
@@ -600,6 +622,44 @@ export default [
       '<button></body><!-->foo',
       '<p></body><!-->foo',
       '<li></body><!-->foo',
+      //
+      '<table></body><!-->foo',
+      '<table><caption></body><!-->foo',
+      '<table><tr></body><!-->foo',
+      '<table><td></body><!-->foo',
+      '<select></body><!-->foo',
+      '<select><option></body><!-->foo',
+      '<option></body><!-->foo',
+      //
+      `Foo</body><!--><!-->foo`,
+      `<frameset></body><!-->a`,
+      `<head></head>After head</body>After body`,
+    ]
+  },
+  {
+    title: 'After Frameset',
+    samples: [
+      '<html><frameset></frameset></html> ',
+      '<html><frameset></frameset></html><noframes>foo</noframes>',
+      `<frameset><frame></frameset><!--->Foo</frameset><!--->Bar</body><!-->Bee`,
+      `<frameset></frameset>Foo<!-->Foo`,
+      `<frameset></frameset></html>1<noframes>2</noframes>3<noframes>4</noframes>5`
+    ]
+  },
+  {
+    title: 'After Html',
+    samples: [
+      '</html>   <head>',
+      'foo</html><!-->',
+      '<svg><html></html>foo<!-->bar',
+      '<svg><html></html>foo<!-->bar',
+      '<svg></html><!-->bar',
+      '<svg></html>foo<!-->bar',
+      `<body></html><svg><g>foo</g>`,
+      `<body></html><svg><g>foo</g>`,
+      `<body></html><!--><div><g>foo</g>`,
+      `<body></html><!--><div><g>foo</g>`,
+      `<head></head>After head</html>After html`,
     ]
   },
 
@@ -615,20 +675,31 @@ export default [
     title: 'NULL characters',
     samples: [
       'Hello\0World',
+      '<head>Hello\0World',
       '<svg>Hello\0World',
       '<math>Hello\0World',
       '<select>foo\0bar',
       '<select><option>foo\0bar',
       '<svg><select>foo\0bar',
       '<svg><select><option>foo\0bar',
+      '<option>foo\0bar',
+      '<div>foo\0bar',
+      '<optgroup>foo\0bar',
+      '<span>foo\0bar',
+      '<table>foo\0bar',
+      '<table><td>foo\0bar',
     ]
   },
 
   { 
     title: 'Space in Tables',
     samples: [
-      '<table><colgroup>a b<col> <col>',
-      '<table> s<td></td> </table>',
+      '<table><colgroup>foo bar<col> <col>',
+      '<table><colgroup> foo<col> <col>',
+      '<table>foo <td></td> </table>',
+      '<table> foo<td></td> </table>',
+      '<table> foo <td></td> </table>',
+      '<table> \0 <td></td> </table>',
     ]
   },
 
@@ -679,6 +750,16 @@ export default [
       `<p><foo><li>`,
       '<button><div><p><applet><button>',
       '<button><div><p><applet><p>', 
+
+      '<div><a>Is closed by<a>',
+      '<div><nobr>Is closed by<nobr>',
+      '<svg><a>Not closed by<a>',
+      '<svg><nobr>Not closed by<nobr>',
+      '<svg><img>',
+      '<svg><select>not closed by<select>',
+      
+      '<svg>foo<br>bar',
+      '<svg>foo</br>bar',
     ]
   },
   
@@ -693,6 +774,10 @@ export default [
       '<head> </head> <listing> <source> <frameset>',
       '<head> </head> <menu> <source> <frameset>',
       '<head> </head> <main> <source> <frameset>',
+
+      '<svg></svg><frameset>',
+      '<math></math><frameset>',
+      '<div></div><frameset>',
     ]
   },
 
