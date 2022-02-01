@@ -428,6 +428,26 @@ export default [
   },
 
   {
+    title: 'Tagname adjustments',
+    samples: [
+      '<div><img>',
+      '<div><image>',
+      '<div><RaDiAlGradient>',
+      '<svg><img>',
+      '<svg><image>',
+      '<svg><RaDiAlGradient>',
+      '<math><img>',
+      '<math><image>',
+      '<math><RaDiAlGradient>',
+      '<svg><G>foo</g>bar',
+      '<svg><g>foo</G>bar',
+      '<math><G>foo</g>bar',
+      '<math><g>foo</G>bar',
+      '<svg><forEignObJect>foo</foreignobject>bar',
+    ]
+  },
+
+  {
     title: 'Integration points',
     samples: [
       '<svg><a>foo',
@@ -477,6 +497,9 @@ export default [
       '<svg>foo<foreignobject>bar<table><caption></svg>bee',
       '<svg>foo<foreignobject>bar<table><colgroup></svg>bee',
 
+      // Test proper closing, proper tagname adjustments
+      '<svg>foo<foreignObject>bar</foreignObject>bas',
+      
       // test closing of math from withing math-foreign tags
       '<math>foo<mi>bar</math>bee',
       '<math>foo<mi>bar<a></math>bee',
@@ -513,21 +536,6 @@ export default [
       '<annotation-xml><other>',
       '<annotation-xml encoding=TeXt/Html><p><p>',
       '<annotation-xml encoding=TeXt/Html><other>',
-    ]
-  },
-
-  {
-    title: 'Tagname adjustments',
-    samples: [
-      '<div><img>',
-      '<div><image>',
-      '<div><RaDiAlGradient>',
-      '<svg><img>',
-      '<svg><image>',
-      '<svg><RaDiAlGradient>',
-      '<math><img>',
-      '<math><image>',
-      '<math><RaDiAlGradient>',
     ]
   },
 
@@ -643,7 +651,8 @@ export default [
       '<html><frameset></frameset></html><noframes>foo</noframes>',
       `<frameset><frame></frameset><!--->Foo</frameset><!--->Bar</body><!-->Bee`,
       `<frameset></frameset>Foo<!-->Foo`,
-      `<frameset></frameset></html>1<noframes>2</noframes>3<noframes>4</noframes>5`
+      `<frameset></frameset></html>1<noframes>2</noframes>3<noframes>4</noframes>5`,
+      `<frameset><frame></frameset><!--></html><!--> <!--> <!-->`
     ]
   },
   {
@@ -781,6 +790,17 @@ export default [
     ]
   },
 
+  {
+    title: 'Browser Disagreements',
+    samples: [
+      '<svg>foo</br>bar',
+      'foo</body> <!--->',
+      'foo</body> <!---></body> <!--->',
+      '<!doctype html><p>foo<dialog>bar<p>baz',
+      '<!doctype html><dialog><p>foo</dialog>bar',
+      '<select><keygen>',
+    ]
+  },
 
   // Tests taken from the html5lib = tests
   // -------------------------------------
