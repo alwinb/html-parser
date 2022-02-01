@@ -218,7 +218,7 @@ function showTree (domNode) {
   if (domNode instanceof Document || domNode instanceof dom.Document)
     label = '#document'
 
-  else if (domNode instanceof DocumentType || domNode instanceof dom.MDecl && domNode.name.toLowerCase () === 'doctype')
+  else if (domNode instanceof DocumentType || domNode instanceof dom.Doctype)
     label = '<!doctype>'
 
   else if (domNode instanceof Comment || domNode instanceof dom.MDecl || domNode instanceof dom.Comment) // && domNode.name === '#comment')

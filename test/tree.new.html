@@ -85,9 +85,14 @@ function Logger (delegate) {
       return delegate.writeNulls (buff)
     },
 
-    writeMDecl (buff) {
-      _tokens.push (buff)
-      return delegate.writeMDecl (buff)
+    writeDoctype (item) {
+      _tokens.push (item)
+      return delegate.writeComment (item)
+    },
+
+    writeComment (item) {
+      _tokens.push (item)
+      return delegate.writeComment (item)
     },
     
     writeEOF () {

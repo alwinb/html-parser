@@ -57,7 +57,7 @@ var samples = [
 
 
 var samples = [
-'foo</body><!---></body><!--->',
+'</foreignObject><plaintext><div>foo</div>',
 ]
 
 // Test
