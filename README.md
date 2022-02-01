@@ -25,16 +25,15 @@ API
 As of version 0.10.0 the general architecture is that of a modular push parser. The parsing pipleline is set up as follows, with input flowing from right-to-left:
 
 
-<center>
 TreeBuilder  ⥦  Parser  ⥦  Preprocessor  ⥦  Lexer  ⟵  input
-</center>
+
 
 The Parser and the Preprocessor share a common _TokenHandler_ interface
 for handling a stream of input tokens, with one method for each token-type:
 
-<center>
-{ writeTag, writeEndTag, writeMDecl, writeData, writeSpace, writeNulls, writeEOF }
-</center>
+
+{ writeTag, writeEndTag, writeComment, writeData, writeSpace, writeEOF }
+
 
 The return value of each of the write* methods is used as feedback to the caller. This is used to pass a small amount of contextual information from the TreeBuilder back into the Preprocessor and the Lexer. 
 
@@ -43,10 +42,9 @@ The return value of each of the write* methods is used as feedback to the caller
 
 - writeTag (node)
 - writeEndTag (endTag)
-- writeMDecl (mDecl)
+- writeComment (mDecl)
 - writeData (buffer)
 - writeSpace (buffer)
-- writeNulls (buffer)
 - writeEOF ()
 
 ### class Lexer
