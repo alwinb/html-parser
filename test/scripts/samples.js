@@ -536,6 +536,9 @@ export default [
       '<annotation-xml><other>',
       '<annotation-xml encoding=TeXt/Html><p><p>',
       '<annotation-xml encoding=TeXt/Html><other>',
+      
+      // Others
+      '<table><svg>foo<td>bar',
     ]
   },
 
