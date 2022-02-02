@@ -683,6 +683,23 @@ export default [
     ]
   },//*/
   
+  {
+    title: 'RawText and RcData',
+    samples: [
+      `<textarea>foo &amp; bar</textarea>bee<div>buzz`,
+      `<script>foo &amp; bar</script>bee<div>buzz`,
+      `<tExTaReA>foo &amp; bar</textarea>bee<div>buzz`,
+      `<sCrIpT>foo &amp; bar</script>bee<div>buzz`,
+      `<textarea>foo <x> bar</textarea>bee<div>buzz`,
+      `<script>foo <x> bar</script>bee<div>buzz`,
+      //
+      `<svg><textarea>foo &amp; bar</textarea>bee<div>buzz`,
+      `<svg><script>foo &amp; bar</script>bee<div>buzz`,
+      `<svg><textarea>foo <x> bar</textarea>bee<div>buzz`,
+      `<svg><script>foo <x> bar</script>bee<div>buzz`,
+    ]
+  },//*/
+
   { 
     title: 'NULL characters',
     samples: [
@@ -700,6 +717,7 @@ export default [
       '<span>foo\0bar',
       '<table>foo\0bar',
       '<table><td>foo\0bar',
+      // TODO add tests for \0 in other places
     ]
   },
 
