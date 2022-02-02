@@ -129,7 +129,7 @@ class TestUI {
   }
   
   showSampleValue (sample) {
-    window.console.clear ()
+    // window.console.clear ()
     this.dom.input.value = sample
   
     const nativeResult = nativeParse (sample)
@@ -181,8 +181,8 @@ class TestUI {
 
 // domNode may either be a browser DOM node or a light-weight html-parser 'DOM' node. 
 
-let decode = new TextDecoder ()
-decode = decode.decode.bind (decode)
+// let decode = new TextDecoder ()
+// decode = decode.decode.bind (decode)
 
 function showTree (domNode) {
   let elem, label, className
@@ -196,11 +196,19 @@ function showTree (domNode) {
     return elem
   }
 
+  if (typeof domNode === 'string') {
+    elem = $('span')
+    className = (domNode[0] === ' ' || domNode[0] === '\t') ? 'space' : 'text'
+    elem.className = className
+    elem.append (domNode)
+    return elem
+  }
+
   if (domNode instanceof Uint8Array) {
     elem = $('span')
     className = (domNode[0] === 0x20 || domNode[0] === 0x9) ? 'space' : 'text'
     elem.className = className
-    elem.append (decode (domNode))
+    elem.append ( decode (domNode))
     return elem
   }
   // if (typeof domNode === 'string') {
@@ -218,11 +226,14 @@ function showTree (domNode) {
   if (domNode instanceof Document || domNode instanceof dom.Document)
     label = '#document'
 
-  else if (domNode instanceof DocumentType || domNode instanceof dom.MDecl && domNode.name.toLowerCase () === 'doctype')
+  else if (domNode instanceof DocumentType || domNode instanceof dom.Doctype)
     label = '<!doctype>'
 
-  else if (domNode instanceof Comment || domNode instanceof dom.MDecl) // && domNode.name === '#comment')
-    label = '<!-->'
+  else if (domNode instanceof Comment)
+    label = `<!--${domNode.data}-->`
+
+  else if (domNode instanceof dom.MDecl || domNode instanceof dom.Comment) // && domNode.name === '#comment')
+    label = `<!--${(domNode.data) .map (_ =>  (_)) .join ('') }-->`
 
   else if (domNode instanceof Element) {
     if (domNode.namespaceURI && domNode.namespaceURI !== dom.htmlns)

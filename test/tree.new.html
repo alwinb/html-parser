@@ -18,7 +18,7 @@
 
 <script type=module>
 
-import { dom, Lexer, Preprocessor, Parser } from '../lib/index.js'
+import { dom, Tokeniser, Preprocessor, Parser } from '../lib/index.js'
 import { showTree } from './scripts/testui.js'
 import { domex, Domex } from '../dist/domex.min.js'
 const log = console.log.bind (console)
@@ -34,7 +34,7 @@ const dx = domex `
     > @default.vstack.token.pp3*;
   
   div @state
-    > h3.br0 "Lexer State"
+    > h3.br0 "Tokeniser State"
     + @default.p;
     // + (dl
     //   > (di > dt "tagStart" + dd %tagStart)
@@ -80,14 +80,14 @@ function Logger (delegate) {
       return delegate.writeSpace (buff)
     },
   
-    writeNulls (buff) {
-      _tokens.push (buff)
-      return delegate.writeNulls (buff)
+    writeDoctype (item) {
+      _tokens.push (item)
+      return delegate.writeComment (item)
     },
 
-    writeMDecl (buff) {
-      _tokens.push (buff)
-      return delegate.writeMDecl (buff)
+    writeComment (item) {
+      _tokens.push (item)
+      return delegate.writeComment (item)
     },
     
     writeEOF () {
@@ -106,7 +106,7 @@ function debugParse (input) {
   const r2 = new Logger (p)
   const pp = new Preprocessor (r2)
   const r1 = new Logger (pp)
-  const l  = new Lexer (r1)
+  const l  = new Tokeniser (r1)
 
   l.parse (input)
   const tokens = r1.tokens.map (_ => _ instanceof Uint8Array ? decode (_) : _)

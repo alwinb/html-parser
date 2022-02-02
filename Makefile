@@ -1,9 +1,9 @@
 .PHONY: all clean run
 
-files = lexer.js treebuilder.js parser.js index.js dom.js categories.js schema.js
+files = dfa.js tokeniser.js treebuilder.js parser.js index.js dom.js categories.js schema.js
 sources = $(addprefix lib/, $(files))
 
-all: dist/domex.min.js dist/html.min.js dist/html.min.js Makefile
+all: dist/domex.min.js dist/html.min.js Makefile
 
 dist/domex.min.js: test/domex-browser.js Makefile
 	@ echo "Making domex browser module"
