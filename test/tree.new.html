@@ -80,11 +80,6 @@ function Logger (delegate) {
       return delegate.writeSpace (buff)
     },
   
-    writeNulls (buff) {
-      _tokens.push (buff)
-      return delegate.writeNulls (buff)
-    },
-
     writeDoctype (item) {
       _tokens.push (item)
       return delegate.writeComment (item)
