@@ -25,7 +25,7 @@ API
 As of version 0.10.0 the general architecture is that of a modular push parser. The parsing pipleline is set up as follows, with input flowing from right-to-left:
 
 
-TreeBuilder  ⥦  Parser  ⥦  Preprocessor  ⥦  Lexer  ⟵  input
+TreeBuilder  ⥦  Parser  ⥦  Preprocessor  ⥦  Tokeniser  ⟵  input
 
 
 The Parser and the Preprocessor share a common _TokenHandler_ interface
@@ -35,7 +35,7 @@ for handling a stream of input tokens, with one method for each token-type:
 { writeTag, writeEndTag, writeComment, writeData, writeSpace, writeEOF }
 
 
-The return value of each of the write* methods is used as feedback to the caller. This is used to pass a small amount of contextual information from the TreeBuilder back into the Preprocessor and the Lexer. 
+The return value of each of the write* methods is used as feedback to the caller. This is used to pass a small amount of contextual information from the TreeBuilder back into the Preprocessor and the Tokeniser. 
 
 
 ### interface TokenHandler
@@ -47,7 +47,7 @@ The return value of each of the write* methods is used as feedback to the caller
 - writeSpace (buffer)
 - writeEOF ()
 
-### class Lexer
+### class Tokeniser
 
 - constructor (delegate: tokenHandler)
 - write (buffer)
@@ -169,9 +169,8 @@ Remaining work
 --------------
 
 * Lexer:
-  - Doctype and CDATA tags are as of yet lexed as bogus comments.
+  - CDATA tags are as of yet lexed as bogus comments.
   - The end tags of comments are lexed slightly differently.
-  - Lexing of rawtext/ rcdata/ plaintext may be incorret in svg and mathml.
 * Parser:
   - The tree construction rules for template tags.
   - Include attributes check in the implementation of 'Noah's Ark'.

@@ -12,9 +12,11 @@ export default [
       '<!doctype html><p>TestHead1<table>foo<div></h2>Text',
     ]
   },//*/
-  { title: 'Quick…',
-    samples:['</html><!--5--><noframes>C</noframes><!--6-->']
-  },
+
+  // {
+  //   title: 'Quick…',
+  //   samples:['</html><!--5--><noframes>C</noframes><!--6-->']
+  // },
 
   {
     title: 'Reopen Formatting Tags',
