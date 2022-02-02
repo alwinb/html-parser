@@ -1,7 +1,7 @@
 Html Parser
 ===========
 
-**[ Version 0.11.0 ] [ [Test Page][0] ] [ [Playground][1] ]**
+**[ Version 0.11.1 ] [ [Test Page][0] ] [ [Playground][1] ]**
 
 This is a new HTML5 parser that I am working on.  
 The focus is on code size, speed and simplicity. 
