@@ -129,7 +129,7 @@ class TestUI {
   }
   
   showSampleValue (sample) {
-    window.console.clear ()
+    // window.console.clear ()
     this.dom.input.value = sample
   
     const nativeResult = nativeParse (sample)
@@ -221,8 +221,11 @@ function showTree (domNode) {
   else if (domNode instanceof DocumentType || domNode instanceof dom.Doctype)
     label = '<!doctype>'
 
-  else if (domNode instanceof Comment || domNode instanceof dom.MDecl || domNode instanceof dom.Comment) // && domNode.name === '#comment')
-    label = '<!-->'
+  else if (domNode instanceof Comment)
+    label = `<!--${domNode.data}-->`
+
+  else if (domNode instanceof dom.MDecl || domNode instanceof dom.Comment) // && domNode.name === '#comment')
+    label = `<!--${(domNode.data) .map (_ => decode (_)) .join ('') }-->`
 
   else if (domNode instanceof Element) {
     if (domNode.namespaceURI && domNode.namespaceURI !== dom.htmlns)
