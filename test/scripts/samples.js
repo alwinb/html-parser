@@ -751,10 +751,21 @@ export default [
       `<table><tr><tr><td>cell1<td>cell2`,
       `<table><td>foo<tr><td>bar<col>`, 
       '<table><td><applet><td>',
+    ]
+  },
 
-      // Hidden input
+  {
+    title: 'Hidden input',
+    samples: [
       '<table><input type=hiddenfoo',
       '<table><input type=hidden type=still-hidden>foo',
+      '<!doctype html><table><input type=hidDEN></table>',
+      '<!doctype html><table>X<input type=hidDEN></table>',
+      '<!doctype html><table>  <input type=hidDEN></table>',
+      '<!doctype html><table>  <input type=\'hidDEN\'></table>',
+      '<!doctype html><table><input type=" hidden"><input type=hidDEN></table>',
+      '<!doctype html><input type="hidden"><frameset>',
+      '<!doctype html><input type="button"><frameset>',
     ]
   },
 
@@ -979,11 +990,6 @@ export default [
       '<!doctype html><listing>',
       '<!doctype html><select><input>X',
       '<!doctype html><select><select>X',
-      '<!doctype html><table><input type=hidDEN></table>',
-      '<!doctype html><table>X<input type=hidDEN></table>',
-      '<!doctype html><table>  <input type=hidDEN></table>',
-      '<!doctype html><table>  <input type=\'hidDEN\'></table>',
-      '<!doctype html><table><input type=" hidden"><input type=hidDEN></table>',
       '<!doctype html><table><select>X<tr>',
       '<!doctype html><select>X</select>',
       '<!DOCTYPE hTmL><html></html>',
@@ -1252,8 +1258,6 @@ export default [
       '<table><tr><td><svg><desc><td></desc><circle>',
       '<svg><tfoot></mi><td>',
       '<math><mrow><mrow><mn>1</mn></mrow><mi>a</mi></mrow></math>',
-      '<!doctype html><input type="hidden"><frameset>',
-      '<!doctype html><input type="button"><frameset>',
     ]
   },//*/
   
