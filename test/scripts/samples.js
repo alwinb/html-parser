@@ -12,6 +12,9 @@ export default [
       '<!doctype html><p>TestHead1<table>foo<div></h2>Text',
     ]
   },//*/
+  { title: 'Quick…',
+    samples:['</html><!--5--><noframes>C</noframes><!--6-->']
+  },
 
   {
     title: 'Reopen Formatting Tags',
@@ -430,6 +433,7 @@ export default [
   {
     title: 'Tagname adjustments',
     samples: [
+      '<image>',
       '<div><img>',
       '<div><image>',
       '<div><RaDiAlGradient>',
@@ -652,11 +656,11 @@ export default [
     samples: [
       '<html><frameset></frameset></html> ',
       '<html><frameset></frameset></html><noframes>foo</noframes>',
-      `<frameset><frame></frameset><!--->Foo</frameset><!--->Bar</body><!-->Bee`,
+      `<frameset><frame></frameset><!-1->Foo</frameset><!-2->Bar</body><!-3->Bee`,
       `<frameset></frameset>Foo<!-->Foo`,
       `<frameset></frameset></html>1<noframes>2</noframes>3<noframes>4</noframes>5`,
-      `<frameset><frame></frameset><!--></html><!--> <!--> <!-->`
-    ]
+      `<frameset><frame></frameset><!-1-></html><!-2-> <!-3-> <!-4->`,
+  ]
   },
   {
     title: 'After Html',
@@ -815,6 +819,10 @@ export default [
       '<head> </head> <listing> <source> <frameset>',
       '<head> </head> <menu> <source> <frameset>',
       '<head> </head> <main> <source> <frameset>',
+
+      '<svg><frameset>foo',
+      '<math><frameset>foo',
+      '<div><frameset>foo',
 
       '<svg></svg><frameset>',
       '<math></math><frameset>',
