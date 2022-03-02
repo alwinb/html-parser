@@ -726,6 +726,11 @@ export default [
     title: 'NULL characters',
     samples: [
       'Hello\0World',
+      'Hello \0World',
+      '<textarea>Hello\0World',
+      '<textarea>Hello \0World',
+      '<style>Hello\0World',
+      '<style>Hello \0World',
       '<head>Hello\0World',
       '<svg>Hello\0World',
       '<math>Hello\0World',
