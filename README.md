@@ -1,7 +1,7 @@
 Html Parser
 ===========
 
-**[ Version 0.12.0 ] [ [Test Page][0] ] [ [Playground][1] ]**
+**[ Version 0.12.1 ] [ [Test Page][0] ] [ [Playground][1] ]**
 
 This is a new HTML5 parser that I am working on.  
 The focus is on code size, speed and simplicity. 
@@ -32,16 +32,18 @@ The Parser and the Preprocessor share a common _TokenHandler_ interface
 for handling a stream of input tokens, with one method for each token-type:
 
 
-{ writeTag, writeEndTag, writeComment, writeData, writeSpace, writeEOF }
+{ writeTag, writeEndTag, writeDoctype, writeComment, writeData, writeSpace, writeEOF }
 
 
 The return value of each of the write* methods is used as feedback to the caller. This is used to pass a small amount of contextual information from the TreeBuilder back into the Preprocessor and the Tokeniser. 
 
+The TreeBuilder is derived from a declarative schema. It implements a well-behaved formalism that specifies invariants on the resulting DOM-tree and _in addition_ also specifies how misplaced and mismatched tokens in the token stream should be handled.
 
 ### interface TokenHandler
 
 - writeTag (node)
 - writeEndTag (endTag)
+- writeDoctype (doctype)
 - writeComment (mDecl)
 - writeData (buffer)
 - writeSpace (buffer)
@@ -72,22 +74,27 @@ The Parser wraps around a TreeBuilder and takes care of more complex parsing beh
 
 ### class TreeBuilder
 
-The TreeBuilder class is derived from a delarative schema that specifies invariants on the resuting DOM tree and also specifies how to handle misplaced and mismatched tokens.
+The TreeBuilder class is derived from a declarative schema that specifies invariants on the resuting DOM tree. It _also_ specifies how to handle misplaced and mismatched tokens.
 
 - constructor (…)
 - reset ()
-- canClose (name, kind, namespace)
-- canEscalate (name, kind, namespace)
+- canClose (name, kind)
+- canEscalate (name, kind)
 - canExtend (name, kind)
-- prepare (name, kind, namespace)
-- tryOpen (name, kind, namespace)
-- tryAppend (name, kind, namespace)
+- prepare (name, kind)
+- tryOpen (name, kind)
+- tryAppend (name, kind)
 - tryClose (name, kind)
 - _onopen (mask, hander)
 - _onclose (mask, hander)
 - _open ()
 - _reformat ()
 - _select ()
+
+
+### TreeBuilder Schema
+
+In essence the TreeBuilder Schema is a top-down tree automaton with child- and sibling-transitions, with some additional annotations for handling misplaced and mismatched tokens. 
 
 
 Notes
@@ -170,7 +177,6 @@ Remaining work
 
 * Lexer:
   - CDATA tags are as of yet lexed as bogus comments.
-  - The end tags of comments are lexed slightly differently.
 * Parser:
   - The tree construction rules for template tags.
   - Include attributes check in the implementation of 'Noah's Ark'.
