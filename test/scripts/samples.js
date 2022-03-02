@@ -579,6 +579,22 @@ export default [
   },
 
   {
+    title: 'Doctype',
+    samples: [
+      '<!doctype>',
+      '<!doctype><!doctype>',
+      ' <!doctype>',
+      ' <!doctype> <!doctype>',
+      'foo <!doctype>',
+      'foo <!doctype> <!doctype>',
+      '<head></head><!doctype>',
+      '<body><!doctype>',
+      '<svg>foo<!doctype html>bar',
+      '<svg>foo<!-- -->bar',
+    ]
+  },
+
+  {
     title: 'After Head',
     samples: [
       '</head><link>',
