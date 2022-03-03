@@ -145,6 +145,22 @@ export default [
   },
 
   {
+    title: 'Foster parenting and Foreign Content',
+    samples: [
+      // '<table><svg>foo<td>bar',
+      // '<table><td><svg>foo<td>bar',
+      // '<table><svg>foo<tr>bar',
+      // '<table><td><svg>foo<tr>bar',
+      '<table><tr><td><svg><desc><td>',
+      '<table><tr><td><svg><desc></svg><td>',
+      '<table><svg>foo<td>bar',
+      '<div><table><svg><desc><td>',
+      '<div><table></svg><desc><td>',
+      '<div><table><td><svg><desc><td>',
+    ]
+  },
+
+  {
     title: 'Paragraphs',
     samples: [
       '<optgroup>foo<p>bar</optgroup>bee',
@@ -400,11 +416,6 @@ export default [
       '<math>foo<mn><close/>bar',
       '<math>foo<ms><close/>bar',
 
-      // In tables...
-      
-      '<div><table><svg><desc><td>',
-      '<div><table></svg><desc><td>',
-      '<div><table><td><svg><desc><td>',
       '<div><other><svg><desc><td>',
 
       // Breakout tags
@@ -425,10 +436,6 @@ export default [
       '<svg><font faCe>foo',
       '<svg><font>foo',
       '<svg><font other>foo',
-
-      //
-      '<table><tr><td><svg><desc><td>',
-      '<table><tr><td><svg><desc></svg><td>',
     ]
   },
 
@@ -542,9 +549,6 @@ export default [
       '<annotation-xml><other>',
       '<annotation-xml encoding=TeXt/Html><p><p>',
       '<annotation-xml encoding=TeXt/Html><other>',
-      
-      // Others
-      '<table><svg>foo<td>bar',
     ]
   },
 
