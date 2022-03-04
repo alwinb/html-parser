@@ -1,15 +1,13 @@
 html { font-size:24px; }
 body { font-size:14px; }
 
-html, body {
-  width:100vw;
-  height:100vh;
-  overflow:hidden;
-  margin:0;
+:root {
+  --screen:#0002;
   --border-color:#bbb;
   --link-color: blue;
   --select-color:#444;
   --select-text-color:white;
+/*  background-color:rgb(93.28% 93.45% 90.32%);*/
 }
 
 .Console {
@@ -23,6 +21,7 @@ html, body {
   overflow-y:scroll;
   border-top:1px solid currentColor;
 }
+
 .error.notification {
   border-radius:.4rem;
   border:1px solid #ccc;
@@ -30,7 +29,46 @@ html, body {
   right:1rem;
 }
 
-main {
+
+/* Dom Tree Viz
+/* ------------ */
+
+.DomTree {
+  /*font-family:Hack, Monaco, Menlo, Monospace;*/
+  /*font-size:12px;*/
+}
+
+.DomTree div.children {
+  margin-left:.55rem;
+  padding-left:.4rem;
+  border-left:1.5px solid black;
+  white-space:pre;
+}
+
+.DomTree div.children:after {
+  content:'';
+  display:block;
+  clear:both;
+  height:0px;
+}
+
+.DomTree div.children .text, 
+.DomTree div.children .space {
+  font-weight:normal;
+  font-style:italic;
+  background:var(--screen);
+  min-height:1rem;
+  line-height:1rem;
+  padding:.15rem 0;
+}
+
+.DomTree div.children .data {
+  font-family:Hack, Mono;
+}
+
+/**/
+
+html#tree main {
   position:absolute;
   height:100vh;
   width:100vw;
@@ -39,10 +77,14 @@ main {
   padding-left:8vw;
 }
 
-:root {
-  --screen:#0002;
-/*  background-color:rgb(93.28% 93.45% 90.32%);*/
+html#tree, #tree body {
+  width:100vw;
+  height:100vh;
+  overflow:hidden;
+  margin:0;
 }
+
+
 
 .Input{
   width:50vw;
@@ -91,15 +133,22 @@ html.chrome #input:focus {
 }
 
 
+html#tree #suites {
+  margin-left:-.5rem;
+}
 
 .Output {
   height:calc(100vh - 12rem);
+}
+h1 {
+  font-size:1.5rem;
+  line-height:1.5rem;
+  margin-bottom:.5rem;
 }
 h3 {
   margin-top:.5rem;
   margin-bottom:.5rem;
 }
-
 #view1, #view2, #view3 {
   width:25vw;
 }
@@ -168,7 +217,9 @@ h3 {
   line-height:1rem;
   padding:.1em .2em;
 }
-
+#view2 {
+  padding-left:.5rem;
+}
 #view2 .label:hover, .label.selected {
   cursor:pointer;
   color:white;
@@ -178,40 +229,3 @@ h3 {
   border:.15rem solid var(--select-color);
 }
 
-/* Dom Tree Viz
-/* ------------ */
-
-.DomTree {
-  /*font-family:Hack, Monaco, Menlo, Monospace;*/
-  /*font-size:12px;*/
-  overflow:scroll;
-  padding:1rem;
-  font-weight:bold;
-}
-
-div.children {
-  margin-left:.55rem;
-  padding-left:.4rem;
-  border-left:1.5px solid black;
-  white-space:pre;
-}
-
-div.children:after {
-  content:'';
-  display:block;
-  clear:both;
-  height:0px;
-}
-
-div.children .text, div.children .space {
-  font-weight:normal;
-  font-style:italic;
-  background:var(--screen);
-  min-height:1rem;
-  line-height:1rem;
-  padding:.15rem 0;
-}
-
-div.children .data {
-  font-family:Hack, Mono;
-}

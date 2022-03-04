@@ -579,6 +579,22 @@ export default [
   },
 
   {
+    title: 'Doctype',
+    samples: [
+      '<!doctype>',
+      '<!doctype><!doctype>',
+      ' <!doctype>',
+      ' <!doctype> <!doctype>',
+      'foo <!doctype>',
+      'foo <!doctype> <!doctype>',
+      '<head></head><!doctype>',
+      '<body><!doctype>',
+      '<svg>foo<!doctype html>bar',
+      '<svg>foo<!-- -->bar',
+    ]
+  },
+
+  {
     title: 'After Head',
     samples: [
       '</head><link>',
@@ -710,6 +726,11 @@ export default [
     title: 'NULL characters',
     samples: [
       'Hello\0World',
+      'Hello \0World',
+      '<textarea>Hello\0World',
+      '<textarea>Hello \0World',
+      '<style>Hello\0World',
+      '<style>Hello \0World',
       '<head>Hello\0World',
       '<svg>Hello\0World',
       '<math>Hello\0World',

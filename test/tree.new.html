@@ -4,6 +4,7 @@
   <meta charset=utf-8>
   <title>HTML Parser Test Page</title>
   <link rel=stylesheet href=style/base.css>
+  <link rel=stylesheet href=style/tree.css>
 </head>
 <body>
 <script type=module src=scripts/error-handler.js></script>
@@ -15,7 +16,6 @@
   </div>
   <div class=Output id=output><br></div>
 </main>
-
 <script type=module>
 
 import { dom, Tokeniser, Preprocessor, Parser } from '../lib/index.js'
@@ -31,23 +31,26 @@ let out = document.getElementById ('output')
 
 const dx = domex `
   div.hstack @tokens
-    > @default.vstack.token.pp3*;
+    > @default.vstack.token.pp3.mm1*;
   
   div @state
     > h3.br0 "Tokeniser State"
     + @default.p;
-    // + (dl
+    // + (dl.m0
     //   > (di > dt "tagStart" + dd %tagStart)
     //   + (di > dt "anchor" + dd %anchor))
   
-  div.hstack.vsep.vlines
-    > @state.scrolly.vstack.fl ~lexerState
+  ul @parserStack
+    > li* %name; // @default.hstack
+  
+  div.hstack.vsep.sep.vlines
+    > @state[style="padding-right:1rem"] ~lexerState
     + div
-      > (div.Tokens.p   > h3 "Tokens"          + @tokens) ~tokens
-      + (div.Adjusted.p > h3 "Adjusted Tokens" + @tokens) ~adjustedTokens
-      + div.Document.p
+      > (div.Tokens   > h3 "Tokens"          + @tokens) ~tokens
+      + (div.Adjusted > h3 "Adjusted Tokens" + @tokens) ~adjustedTokens
+      + div.Document.m0
         > h3 "TreeBuilder Stack"
-        + (ul.hstack.sep > li*parserStack %name) // @default.hstack ~parserStack
+        + @parserStack.hstack.sep ~parserStack
         + h3 "TreeBuilder Document"
         + div #tree`
 

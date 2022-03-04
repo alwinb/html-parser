@@ -46,9 +46,9 @@ class TestUI {
         + button #submit "Run";
         
       div.Output @output
-        > (div.p1 #view2 > h3 "html-parser" + div)
-        + (div.p1 #view1 > h3 "browser"     + div)
-        + (div.p1 #view3 .Inspector [style="display:none"] > h3 "inspector"   + div);
+        > (div.pp #view2 > h3 "html-parser" + div)
+        + (div.pp #view1 > h3 "browser"     + div)
+        + (div.pp #view3 .Inspector [style="display:none"] > h3 "inspector"   + div);
 
       span @results #results
         > (a [href="javascript:void(runAllTests())"] "Run all tests")
@@ -60,7 +60,7 @@ class TestUI {
         + div.hstack.nowrap
           > @suites.vstack.xx18 #suites ~suites
           + @samples.vstack.xx18 #tabs ~samples
-          + (div > @input.layers + @output.scrolly.hstack.nowrap);
+          + (div.DomTree > @input.layers + @output.scrolly.hstack.nowrap);
   
       @main
     `
