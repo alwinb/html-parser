@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang=en>
+<html id=tree lang=en>
 <head>
   <meta charset=utf-8>
   <title>Tree Builder Test Page</title>
@@ -10,7 +10,7 @@
 <script type=module src=scripts/error-handler.js></script>
 <script type=module>
 
-  import { Lexer, Preprocessor, Parser, parse } from '../lib/index.js'
+  import { Tokeniser, Preprocessor, Parser, parse } from '../lib/index.js'
   import { printTree } from '../lib/traversal.js'
 
   import { TestUI, objectKey, nativeParse } from './scripts/testui.js'

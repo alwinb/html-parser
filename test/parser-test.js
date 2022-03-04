@@ -45,10 +45,6 @@ var samples = [
   '<head></head><title>X</title>',
   '<head>asdasd<frameset>',
   '<head> </head> <listing> <source> <frameset>',
-]
-
-
-var samples = [
   '<html><frameset></frameset></html> ',
   '<html><frameset></frameset></html>\n<!-->\n<!-->\n<!-->',
   '<html><frameset></frameset></html><noframes>foo</noframes>',
@@ -57,6 +53,11 @@ var samples = [
   '<!DOCTYPE html><frameset><svg><g></g><g></g><p><span>',
   '<i><b><i>1<p><s><u>2<p>bar</b>3',
   'Hello <!-- foo --> Bar',
+]
+
+
+var samples = [
+'</foreignObject><plaintext><div>foo</div>',
 ]
 
 // Test

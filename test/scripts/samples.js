@@ -13,6 +13,11 @@ export default [
     ]
   },//*/
 
+  // {
+  //   title: 'Quick…',
+  //   samples:['</html><!--5--><noframes>C</noframes><!--6-->']
+  // },
+
   {
     title: 'Reopen Formatting Tags',
     samples: [
@@ -428,6 +433,27 @@ export default [
   },
 
   {
+    title: 'Tagname adjustments',
+    samples: [
+      '<image>',
+      '<div><img>',
+      '<div><image>',
+      '<div><RaDiAlGradient>',
+      '<svg><img>',
+      '<svg><image>',
+      '<svg><RaDiAlGradient>',
+      '<math><img>',
+      '<math><image>',
+      '<math><RaDiAlGradient>',
+      '<svg><G>foo</g>bar',
+      '<svg><g>foo</G>bar',
+      '<math><G>foo</g>bar',
+      '<math><g>foo</G>bar',
+      '<svg><forEignObJect>foo</foreignobject>bar',
+    ]
+  },
+
+  {
     title: 'Integration points',
     samples: [
       '<svg><a>foo',
@@ -477,6 +503,9 @@ export default [
       '<svg>foo<foreignobject>bar<table><caption></svg>bee',
       '<svg>foo<foreignobject>bar<table><colgroup></svg>bee',
 
+      // Test proper closing, proper tagname adjustments
+      '<svg>foo<foreignObject>bar</foreignObject>bas',
+      
       // test closing of math from withing math-foreign tags
       '<math>foo<mi>bar</math>bee',
       '<math>foo<mi>bar<a></math>bee',
@@ -513,21 +542,9 @@ export default [
       '<annotation-xml><other>',
       '<annotation-xml encoding=TeXt/Html><p><p>',
       '<annotation-xml encoding=TeXt/Html><other>',
-    ]
-  },
-
-  {
-    title: 'Tagname adjustments',
-    samples: [
-      '<div><img>',
-      '<div><image>',
-      '<div><RaDiAlGradient>',
-      '<svg><img>',
-      '<svg><image>',
-      '<svg><RaDiAlGradient>',
-      '<math><img>',
-      '<math><image>',
-      '<math><RaDiAlGradient>',
+      
+      // Others
+      '<table><svg>foo<td>bar',
     ]
   },
 
@@ -558,6 +575,22 @@ export default [
       '<table><th>',
       'foo</body><!--> bar<!--> bee',
       '</body><!-->bar',
+    ]
+  },
+
+  {
+    title: 'Doctype',
+    samples: [
+      '<!doctype>',
+      '<!doctype><!doctype>',
+      ' <!doctype>',
+      ' <!doctype> <!doctype>',
+      'foo <!doctype>',
+      'foo <!doctype> <!doctype>',
+      '<head></head><!doctype>',
+      '<body><!doctype>',
+      '<svg>foo<!doctype html>bar',
+      '<svg>foo<!-- -->bar',
     ]
   },
 
@@ -641,10 +674,11 @@ export default [
     samples: [
       '<html><frameset></frameset></html> ',
       '<html><frameset></frameset></html><noframes>foo</noframes>',
-      `<frameset><frame></frameset><!--->Foo</frameset><!--->Bar</body><!-->Bee`,
+      `<frameset><frame></frameset><!-1->Foo</frameset><!-2->Bar</body><!-3->Bee`,
       `<frameset></frameset>Foo<!-->Foo`,
-      `<frameset></frameset></html>1<noframes>2</noframes>3<noframes>4</noframes>5`
-    ]
+      `<frameset></frameset></html>1<noframes>2</noframes>3<noframes>4</noframes>5`,
+      `<frameset><frame></frameset><!-1-></html><!-2-> <!-3-> <!-4->`,
+  ]
   },
   {
     title: 'After Html',
@@ -671,10 +705,32 @@ export default [
     ]
   },//*/
   
+  {
+    title: 'RawText and RcData',
+    samples: [
+      `<textarea>foo &amp; bar</textarea>bee<div>buzz`,
+      `<script>foo &amp; bar</script>bee<div>buzz`,
+      `<tExTaReA>foo &amp; bar</textarea>bee<div>buzz`,
+      `<sCrIpT>foo &amp; bar</script>bee<div>buzz`,
+      `<textarea>foo <x> bar</textarea>bee<div>buzz`,
+      `<script>foo <x> bar</script>bee<div>buzz`,
+      //
+      `<svg><textarea>foo &amp; bar</textarea>bee<div>buzz`,
+      `<svg><script>foo &amp; bar</script>bee<div>buzz`,
+      `<svg><textarea>foo <x> bar</textarea>bee<div>buzz`,
+      `<svg><script>foo <x> bar</script>bee<div>buzz`,
+    ]
+  },//*/
+
   { 
     title: 'NULL characters',
     samples: [
       'Hello\0World',
+      'Hello \0World',
+      '<textarea>Hello\0World',
+      '<textarea>Hello \0World',
+      '<style>Hello\0World',
+      '<style>Hello \0World',
       '<head>Hello\0World',
       '<svg>Hello\0World',
       '<math>Hello\0World',
@@ -688,6 +744,7 @@ export default [
       '<span>foo\0bar',
       '<table>foo\0bar',
       '<table><td>foo\0bar',
+      // TODO add tests for \0 in other places
     ]
   },
 
@@ -721,10 +778,21 @@ export default [
       `<table><tr><tr><td>cell1<td>cell2`,
       `<table><td>foo<tr><td>bar<col>`, 
       '<table><td><applet><td>',
+    ]
+  },
 
-      // Hidden input
+  {
+    title: 'Hidden input',
+    samples: [
       '<table><input type=hiddenfoo',
       '<table><input type=hidden type=still-hidden>foo',
+      '<!doctype html><table><input type=hidDEN></table>',
+      '<!doctype html><table>X<input type=hidDEN></table>',
+      '<!doctype html><table>  <input type=hidDEN></table>',
+      '<!doctype html><table>  <input type=\'hidDEN\'></table>',
+      '<!doctype html><table><input type=" hidden"><input type=hidDEN></table>',
+      '<!doctype html><input type="hidden"><frameset>',
+      '<!doctype html><input type="button"><frameset>',
     ]
   },
 
@@ -775,12 +843,27 @@ export default [
       '<head> </head> <menu> <source> <frameset>',
       '<head> </head> <main> <source> <frameset>',
 
+      '<svg><frameset>foo',
+      '<math><frameset>foo',
+      '<div><frameset>foo',
+
       '<svg></svg><frameset>',
       '<math></math><frameset>',
       '<div></div><frameset>',
     ]
   },
 
+  {
+    title: 'Browser Disagreements',
+    samples: [
+      '<svg>foo</br>bar',
+      'foo</body> <!--->',
+      'foo</body> <!---></body> <!--->',
+      '<!doctype html><p>foo<dialog>bar<p>baz',
+      '<!doctype html><dialog><p>foo</dialog>bar',
+      '<select><keygen>',
+    ]
+  },
 
   // Tests taken from the html5lib = tests
   // -------------------------------------
@@ -938,11 +1021,6 @@ export default [
       '<!doctype html><listing>',
       '<!doctype html><select><input>X',
       '<!doctype html><select><select>X',
-      '<!doctype html><table><input type=hidDEN></table>',
-      '<!doctype html><table>X<input type=hidDEN></table>',
-      '<!doctype html><table>  <input type=hidDEN></table>',
-      '<!doctype html><table>  <input type=\'hidDEN\'></table>',
-      '<!doctype html><table><input type=" hidden"><input type=hidDEN></table>',
       '<!doctype html><table><select>X<tr>',
       '<!doctype html><select>X</select>',
       '<!DOCTYPE hTmL><html></html>',
@@ -1211,8 +1289,6 @@ export default [
       '<table><tr><td><svg><desc><td></desc><circle>',
       '<svg><tfoot></mi><td>',
       '<math><mrow><mrow><mn>1</mn></mrow><mi>a</mi></mrow></math>',
-      '<!doctype html><input type="hidden"><frameset>',
-      '<!doctype html><input type="button"><frameset>',
     ]
   },//*/
   
