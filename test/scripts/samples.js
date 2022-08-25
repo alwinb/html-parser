@@ -790,6 +790,8 @@ export default [
     samples: [
       '<table><input type=hiddenfoo',
       '<table><input type=hidden type=still-hidden>foo',
+      '<table><colgroup><input type=not-hidden>',
+      '<table><colgroup><input type=hidden>',
       '<!doctype html><table><input type=hidDEN></table>',
       '<!doctype html><table>X<input type=hidDEN></table>',
       '<!doctype html><table>  <input type=hidDEN></table>',
