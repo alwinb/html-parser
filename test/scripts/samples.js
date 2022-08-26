@@ -224,6 +224,13 @@ export default [
       '<h1>foo<button>bar<h1>bee',
       '<h1>foo<button>bar</h2>bee',
       '<h1>foo<button>bar<h2>bee',
+      '<ul>foo<button>bar',
+      '<ul><li>foo<button>bar',
+      '<dl>foo<button>bar',
+      '<button>foo<dl>bee<button>bar',
+      '<button>foo<ul>bee<button>bar',
+      '<button>foo<h1>bee<button>bar',
+      '<button><object><h1><button>',
     ]
   },
 
@@ -232,6 +239,8 @@ export default [
     samples: [
       `text<h1>s<div>b<h2>`,
       `text<h1>b<h2>`,
+      '<button>text<h1>b<h2>',
+      '<button><p>Test<h1>Head<h2><h2>',
       `<p>Test<h1>Head1<div><h2>Head2`,
       `<p>Test<h1>Head1<sdiv><h2>Head2`,
       `<p>Test<h1>Head1<div></h2>Text`,
@@ -307,6 +316,9 @@ export default [
         <select>Baz<optgroup>Item<li>item<optgroup>g<di>Di</select>`,
       `<option>Item<li>item<di><option><select><option>Item<li>item<di><option><select>`,
       `<option>Item<li>item<di><option>Item2<li>item<di><option><select><option>Item<li>item<di><option><option>Item2<li><optgroup>item<di>`,
+      '<table><caption><select><optgroup><tr>',
+      '<table><caption><select><optgroup><!--foo-->s',
+      '<select><optgroup><!--foo-->s',
     ]
   },
 
@@ -333,6 +345,7 @@ export default [
       '<table><select>foo<tbody>bar',
       '<table><select>foo<tr>bar',
       '<table><select>foo<td>bar',
+      '<table><caption><select><!--foo-->',
     ]
   },
 
@@ -357,6 +370,8 @@ export default [
       '<p>Test<li>Head<address></li>foo',
       '<p>Test<li>Head<center><li>foo',
       '<p>Test<li>Head<center></li>foo',
+      '<button><li>foo<p>bar<button>bee',
+      '<li>foo<p>bar<li>bee',
     ]
   },
 
@@ -796,6 +811,8 @@ export default [
       `<table><tr><tr><td>cell1<td>cell2`,
       `<table><td>foo<tr><td>bar<col>`, 
       '<table><td><applet><td>',
+      '<table><td><menu><td>',
+      '<table><td><menu><td>',
     ]
   },
 
