@@ -430,7 +430,8 @@ export default [
       '<svg><html></html>',
       '<svg><html></html>',
 
-      // Non-breakout
+      // Breakout tags (NB) due to
+      // attribute-name normalisaton
       '<svg><font Size>foo',
       '<svg><font cOlor>foo',
       '<svg><font faCe>foo',
