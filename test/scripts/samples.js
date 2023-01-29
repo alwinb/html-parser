@@ -458,6 +458,7 @@ export default [
       '<math><G>foo</g>bar',
       '<math><g>foo</G>bar',
       '<svg><forEignObJect>foo</foreignobject>bar',
+      '<svg><forEignObJect/><foo>',
     ]
   },
 
