@@ -157,6 +157,11 @@ export default [
       '<div><table><svg><desc><td>',
       '<div><table></svg><desc><td>',
       '<div><table><td><svg><desc><td>',
+
+      '<table><math>a<annotation-xml encoding=text/html>b<td>c<foo>',
+      '<table><math>a<mi>b<td>c<foo>',
+      '<table><math><svg><mi>foo<td>', // <math:svg>
+      '<table><svg><math><mi>foo<td>', // <svg:math>
     ]
   },
 
@@ -423,6 +428,12 @@ export default [
       '<svg><font color>foo',
       '<svg><font face>foo',
 
+      '<svg><math><annotation-xml><span><foo>',
+      '<svg><math><annotation-xml><body><foo>',
+      
+      // Self closing...
+      '<svg><font size/>foo',
+
       // Yet more
       '<svg></body>foo<!-->bar',
       '<svg><body></body>foo<!-->bar',
@@ -459,6 +470,7 @@ export default [
       '<math><g>foo</G>bar',
       '<svg><forEignObJect>foo</foreignobject>bar',
       '<svg><forEignObJect/><foo>',
+      '<svg><foreignObject><math><foreignObject></foreignobject><foo>',
     ]
   },
 
@@ -858,6 +870,9 @@ export default [
       '<svg></svg><frameset>',
       '<math></math><frameset>',
       '<div></div><frameset>',
+      
+      '<svg><foreignObject><frameset>',
+      '<math><annotation-xml encoding=text/html><frameset>',
     ]
   },
 
