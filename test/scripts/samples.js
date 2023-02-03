@@ -257,6 +257,15 @@ export default [
       '<li><h1>asd<li>asd',
       '<p><h1>asd<p>asd',
       '<div><h1>asd<div>asd',
+      '<p><option><h1><p>',
+      '<li><option><h1><li>',
+      '<h3><x>asd<h1>',
+      '<h3><i>asd<h1>',
+      '<h3><p><x>asd<h1>',
+      //
+      '<h1><option><h2>bar<option>',
+      '<h1><p><option><h2>bar<option>',
+      '<p><option><h1>bar<option>',
     ]
   },
 
@@ -269,7 +278,27 @@ export default [
       '<p><other><p><div><p>',
       '<h1><other><h2><div><h3>',
       '<h1><s><h2><s><h3>',
-    ]
+
+      // closing
+      '<button><div></button>foo',
+      '<other><div></other>foo',
+      '<li><div></li>foo',
+      '<ul><div></ul>foo',
+      '<option><div></option>foo',
+      '<optgroup><div></optgroup>foo',
+      '<span><div></span>foo',
+      '<object><div></object>foo',
+      '<pre><div></pre>foo',
+      '<area><div></area>foo',
+      '<param><div></param>foo',
+      '<h1><div></h1>foo',
+      '<address><div></address>foo',
+      '<center><div></center>foo',
+      '<button><center><button>foo',
+      '<button><address><button>foo',
+      // '<code><div></code>foo', // AAA
+      
+      ]
   },
 
   {
@@ -295,6 +324,17 @@ export default [
       '<select><div><option>foo<b>bar<option>sd',
       '<div><option>foo<b>bar</option>sd',
       '<div><option>foo<b>bar<option>sd',
+      
+      // closable
+      '<optgroup><x></optgroup>foo',
+      '<optgroup><b></optgroup>foo',
+      '<optgroup><div></optgroup>foo',
+      '<option><x></option>foo',
+      '<option><b></option>foo',
+      '<option><div></option>foo',
+      '<optgroup><option><x></optgroup>foo',
+      '<optgroup><option><b></optgroup>foo',
+      '<optgroup><option><div></optgroup>foo',
     ]
   },
 
@@ -837,8 +877,6 @@ export default [
     title: 'Others',
     samples: [
       '<table><caption><p><option><tr>',
-      '<h1><option><h2>bar<option>',
-      '<p><option><h1>bar<option>',
       '<button><li><button>bar<li>',
       '<other><li></other>bar<li>bee',
       '<dd><li></dd>bar<li>bee',
