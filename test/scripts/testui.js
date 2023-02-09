@@ -112,7 +112,7 @@ class TestUI {
     this.dom.results.append (domex `
       span "Parsing took " %nativeTime "ms (native)"
         " vs " %time "ms (html-parser) – " %ratio "%."`
-      .render ({time, nativeTime, ratio}).elems)
+      .render ({ time, nativeTime, ratio }) .elems)
   }
 
   showSuite (index) {
@@ -185,76 +185,72 @@ class TestUI {
 // decode = decode.decode.bind (decode)
 
 function showTree (domNode) {
-  let elem, label, className
+
+  // ### Text Nodes -- various reprs
 
   if (domNode instanceof Text) {
-    className = (/^\s*$/.test (domNode.data)) ? 'space' : 'text'
-    elem = $('span')
-    elem.append (domNode.data)
-    elem.className = className
-    // elem[objectKey] = domNode
-    return elem
+    const className = (/^\s*$/.test (domNode.data)) ? 'space' : 'text'
+    return domex `span[class=%className] > %data~domNode` .render ({ className, domNode }) .elem
   }
 
   if (typeof domNode === 'string') {
-    elem = $('span')
-    className = (domNode[0] === ' ' || domNode[0] === '\t') ? 'space' : 'text'
-    elem.className = className
-    elem.append (domNode)
-    return elem
+    const className = (domNode[0] === ' ' || domNode[0] === '\t') ? 'space' : 'text'
+    return domex `span[class=%className] > %domNode` .render ({ className, domNode }) .elem
   }
 
   if (domNode instanceof Uint8Array) {
-    elem = $('span')
-    className = (domNode[0] === 0x20 || domNode[0] === 0x9) ? 'space' : 'text'
-    elem.className = className
-    elem.append ( decode (domNode))
+    const className = (domNode[0] === 0x20 || domNode[0] === 0x9) ? 'space' : 'text'
+    return domex `span[class=%className] > %domNode` .render ({ className, data: decode (domNode) }) .elem
+  }
+
+  // ### Doctype and Comments -- various reprs
+
+  if (domNode instanceof DocumentType || domNode instanceof dom.Doctype) {
+    const elem = domex `div.doctype > span.label > "<!doctype>"` .render () .elem
+    elem[objectKey] = domNode
     return elem
   }
-  // if (typeof domNode === 'string') {
-  //   className = (/^\s*$/.test (domNode)) ? 'space' : 'text'
-  //   elem = $('span')
-  //   elem.append (domNode)
-  //   elem.className = className
-  //   elem[objectKey] = domNode
-  //   return elem
-  // }
 
-  elem = $('div')
-  elem.className = 'node'
+  else if (domNode instanceof Comment) {
+    const elem = domex `div.comment > span.label %data` .render (domNode) .elem
+    return elem
+  }
+
+  else if (domNode instanceof dom.Comment) { // && domNode.name === '#comment')
+    const elem = domex `div.comment > span.label > %*data` .render (domNode) .elem
+    elem[objectKey] = domNode
+    return elem
+  }
+
+  // ### Document and Elements
+
+  let label, attList
 
   if (domNode instanceof Document || domNode instanceof dom.Document)
     label = '#document'
-
-  else if (domNode instanceof DocumentType || domNode instanceof dom.Doctype)
-    label = '<!doctype>'
-
-  else if (domNode instanceof Comment)
-    label = `<!--${domNode.data}-->`
-
-  else if (domNode instanceof dom.MDecl || domNode instanceof dom.Comment) // && domNode.name === '#comment')
-    label = `<!--${(domNode.data) .map (_ =>  (_)) .join ('') }-->`
 
   else if (domNode instanceof Element) {
     if (domNode.namespaceURI && domNode.namespaceURI !== dom.htmlns)
       label = domNode.namespaceURI.split ('/') .pop () + ':' + domNode.tagName
     else label = domNode.tagName.toLowerCase ()
+    const dx = domex `dl.atts.hstack.m0 > di.hstack.pp1* > (dt %name + dd %value)`
+    attList = dx.render (domNode.attributes).elem
   }
 
   else if (domNode instanceof dom.Element) {
     label = domNode.name
+    const dx = domex `dl.atts.hstack.m0 > di.hstack.pp1* > (dt $ + dd %)`
+    attList = dx.render (domNode.attrs).elems
   }
 
   // log (domNode.__proto__)
-  var elel = $('span')
-  elel.className = 'label'
-  elel.append (label)
-  elem.append (elel)
-  elem[objectKey] = domNode.frame ? domNode.frame.info : domNode
+  const elem = domex `div.node > span.label %` .render (label) .elem
 
-  if (className) elem.classList.add (className)
-  let ul; elem.append ((ul = $('div')))
-  ul.className = 'children'
+  // var elel = domex `span.label %` .render (label) .elem
+  var ul = domex `div.children` .render () .elem
+  if (attList) elem.append (attList)
+  elem.append (ul)
+  elem[objectKey] = domNode.frame ? domNode.frame.info : domNode
 
   const children = domNode instanceof HTMLTemplateElement
     ? domNode.content.childNodes
