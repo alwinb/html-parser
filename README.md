@@ -19,8 +19,39 @@ There is a test page that I use for testing and debugging online [here][0].
 [2]: ./notes/lexical-grammar.txt
 
 
-API
----
+Theory and API
+--------------
+
+### Element Categories
+
+I refer to finite and/ or cofinite sets of element-names that
+trigger specific parsing behaviour as an _element category_.
+
+In the implementation the categories are encoded as bitvectors,
+where the sign bit signifies a cofinite set. The remaining bits
+correspond to _mutually disjoint_ finite sets.
+
+This encoding makes it possible to use the bitwise operators for
+computing complements, unions and intersections of categories.
+
+Some of the bits correspond to singleton sets, and thus identify
+a particular single element name.
+
+#### Categories
+
+* Any
+* None
+* Kind (tagName)  —  returns the equivalence-class
+* printKind (kind)  —  maybe rename this?
+
+The built-in bitwise operations can be used as boolean algebra operations on element categories:
+
+* `~a`  —  complement
+* `a | b`  —  union
+* `a & b`  —  intersection
+
+
+### Parser
 
 As of version 0.10.0 the general architecture is that of a modular push parser. The parsing pipleline is set up as follows, with input flowing from right-to-left:
 
@@ -164,8 +195,6 @@ Each stack frame stores:
 Rather than pointing out the behaviours mentioned above for each combination of tag-names in code, I am working on a declarative system, a kind of schema. This 'schema' determines which of the above rules are to be applied in the case of mismatched and misplaced tags. 
 
 The schema is specified using subsets of the set of all elements. Each of these subsets is either a finite set, or it has a finite complement. I am using integer bitfields as identifiers for these subsets. This allows very fast computations on sets of elements.
-
-I precompute a single dictionary that maps tag-names to such an integer, thus representing the union of the categories to which the tag belongs. 
 
 ### Forthcoming...
 
