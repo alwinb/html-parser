@@ -18,6 +18,7 @@ export default [
   //   samples:['</html><!--5--><noframes>C</noframes><!--6-->']
   // },
 
+
   {
     title: 'Numeric Character References',
     samples: [
@@ -345,6 +346,8 @@ export default [
       '<button>foo<ul>bee<button>bar',
       '<button>foo<h1>bee<button>bar',
       '<button><object><h1><button>',
+      '<p><button><form>',
+      '<p><form>',
     ]
   },
 
@@ -449,6 +452,29 @@ export default [
       '<optgroup><option><x></optgroup>foo',
       '<optgroup><option><b></optgroup>foo',
       '<optgroup><option><div></optgroup>foo',
+
+      '<p><optgroup><x></optgroup>foo',
+      '<p><optgroup><b></optgroup>foo',
+      '<p><optgroup><div></optgroup>foo',
+      '<p><option><x></option>foo',
+      '<p><option><b></option>foo',
+      '<p><option><div></option>foo',
+      '<p><optgroup><option><x></optgroup>foo',
+      '<p><optgroup><option><b></optgroup>foo',
+      '<p><optgroup><option><div></optgroup>foo',
+
+      //
+      '<x><option></x>foo',
+      '<form><optgroup></form>foo',
+
+      // In paragraph
+      '<p><option><x><option>',
+      '<p><optgroup><x><optgroup>',
+      '<p><option><x><optgroup>',
+      '<p><optgroup><x><option>',
+      '<p><option><form>',
+      '<p><option><optgroup>',
+      '<p><option><option>',
     ]
   },
 
@@ -602,13 +628,16 @@ export default [
       
       // Self closing...
       '<svg><font size/>foo',
-
+      '<svg><div/>asd',
+      '<svg><span/>asd',
+      
       // Yet more
       '<svg></body>foo<!-->bar',
       '<svg><body></body>foo<!-->bar',
       '<svg><body></body>foo<!-->bar',
       '<svg><html></html>',
       '<svg><html></html>',
+      '<table><caption><svg><title><object></table>foo',
 
       // Breakout tags (NB) due to
       // attribute-name normalisaton
@@ -617,6 +646,26 @@ export default [
       '<svg><font faCe>foo',
       '<svg><font>foo',
       '<svg><font other>foo',
+      
+      // Annotation XML
+      '<math><annotation-xml><svg><table>',
+      '<math><annotation-xml><svg><tbody>',
+      '<math><annotation-xml><svg><tr>',
+      '<math><annotation-xml><svg><caption>',
+      '<math><annotation-xml><svg><colgroup>',
+      '<table><td><math><annotation-xml><svg><table>',
+      '<table><td><math><annotation-xml><svg><tbody>',
+      '<table><td><math><annotation-xml><svg><tr>',
+      '<table><td><math><annotation-xml><svg><caption>',
+      '<table><td><math><annotation-xml><svg><colgroup>',
+      '<table><td><math><annotation-xml></table>foo',
+      
+      '<math><annotation-xml><svg><foreignObject><div><math><mi></mi></math><span></span></div></foreignObject><path></path></svg></annotation-xml><mi>',
+
+      // TODO
+      // '<math><annotation-xml><x><svg><foreignobject>',
+      // '<math><annotation-xml><svg><foreignobject>',
+      
     ]
   },
 
@@ -640,6 +689,7 @@ export default [
       '<svg><forEignObJect>foo</foreignobject>bar',
       '<svg><forEignObJect/><foo>',
       '<svg><foreignObject><math><foreignObject></foreignobject><foo>',
+      '<svg><image><foreignObject><image><math><image><mi><image>',
     ]
   },
 
@@ -854,6 +904,8 @@ export default [
       `Foo</body><!--><!-->foo`,
       `<frameset></body><!-->a`,
       `<head></head>After head</body>After body`,
+      //
+      '<math>foo</body><!-->bar',
     ]
   },
   {
@@ -881,6 +933,9 @@ export default [
       `<body></html><!--><div><g>foo</g>`,
       `<body></html><!--><div><g>foo</g>`,
       `<head></head>After head</html>After html`,
+
+      '<math><mi></html><!-->',
+      '<body><math><mi></html><!-->',
     ]
   },
 
@@ -923,6 +978,9 @@ export default [
       '<math>Hello\0World',
       '<select>foo\0bar',
       '<select><option>foo\0bar',
+      '<select>foo\0bar',
+      '<select><optgroup>foo\0bar',
+      '<select><option><optgroup>foo\0bar',
       '<svg><select>foo\0bar',
       '<svg><select><option>foo\0bar',
       '<option>foo\0bar',
@@ -967,8 +1025,40 @@ export default [
       '<table><td><applet><td>',
       '<table><td><menu><td>',
       '<table><td><menu><td>',
+      // Captions
+      '<form><table><caption><form>foo',
+      '<button><table><caption><button>foo',
+      // Forms
+      '<form id=1><table><caption><form id=2>',
+      '<form id=1><table><colgroup><form id=2>',
+      '<form id=1><table><tbody><form id=2>',
+      '<form id=1><table><tr><form id=2>',
+      '<form id=1><table><td><form id=2>',
     ]
   },
+
+  {
+    title: 'Colgroup',
+    samples: [
+      '<table><colgroup> ',
+      '<table><colgroup><!--1-->',
+      '<table><colgroup><!doctype>',
+      '<table><colgroup><html>',
+      '<table><colgroup><head>',
+      '<table><colgroup><frameset>',
+      '<table><colgroup><frame>',
+      '<table><colgroup><div>',
+      '<table><colgroup><table>',
+      '<table><colgroup><colgroup>',
+      '<table><colgroup><col>',
+      '<table><colgroup><tbody>',
+      '<table><colgroup><tr>',
+      '<table><colgroup><td>',
+      '<table><colgroup><input type=hidden>',
+      '<table><colgroup><input>',
+    ]
+  },
+
 
   {
     title: 'Hidden input',
@@ -990,6 +1080,10 @@ export default [
   {
     title: 'Others',
     samples: [
+      '<form><h1><object><form>foo',
+      '<form><ul><li></form>foo',
+      '<form><table><tr><form>',
+
       '<table><caption><p><option><tr>',
       '<button><li><button>bar<li>',
       '<other><li></other>bar<li>bee',
@@ -1001,7 +1095,7 @@ export default [
       '<li><applet>a </li>test <li>test',
       '<ul><li>one<ul></li>text',
       `<ul><li><applet><as></li>test</ul>
-      <ul><li><p><as></li>test`,
+        <ul><li><p><as></li>test`,
       `<p>para<object>and<p>para`,
       `<p>Test<li>li<blockquote>Foo<p>bar<p>`,
       `<p><foo><li>`,
@@ -1013,10 +1107,10 @@ export default [
       '<svg><a>Not closed by<a>',
       '<svg><nobr>Not closed by<nobr>',
       '<svg><img>',
+      '<nobr><svg><nobr>',
       '<svg><select>not closed by<select>',
       
       '<svg>foo<br>bar',
-      '<svg>foo</br>bar',
     ]
   },
   
@@ -1042,6 +1136,11 @@ export default [
       
       '<svg><foreignObject><frameset>',
       '<math><annotation-xml encoding=text/html><frameset>',
+      '<svg><title><frameset>',
+      '<svg><desc><frameset>',
+      '<math><mi><frameset>',
+
+      '<svg><desc><frameset id=1><frame><frameset id=2>',
     ]
   },
 
