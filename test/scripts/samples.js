@@ -19,6 +19,120 @@ export default [
   // },
 
   {
+    title: 'Numeric Character References',
+    samples: [
+      `Hex lowercase &#x1f332;`,
+      `Hex uppercase &#x1F332;`,
+      `Hex leading zeroes &#x0001F332;`,
+      `Hex incomplete &#x1f332`,
+      `Hex non-terminated &#x1f332g`,
+      `Hex amp-terminated &#x1f332&foo`,
+
+      `Decimal lowercase &#127794;`,
+      `Decimal uppercase &#127794;`,
+      `Decimal leading zeroes &#000127794;`,
+      `Decimal incomplete &#127794`,
+      `Decimal non-terminated &#127794g`,
+      `Decimal amp-terminated &#127794&foo`,
+
+      `Hex replaced NUL &#x0;`,
+      `Hex replaced NUL &#x00;`,
+      `Decimal replaced NUL &#0;`,
+      `Decimal replaced NUL &#00;`,
+
+      `Hex replaced surrogate &#xD800;`,
+      `Hex replaced surrogate &#55296;`,
+
+      `Hex out of range &#x110000;`,
+      `Decimal out of range &#1114112;`,
+      
+      `Unquoted hex lowercase <span a=&#x1f332; >`,
+      `Unquoted hex uppercase <span a=&#x1F332; >`,
+      `Unquoted hex leading zeroes <span a=&#x0001F332; >`,
+      `Unquoted hex incomplete <span a=&#x1f332 >`,
+      `Unquoted hex non-terminated <span a=&#x1f332g >`,
+      `Unquoted hex amp-terminated <span a=&#x1f332&foo >`,
+      `Unquoted decimal lowercase <span a=&#127794; >`,
+      `Unquoted decimal uppercase <span a=&#127794; >`,
+      `Unquoted decimal leading zeroes <span a=&#000127794; >`,
+      `Unquoted decimal incomplete <span a=&#127794 >`,
+      `Unquoted decimal non-terminated <span a=&#127794g >`,
+      `Unquoted decimal amp-terminated <span a=&#127794&foo >`,
+      `Unquoted decimal amp-terminated <span a=&#127794&foo >`,
+
+      `Double-quoted hex lowercase <span a="&#x1f332;" >`,
+      `Double-quoted hex uppercase <span a="&#x1F332;" >`,
+      `Double-quoted hex leading zeroes <span a="&#x0001F332;" >`,
+      `Double-quoted hex incomplete <span a="&#x1f332" >`,
+      `Double-quoted hex non-terminated <span a="&#x1f332g" >`,
+      `Double-quoted hex amp-terminated <span a="&#x1f332&foo" >`,
+      `Double-quoted decimal lowercase <span a="&#127794;" >`,
+      `Double-quoted decimal uppercase <span a="&#127794;" >`,
+      `Double-quoted decimal leading zeroes <span a="&#000127794;" >`,
+      `Double-quoted decimal incomplete <span a="&#127794" >`,
+      `Double-quoted decimal non-terminated <span a="&#127794g" >`,
+      `Double-quoted decimal amp-terminated <span a="&#127794&foo" >`,
+
+      `Single-quoted hex lowercase <span a='&#x1f332;' >`,
+      `Single-quoted hex uppercase <span a='&#x1F332;' >`,
+      `Single-quoted hex leading zeroes <span a='&#x0001f332;' >`,
+      `Single-quoted hex incomplete <span a='&#x1f332' >`,
+      `Single-quoted hex non-terminated <span a='&#x1f332g' >`,
+      `Single-quoted hex amp-terminated <span a='&#x1f332&foo' >`,
+      `Single-quoted decimal lowercase <span a='&#127794;' >`,
+      `Single-quoted decimal uppercase <span a='&#127794;' >`,
+      `Single-quoted decimal leading zeroes <span a='&#000127794;' >`,
+      `Single-quoted decimal incomplete <span a='&#127794' >`,
+      `Single-quoted decimal non-terminated <span a='&#127794g' >`,
+      `Single-quoted decimal amp-terminated <span a='&#127794&foo' >`,
+    ]
+  },
+
+  {
+    title: 'Windows 1252 References',
+    samples: [
+      `Hex win1252 &#x80;`,
+      `Hex win1252 &#x87;`,
+      `Hex win1252 &#x8D;`,
+      `Hex win1252 &#x95;`,
+      `Hex win1252 &#x9F;`,
+      `Hex <i>not</i> win1252 &#x7F;`,
+      `Hex <i>not</i> win1252 &#xF0;`,
+
+      `Decimal win1252 &#128;`,
+      `Decimal win1252 &#135;`,
+      `Decimal win1252 &#141;`,
+      `Decimal win1252 &#149;`,
+      `Decimal win1252 &#159;`,
+      `Decimal <i>not</i> win1252 &#127;`,
+      `Decimal <i>not</i> win1252 &#240;`,
+    ]
+  },
+
+  {
+    title: 'Attributes',
+    samples: [
+      // FIXME implement test comparison of attribute lists
+      '<span foo=bar>Buzz</span>',
+      `<span "" \n = \n foo "= &bee &bar />`,
+      `<a b=&ampa>`,
+    ]
+  },
+
+  {
+    title: 'Comments',
+    samples: [
+      // FIXME implement test comparison of comments
+      '<!--foo bar\nbaz bee-->',
+      '<!--foo bar &amp; baz bee-->',
+      // Invalid comment tags
+      '<!-foo bar\nbaz bee-->',
+      `<!--foo bar\n\n\t baz bee-->`,
+      '<? foo >',
+    ]
+  },
+
+  {
     title: 'Reopen Formatting Tags',
     samples: [
       '<div><s><s><i><b><tt><s><s><s>foo</i><tt><tt><tt><tt></div>X',
@@ -795,7 +909,7 @@ export default [
     ]
   },//*/
 
-  { 
+  {
     title: 'NULL characters',
     samples: [
       'Hello\0World',
@@ -821,7 +935,7 @@ export default [
     ]
   },
 
-  { 
+  {
     title: 'Space in Tables',
     samples: [
       '<table><colgroup>foo bar<col> <col>',
@@ -969,7 +1083,7 @@ export default [
     ]
   },
 
-  { 
+  {
     title: 'blocks.dat',
     samples: [
       '<!doctype html><p>foo<address>bar<p>baz',
