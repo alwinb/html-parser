@@ -1,7 +1,7 @@
 Html Parser
 ===========
 
-**Version 0.8.0**
+**[ Version 0.12.1 ] [ [Test Page][0] ] [ [Playground][1] ]**
 
 This is a new HTML5 parser that I am working on.  
 The focus is on code size, speed and simplicity. 
@@ -15,24 +15,96 @@ I intend to produce, for all possible input, a parse tree that is equivalent to 
 There is a test page that I use for testing and debugging online [here][0].
 
 [0]: https://alwinb.github.io/html-parser/test/tree.html
-
-The Lexer
----------
-
-There is a preliminary attempt at a lexical grammar for HTML5 in [notes][2]. 
-
-For the implementation, I have painstakingly charted a transition table based on the standard and then used a technique outlined in this [gist][1] to encode the state machine in very few lines. The lexer is almost complete.
-
-[1]: https://gist.github.com/alwinb/d2787f4cde1f7aadd197f40806cb08ef#file-statemachine-js
+[1]: https://alwinb.github.io/html-parser/test/tree.new.html
 [2]: ./notes/lexical-grammar.txt
 
 
-The Parser
-----------
+API
+---
 
-**Note**: This is a preliminary description, it is not always in sync with the development versions (the 0.x.x. series). 
+As of version 0.10.0 the general architecture is that of a modular push parser. The parsing pipleline is set up as follows, with input flowing from right-to-left:
 
-I'm trying to come up with a declarative description and a more elegant algorithm than the one that is described in the standard. The algorithm is not quite compatible with the standard yet but the progress is good!
+
+TreeBuilder  ⥦  Parser  ⥦  Preprocessor  ⥦  Tokeniser  ⟵  input
+
+
+The Parser and the Preprocessor share a common _TokenHandler_ interface
+for handling a stream of input tokens, with one method for each token-type:
+
+
+{ writeTag, writeEndTag, writeDoctype, writeComment, writeData, writeSpace, writeEOF }
+
+
+The return value of each of the write* methods is used as feedback to the caller. This is used to pass a small amount of contextual information from the TreeBuilder back into the Preprocessor and the Tokeniser. 
+
+The TreeBuilder is derived from a declarative schema. It implements a well-behaved formalism that specifies invariants on the resulting DOM-tree and _in addition_ also specifies how misplaced and mismatched tokens in the token stream should be handled.
+
+### interface TokenHandler
+
+- writeTag (node)
+- writeEndTag (endTag)
+- writeDoctype (doctype)
+- writeComment (mDecl)
+- writeData (buffer)
+- writeSpace (buffer)
+- writeEOF ()
+
+### class Tokeniser
+
+- constructor (delegate: tokenHandler)
+- write (buffer)
+- end  ()
+- parse (buffer)
+
+### class Preprocessor
+
+implements _TokenHandler_
+
+The Preprocessor makes slight adjustments to the token stream. Inconsistent behaviour that cannot be expressed by the Parser or the TreeBuilder is taken care of at this level. 
+
+- construtor (delegate: TokenHandler)
+
+### class Parser
+
+implements _TokenHandler_
+
+The Parser wraps around a TreeBuilder and takes care of more complex parsing behaviour that cannot be expressed by a TreeBuilder schema. Examples are 'foster parenting' and body to frameset switching. 
+
+- constructor ()
+
+### class TreeBuilder
+
+The TreeBuilder class is derived from a declarative schema that specifies invariants on the resuting DOM tree. It _also_ specifies how to handle misplaced and mismatched tokens.
+
+- constructor (…)
+- reset ()
+- canClose (name, kind)
+- canEscalate (name, kind)
+- canExtend (name, kind)
+- prepare (name, kind)
+- tryOpen (name, kind)
+- tryAppend (name, kind)
+- tryClose (name, kind)
+- _onopen (mask, hander)
+- _onclose (mask, hander)
+- _open ()
+- _reformat ()
+- _select ()
+
+
+### TreeBuilder Schema
+
+In essence the TreeBuilder Schema is a top-down tree automaton with child- and sibling-transitions, with some additional annotations for handling misplaced and mismatched tokens. 
+
+
+Notes
+-----
+
+**Note**: These are older notes, they are not always in sync with the latest version.
+
+(There is a preliminary attempt at a lexical grammar for HTML5 in [notes][2]). 
+
+As for the parser, I'm trying to come up with a declarative description and a more elegant algorithm than the one that is described in the standard. The algorithm is not quite compatible with the standard yet but the progress is good!
 
 ### The Algorithm
 
@@ -71,7 +143,6 @@ There are four ways to resolve such a situation:
 
 These options are run in a loop, until the tag is either inserted or ignored.
 
-
 ### The parser state
 
 The parser state consists of:
@@ -86,18 +157,15 @@ Each stack frame stores:
 - an 'openFor' property that specifies per start-tag-name the elements that should be inserted; this is behaviour 1. above. 
 - a 'closeFor' property, which encodes the set of potential start-tags' names that would trigger behaviour 2. above (i.e. inserting an implicit ent-tag before it). 
 - A 'contents' property that encodes start-tags to be ignored (via its complement). This is behaviour 3. above.
-- An optional 'foster' property. This is only used with table elements, and it stores a copy of the stack (excluding the table element itself) that is used for foster parenting. This is behaviour 4 above. 
-
-
+- An optional 'foster' property. This is only used with table elements, and it stores a copy of the stack (excluding the table element itself) that is used for foster parenting. This is behaviour 4 above.
 
 ### A schema, using element categories
 
 Rather than pointing out the behaviours mentioned above for each combination of tag-names in code, I am working on a declarative system, a kind of schema. This 'schema' determines which of the above rules are to be applied in the case of mismatched and misplaced tags. 
 
-The schema is specified using subsets of the set of all elements. (I call them element-categories). Each of these subsets is either a finite set, or it has a finite complement. I am using integer bitfields as identifiers for these subsets. This allows _very fast_ computations with element categories. 
+The schema is specified using subsets of the set of all elements. Each of these subsets is either a finite set, or it has a finite complement. I am using integer bitfields as identifiers for these subsets. This allows very fast computations on sets of elements.
 
 I precompute a single dictionary that maps tag-names to such an integer, thus representing the union of the categories to which the tag belongs. 
-
 
 ### Forthcoming...
 
@@ -107,18 +175,13 @@ So far that's it. I will write more of it down later.
 Remaining work
 --------------
 
-The progress so far is very good, but a few issues remain. 
-
 * Lexer:
-  - Doctype and CDATA tags are as of yet lexed as bogus comments.
-  - The end tags of comments are lexed slightly differently.
-  - Lexing of rawtext/ rcdata/ plaintext may be incorret in svg and mathml.
+  - CDATA tags are as of yet lexed as bogus comments.
 * Parser:
   - The tree construction rules for template tags.
   - Include attributes check in the implementation of 'Noah's Ark'.
   - There may be a few remaining exceptions that are not covered yet. 
-  - Body to frameset switching (the 'frameset-ok' flag).
-  - Easy, but the attributes are not attached to the elements yet ...
+  - I've not reimplemented the 'Adoption Agency' yet in the rewrite for 0.9.0.
 
 
 License

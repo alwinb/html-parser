@@ -1,91 +1,152 @@
 <!DOCTYPE html>
-<html lang="en">
+<html id=tree lang=en>
 <head>
-  <meta charset="utf-8">
+  <meta charset=utf-8>
   <title>Tree Builder Test Page</title>
-  <link rel="stylesheet" href="style/base.css">
-  <link rel="stylesheet" href="style/tree.css">
-  <script src="./scripts/console.js"></script>
+  <link rel=stylesheet href=style/base.css>
+  <link rel=stylesheet href=style/tree.css>
 </head>
 <body>
+<script type=module src=scripts/error-handler.js></script>
+<script type=module>
 
-<script>
-  window.console = new Console ()
-  document.body.append (console.elem)
-  window.addEventListener ('error', evt => console.errorHandler (evt), true)
-</script>
+  import { Tokeniser, Preprocessor, Parser, parse } from '../lib/index.js'
+  import { printTree } from '../lib/traversal.js'
 
-<script src="../dist/html.js"></script>
-<script src="../dist/domex.min.js"></script>
-<script src="./scripts/samples.js"></script>
-<script src="./scripts/testui.js"></script>
+  import { TestUI, objectKey, nativeParse } from './scripts/testui.js'
+  import { domex, Domex } from '../dist/domex.min.js'
 
-<script>(()=>{
-
+  import suites from './scripts/samples.js'
   const log = console.log.bind (console)
 
-  // For debugging
-  Object.defineProperty (Object.prototype, Symbol.toStringTag, {
-    get: function () { return this.constructor.name }
-  })
 
+  // Test runner
+  // -----------
 
-  // Tests
-  // -----
-
-  function runTests () {
-    const suites = window ['html-suites']
-    let count = 0
+  function* runTests () {
     const failures = []
-    for (const suite of suites) {
+    let count = 0, time = 0, nativeTime = 0
+
+    for (let i=0, l=suites.length; i<l; i++) {
+      const suite = suites[i]
+      let suiteFailures = []
       for (const sample of suite.samples) {
         try {
           count ++
-          const native = nativeParse (sample)
-          const parsed = html.parse (sample)
-          if (printTree (native) !== printTree (parsed))
+          const d1 = new Date
+            const native = nativeParse (sample)
+          const d2 = new Date
+            nativeTime += (d2 - d1)
+          const parsed = parse (sample)
+            time += (new Date - d2)
+          if (printTree (native) !== printTree (parsed)) {
             failures.push (sample)
+            suiteFailures.push (sample)
+          }
         }
         catch (e) {
           console.error ('Test threw:')
-          console.error (sample)
+          throw (e)
+          // console.error (sample)
           failures.push (sample)
+          suiteFailures.push (sample)
         }
       }
+      if (suiteFailures.length) {
+        suite.title = `(${suiteFailures.length}/${suite.samples.length}) ${suite.title}`
+        suite.samples = suiteFailures
+      }
+      yield { failures, total:count, time, nativeTime }
     }
-    return { failures, total:count }
+    return { failures, total:count, time, nativeTime }
   }
+
 
   // Main 
   // ----
 
+  // Set up TestUI
+
   function main () {
 
-    // Run all samples
-    const { failures, total } = runTests ()
-    window ['html-suites'] .unshift ({
-      title: `🐞 Failures: ${Math.round (failures.length / total * 100)}% (${failures.length} / ${total})`,
-      samples: failures,
+    const ui = new TestUI (suites) .showSuite (0)
+    const todos = runTests ()
+
+    let sampleEl, suiteEl, inspEl
+    let inspected = null
+    let pinned = false
+
+    function loop () {
+      let start = new Date, done, results
+      do {
+        ({ value:results, done } = todos.next ())
+        ui.showResults (results)
+      }
+      while (!done && new Date - start < 150)
+      if (!done) return setTimeout (loop, 100)
+
+      console.clear ()
+      const { failures, total, time, nativeTime } = results
+
+      suites.unshift ({
+        title: `🐞 Failed ${Math.round (failures.length / total * 100)}% (${failures.length}/ ${total})`,
+        samples: failures,
+      })
+      ui.update (suites)
+      ui.showResults (results)
+    }
+    
+    window.runAllTests = loop
+
+    // just quick ...
+
+    let tid = 0
+    document.addEventListener ('mouseover', evt => {
+      clearTimeout (tid)
+      if (evt.target.className === 'label' && objectKey in evt.target.parentNode)
+        tid = setTimeout (() => ui.inspect (evt.target.parentNode [objectKey]), 300)
+      else if (!pinned)
+        tid = setTimeout (() => ui.inspect (null), 300)
     })
 
-    // Set up Test UI
-    const ui = new TestUI () .showSuite (0)
-    const submit = byId ('submit')
-    submit .addEventListener ('click', evt => {
-      ui.showSampleValue (input.value)
-    })
-
-    // Event handlers...
     document.addEventListener ('click', evt => {
+      if (evt.target.className === 'label' && objectKey in evt.target.parentNode) {
+        inspected = evt.target.parentNode [objectKey]
+        pinned = true
+        ui.inspect (inspected)
+        if (inspEl) inspEl.classList.remove ('selected')
+        inspEl = evt.target
+        inspEl.classList.add ('selected')
+      }
+      else {
+        ui.inspect ((pinned = false, inspected = null))
+        if (inspEl) inspEl.classList.remove ('selected')
+        inspEl = null
+      }
+    })
+
+    document.addEventListener ('click', evt => {
+
       if (objectKey in evt.target) {
-        log (evt.target [objectKey])
+        ui.inspect (evt.target [objectKey])
         window.$ = evt.target [objectKey]
       }
-      if ('key' in evt.target.dataset)
-        ui.showSample (+evt.target.dataset.key)
 
-      if ('suite' in evt.target.dataset)
+      if ('key' in evt.target.dataset) {
+        ui.showSample (+evt.target.dataset.key)
+        if (sampleEl)
+          sampleEl.classList.remove ('selected')
+        evt.target.classList.add ('selected')
+        sampleEl = evt.target
+      }
+
+      if ('suite' in evt.target.dataset) {
         ui.showSuite (+evt.target.dataset.suite)
+        evt.target.classList.add ('selected')
+        if (suiteEl) suiteEl.classList.remove ('selected')
+        evt.target.classList.add ('selected')
+        suiteEl = evt.target
+      }
 
     })
 
@@ -98,4 +159,4 @@
   }
 
  setTimeout (main)
-})()</script>
+</script>

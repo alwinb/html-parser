@@ -1,118 +1,78 @@
-const assert = require ('assert') .strict
-const { equal:equals, deepEqual:deepEquals } = assert
-const util = require ('util')
-
-const html = require ('../lib/')
-const { TreeBuilder, Parser } = html
-const { Leaf, Document, Node } = TreeBuilder
+import { fragmentRule } from '../lib/schema.js'
+import { parse } from '../lib/index.js'
+import { traverse, printTree } from '../lib/traversal.js'
+import * as util from 'util'
 const log = console.log.bind (console)
-
-const fs = require ('fs')
-
-
-// Serialise Test Result
-// ---------------------
-
-function print (node) {
-  return [... _print (node)] .join ('')
-}
-
-function* _print (node, depth=0) {
-  let indent = ''
-  for (let i=0; i<depth; i++) indent += '  '
-  if (typeof node === 'string')
-    yield `| ${indent}"${node}"\n`
-
-  else if (node instanceof Node) {
-    yield `| ${indent}<${node.name}>\n`
-    // TODO also print attrs, and coalesce text nodes
-    for (let child of node.children) yield* _print (child, depth+1)
-  }
-
-  else if (node instanceof Leaf) {
-    yield `| ${indent}<${node.name}>\n`
-    // TODO also print attrs, and add quotes around text
-  }
-
-  else if (node instanceof Document)
-    for (let child of node.children) yield* _print (child, depth)
-}
-
-
-// Parse Test Case
-// ---------------
-
-function parseTests (input) {
-  const tests = []
-  // TODO
-}
-
-
-// Test runner
-// -----------
-
-function run (sample) {
-  if (sample.length < 100) {
-    log ('#data')
-    log (sample)
-    log ('#console')
-  }
-  const doc = new Parser ()
-    .parse (sample)
-  //log (doc)
-  // const p = new TreeBuilder
-  // for (let t of html.tags (sample)) p.write (t)
-  // log (util.inspect (doc, { depth:200 }))
-  log ('#document')
-  log (print (doc))
-}
 
 
 // Samples
 // -------
 
 var samples = [
-  '  </html> foo',
-  ' <a>',
-  ' foo',
-  '</body>',
-  '</head> one two theee',
-  '<b><li>test</b> nonbold',
-  '<base>foo',
-  '<body> </head>',
-  '<br/>',
-  '<br>',
-  '<button><table>aa<button>one<td>two<tr>three',
-  '<frame>',
-  '<frameset>',
-  '<h1> One Two </h1> bar',
-  '<h1><!-- comment -->some data</h6> <p>Hello <strong>World!</strong>',
-  '<head><li>foo',
-  '<html><head></head><body><h1>Foo</h1><p>Lorem<p>Ipsum',
-  '<main><table><caption><ul><li>a<li>text<table><p>foo<td>foo<tr></table>γαμμα',
-  '<main><table><div>text<td>foo<tr>',
-  '<main><table><ul><li>a<li>text<p>foo<td>foo<tr></table>γαμμα',
-  '<main><table>text<td>foo<tr>',
-  '<script src=foo>',
-  '<select><li>foo',
-  '<select><optgroup><option>one<option>two<optgroup>three<table><td>foo',
-  '<select>Foo<option>boo<select>Bar',
-  '<svg><path />',
-  '<table><caption>foo<td>',
-  '<table><colgroup><td>foo<tr><br>',
-  '<table><td>foo<col>',
-  '<table><td>foo<td><col>',
-  '<table><td>foo<tfoot>',
-  '<table><td>foo<tr>',
+  '<div>foo',
+  '<table><caption><select>foo<table><select>bar',
+  '<table><caption><select>foo<select>bar',
+  '<!doctype html><p>Test<h1>Head1<table>foo<div></h2>Text',
+  '<head></head>After head</head>Foo',
+  '<html><head> <link> </head> <link>',
+  '<html><frameset>',
+  '</head> <p>',
+  '<math><annotation-xml encoding=TeXt/Html><p><p>',
+  '<svg><desc>test<div>',
+  '<font face>foo',
+  '<!doctype>foo',
+  '<table> g',
+  '</body><title>X</title>',
+  '<param><frameset>',
+  '<svg><foo/><bar>',
+  '<head></head><title>X</title>',
+  '<head></head><title>X&amp;y</title>',
+  '<div><s><s><i><b><tt><s><s><s>foo</i><tt><tt><tt><tt></div>X',
+  '<applet test foo=a><b>bar</applet>foo',
+  'foo</body><!---->',
+  '<html></html>',
+  '<html><frameset></frameset></html>',
+  '<!doctype html><title>',
+  '<html><body><noframes>foo',
+  '<!doctype html><input type="hidden"><frameset>',
+  '<title><!-- foo --></title><svg><title><!-- bar --></title>',
+  'foo</body><!--> bar<!--> bee',
+  'foo</html><!-->',
+  '<div><table>',
+  '<table><td><svg><desc><td>',
+  '<table><td>bar<col>',
+  // '<html><head></head><body><svg><desc><tr>bee',
+  '<head></head><title>X</title>',
+  '<head>asdasd<frameset>',
+  '<head> </head> <listing> <source> <frameset>',
+  '<html><frameset></frameset></html> ',
+  '<html><frameset></frameset></html>\n<!-->\n<!-->\n<!-->',
+  '<html><frameset></frameset></html><noframes>foo</noframes>',
+  '<frame></frame></frame><frameset>',//'<frame><frameset><frame></frameset><noframes></frameset><noframes>',
+  '<head> </head> <pre> <source> <frameset>',
+  '<!DOCTYPE html><frameset><svg><g></g><g></g><p><span>',
+  '<i><b><i>1<p><s><u>2<p>bar</b>3',
+  'Hello <!-- foo --> Bar',
 ]
 
-var samples = [ 
 
-  // issues related to namespace handling
-  // '<table><svg><g>foo</g><g>bar</g><p>baz</table><p>quux',
-  // '<table><math><mi>foo</mi><mi>bar</mi><p>baz</table><p>quux'
+var samples = [
+'</foreignObject><plaintext><div>foo</div>',
 ]
 
-for (const sample of samples)
-  run (sample)
+// Test
+// ====
+
+const options = { verbose: true }
+
+for (const sample of samples) {
+  log ('\n', sample, '\n'+sample.replace (/[^\n]/g, '='))
+  var doc = parse (sample, options) 
+
+  log (util.inspect (doc, {depth:Infinity}))
+  log ('---')
+  for (const tok of traverse (doc)) log (tok)
+  log ('---')
+  log (printTree (doc))
+}
 

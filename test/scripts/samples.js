@@ -1,7 +1,7 @@
 // Samples
 // -------
 
-window['html-suites'] = [
+export default [
   
   /*
   {
@@ -12,6 +12,11 @@ window['html-suites'] = [
       '<!doctype html><p>TestHead1<table>foo<div></h2>Text',
     ]
   },//*/
+
+  // {
+  //   title: 'Quick…',
+  //   samples:['</html><!--5--><noframes>C</noframes><!--6-->']
+  // },
 
   {
     title: 'Reopen Formatting Tags',
@@ -44,6 +49,8 @@ window['html-suites'] = [
       '<a><i><b>foo</i><br>one',
       '<a><i><b>foo</i><input>one',
       '<a><i><b>foo</i><sdiv>one',
+      '<a><i><b>\0</i><nobr>\0',
+      '<a><i><b>\0</i><a>\0',
     ]
   },
 
@@ -164,6 +171,12 @@ window['html-suites'] = [
       '<h1>foo<p>bar<h1>bee',
       '<h1>foo<p>bar</h2>bee',
       '<h1>foo<p>bar<h2>bee',
+      
+      // Special case end tag
+      '</p>foo',
+      '<html></p>foo',
+      's</p>foo',
+      '<body></p>foo',
     ]
   },
 
@@ -208,6 +221,8 @@ window['html-suites'] = [
       `<p>Test<h1>Head<applet><h2>`,
       `<p>Test<h1>Head<h2><h2>`,
       `<p>Test<h1>Head`,
+      '<p>Test<h1>Head<div><h2>foo',
+      '<p>Test<h1>Head<div></h2>foo',
       '<li><h1>asd</li>asd',
       '<li><h1>asd<li>asd',
       '<p><h1>asd<p>asd',
@@ -315,8 +330,6 @@ window['html-suites'] = [
       '<p>Test<li>Head<p></li>foo',
       '<p>Test<li>Head<ul><li>foo',
       '<p>Test<li>Head<ul></li>foo',
-      '<p>Test<h1>Head<div><h2>foo',
-      '<p>Test<h1>Head<div></h2>foo',
       '<p>Test<li>Head<div><li>foo',
       '<p>Test<li>Head<div></li>foo',
       '<p>Test<li>Head<address><li>foo',
@@ -327,7 +340,7 @@ window['html-suites'] = [
   },
 
   {
-    title: 'List scopes (2)',
+    title: 'List scopes 2',
     samples: [
       '<li><dd><li>A</li>B',
       '<li><dd>A</li>B',
@@ -357,6 +370,7 @@ window['html-suites'] = [
       '<svg>foo<sub>bar',
       '<svg>foo<other>bar',
       '<svg>foo<body>bar',
+      '<svg>foo<head>bar',
       '<svg>foo<center>bar',
       `<svg><big><rect></svg>`,
       '<svg>foo<rect><path><circle></rect>sd<center>bar',
@@ -398,6 +412,13 @@ window['html-suites'] = [
       '<svg><font color>foo',
       '<svg><font face>foo',
 
+      // Yet more
+      '<svg></body>foo<!-->bar',
+      '<svg><body></body>foo<!-->bar',
+      '<svg><body></body>foo<!-->bar',
+      '<svg><html></html>',
+      '<svg><html></html>',
+
       // Non-breakout
       '<svg><font Size>foo',
       '<svg><font cOlor>foo',
@@ -405,6 +426,30 @@ window['html-suites'] = [
       '<svg><font>foo',
       '<svg><font other>foo',
 
+      //
+      '<table><tr><td><svg><desc><td>',
+      '<table><tr><td><svg><desc></svg><td>',
+    ]
+  },
+
+  {
+    title: 'Tagname adjustments',
+    samples: [
+      '<image>',
+      '<div><img>',
+      '<div><image>',
+      '<div><RaDiAlGradient>',
+      '<svg><img>',
+      '<svg><image>',
+      '<svg><RaDiAlGradient>',
+      '<math><img>',
+      '<math><image>',
+      '<math><RaDiAlGradient>',
+      '<svg><G>foo</g>bar',
+      '<svg><g>foo</G>bar',
+      '<math><G>foo</g>bar',
+      '<math><g>foo</G>bar',
+      '<svg><forEignObJect>foo</foreignobject>bar',
     ]
   },
 
@@ -458,6 +503,9 @@ window['html-suites'] = [
       '<svg>foo<foreignobject>bar<table><caption></svg>bee',
       '<svg>foo<foreignobject>bar<table><colgroup></svg>bee',
 
+      // Test proper closing, proper tagname adjustments
+      '<svg>foo<foreignObject>bar</foreignObject>bas',
+      
       // test closing of math from withing math-foreign tags
       '<math>foo<mi>bar</math>bee',
       '<math>foo<mi>bar<a></math>bee',
@@ -484,6 +532,19 @@ window['html-suites'] = [
       '<svg><foreigNObject>foo<p>bar<p>baz</svg>bee',
       '<svg><desc>foo<rect>foo<tr><div>bar</svg>bee',
       '<math><desc>foo<svg>foo<tr><div>bar</svg>bee',
+      
+      // Math annotation-xml
+      '<math><annotation-xml><p><p>',
+      '<math><annotation-xml><other>',
+      '<math><annotation-xml encoding=TeXt/Html><p><p>',
+      '<math><annotation-xml encoding=TeXt/Html><other>',
+      '<annotation-xml><p><p>',
+      '<annotation-xml><other>',
+      '<annotation-xml encoding=TeXt/Html><p><p>',
+      '<annotation-xml encoding=TeXt/Html><other>',
+      
+      // Others
+      '<table><svg>foo<td>bar',
     ]
   },
 
@@ -497,31 +558,145 @@ window['html-suites'] = [
       `</head>Foo`,
       `</body>Foo`,
       `</html>Foo`,
-      `<head></head>After head</head>Foo`,
-      `<head></head>After head</body>Foo`,
-      `<head></head>After head</html>Foo`,
+      `<head></head>After head</head>`,
+      `<head></head>After head</body>`,
+      `<head></head>After head</html>`,
 
-      // Space handling
+      // After body, after html
       '</body><title>X</title>',
       '</head> <head>',
-      '</head> <link>',
       '</head> <p>',
-      '</head> <style></style>foo',
       '</head> p',
-      '</head><link>',
       '<body></body></html>',
       '<head></head> <link>',
       '<head></head> <p>',
-      '<head></head> <style></style>foo',
-      '<head></head><link>',
-      '<html> <head> <link> </head> <body> foo',
       '<html></html>',
       '<html><body></body>',
-      '<html><frameset></frameset></html> ',
       '<table><th>',
+      'foo</body><!--> bar<!--> bee',
+      '</body><!-->bar',
     ]
   },
-    
+
+  {
+    title: 'Doctype',
+    samples: [
+      '<!doctype>',
+      '<!doctype><!doctype>',
+      ' <!doctype>',
+      ' <!doctype> <!doctype>',
+      'foo <!doctype>',
+      'foo <!doctype> <!doctype>',
+      '<head></head><!doctype>',
+      '<body><!doctype>',
+      '<svg>foo<!doctype html>bar',
+      '<svg>foo<!-- -->bar',
+    ]
+  },
+
+  {
+    title: 'After Head',
+    samples: [
+      '</head><link>',
+      '</head><style></style>foo',
+      '</head><style>bar</style>foo',
+      '</head><link>',
+      '</head><noscript>',
+      '</head><title>',
+      '<head></head><style></style>foo',
+      '<head></head><style>bar</style>foo',
+      '<head></head><link>',
+      '</head> <link>',
+      '</head> <style></style>foo',
+      '</head> <style>bar</style>foo',
+      '</head> <link>',
+      '</head> <noscript>',
+      '</head> <title>',
+      '<head> </head> <style></style>foo',
+      '<head> </head> <style>bar</style>foo',
+      '<head> </head> <link>',
+      '<html> </head> <link> </head> <body> foo',
+      '<html> </head> <script> bar </script> </head> <body> foo',
+      '<html> </head> <noscript> bar </noscript> </head> <body> foo',
+      '<html> </head> <noframes> bar </noframes> </head> <body> foo',
+      '<html> </head> <title> bar </title> </head> <body> foo',
+    ]
+  },
+
+  {
+    title: 'After Body',
+    samples: [
+      'foo</body><!--->',
+      'foo</body><!---> ',
+      'foo</body> <!--->',
+      'foo</body>bar<!--->',
+      'foo</body><other><!--->',
+      'foo</body><body><!--->',
+      'foo</body><!---></body><!--->',
+      'foo</body><!---> </body><!--->',
+      'foo</body> <!---></body> <!--->',
+      //
+      '<dl></body>foo',
+      '<div></body>foo',
+      '<address></body>foo',
+      '<listing></body>foo',
+      '<option></body>foo',
+      '<optgroup></body>foo',
+      '<button></body>foo',
+      '<p></body>foo',
+      '<li></body>foo',
+      //
+      '<dl></body><!-->foo',
+      '<div></body><!-->foo',
+      '<address></body><!-->foo',
+      '<listing></body><!-->foo',
+      '<option></body><!-->foo',
+      '<optgroup></body><!-->foo',
+      '<button></body><!-->foo',
+      '<p></body><!-->foo',
+      '<li></body><!-->foo',
+      //
+      '<table></body><!-->foo',
+      '<table><caption></body><!-->foo',
+      '<table><tr></body><!-->foo',
+      '<table><td></body><!-->foo',
+      '<select></body><!-->foo',
+      '<select><option></body><!-->foo',
+      '<option></body><!-->foo',
+      //
+      `Foo</body><!--><!-->foo`,
+      `<frameset></body><!-->a`,
+      `<head></head>After head</body>After body`,
+    ]
+  },
+  {
+    title: 'After Frameset',
+    samples: [
+      '<html><frameset></frameset></html> ',
+      '<html><frameset></frameset></html><noframes>foo</noframes>',
+      `<frameset><frame></frameset><!-1->Foo</frameset><!-2->Bar</body><!-3->Bee`,
+      `<frameset></frameset>Foo<!-->Foo`,
+      `<frameset></frameset></html>1<noframes>2</noframes>3<noframes>4</noframes>5`,
+      `<frameset><frame></frameset><!-1-></html><!-2-> <!-3-> <!-4->`,
+  ]
+  },
+  {
+    title: 'After Html',
+    samples: [
+      '</html>   <head>',
+      'foo</html><!-->',
+      '<svg><html></html>foo<!-->bar',
+      '<svg><html></html>foo<!-->bar',
+      '<svg></html><!-->bar',
+      '<svg></html>foo<!-->bar',
+      `<body></html><svg><g>foo</g>`,
+      `<body></html><svg><g>foo</g>`,
+      `<body></html><!--><div><g>foo</g>`,
+      `<body></html><!--><div><g>foo</g>`,
+      `<head></head>After head</html>After html`,
+    ]
+  },
+
   /*
   {
     title: 'Templates',
@@ -530,11 +705,58 @@ window['html-suites'] = [
     ]
   },//*/
   
+  {
+    title: 'RawText and RcData',
+    samples: [
+      `<textarea>foo &amp; bar</textarea>bee<div>buzz`,
+      `<script>foo &amp; bar</script>bee<div>buzz`,
+      `<tExTaReA>foo &amp; bar</textarea>bee<div>buzz`,
+      `<sCrIpT>foo &amp; bar</script>bee<div>buzz`,
+      `<textarea>foo <x> bar</textarea>bee<div>buzz`,
+      `<script>foo <x> bar</script>bee<div>buzz`,
+      //
+      `<svg><textarea>foo &amp; bar</textarea>bee<div>buzz`,
+      `<svg><script>foo &amp; bar</script>bee<div>buzz`,
+      `<svg><textarea>foo <x> bar</textarea>bee<div>buzz`,
+      `<svg><script>foo <x> bar</script>bee<div>buzz`,
+    ]
+  },//*/
+
+  { 
+    title: 'NULL characters',
+    samples: [
+      'Hello\0World',
+      'Hello \0World',
+      '<textarea>Hello\0World',
+      '<textarea>Hello \0World',
+      '<style>Hello\0World',
+      '<style>Hello \0World',
+      '<head>Hello\0World',
+      '<svg>Hello\0World',
+      '<math>Hello\0World',
+      '<select>foo\0bar',
+      '<select><option>foo\0bar',
+      '<svg><select>foo\0bar',
+      '<svg><select><option>foo\0bar',
+      '<option>foo\0bar',
+      '<div>foo\0bar',
+      '<optgroup>foo\0bar',
+      '<span>foo\0bar',
+      '<table>foo\0bar',
+      '<table><td>foo\0bar',
+      // TODO add tests for \0 in other places
+    ]
+  },
+
   { 
     title: 'Space in Tables',
     samples: [
-      '<table><colgroup>a b<col> <col>',
-      '<table> s<td></td> </table>',
+      '<table><colgroup>foo bar<col> <col>',
+      '<table><colgroup> foo<col> <col>',
+      '<table>foo <td></td> </table>',
+      '<table> foo<td></td> </table>',
+      '<table> foo <td></td> </table>',
+      '<table> \0 <td></td> </table>',
     ]
   },
 
@@ -556,10 +778,21 @@ window['html-suites'] = [
       `<table><tr><tr><td>cell1<td>cell2`,
       `<table><td>foo<tr><td>bar<col>`, 
       '<table><td><applet><td>',
+    ]
+  },
 
-      // Hidden input
+  {
+    title: 'Hidden input',
+    samples: [
       '<table><input type=hiddenfoo',
       '<table><input type=hidden type=still-hidden>foo',
+      '<!doctype html><table><input type=hidDEN></table>',
+      '<!doctype html><table>X<input type=hidDEN></table>',
+      '<!doctype html><table>  <input type=hidDEN></table>',
+      '<!doctype html><table>  <input type=\'hidDEN\'></table>',
+      '<!doctype html><table><input type=" hidden"><input type=hidDEN></table>',
+      '<!doctype html><input type="hidden"><frameset>',
+      '<!doctype html><input type="button"><frameset>',
     ]
   },
 
@@ -585,8 +818,506 @@ window['html-suites'] = [
       `<p><foo><li>`,
       '<button><div><p><applet><button>',
       '<button><div><p><applet><p>', 
+
+      '<div><a>Is closed by<a>',
+      '<div><nobr>Is closed by<nobr>',
+      '<svg><a>Not closed by<a>',
+      '<svg><nobr>Not closed by<nobr>',
+      '<svg><img>',
+      '<svg><select>not closed by<select>',
+      
+      '<svg>foo<br>bar',
+      '<svg>foo</br>bar',
+    ]
+  },
+  
+  {
+    title: 'Body → Frameset',
+    samples: [
+      '<head> </head> <span> <source> <frameset>',
+      '<head> </head> <applet> <source> <frameset>',
+      '<head> </head> <div> <source> <frameset>',
+
+      '<head> </head> <pre> <source> <frameset>',
+      '<head> </head> <listing> <source> <frameset>',
+      '<head> </head> <menu> <source> <frameset>',
+      '<head> </head> <main> <source> <frameset>',
+
+      '<svg><frameset>foo',
+      '<math><frameset>foo',
+      '<div><frameset>foo',
+
+      '<svg></svg><frameset>',
+      '<math></math><frameset>',
+      '<div></div><frameset>',
     ]
   },
 
-] // End Suites
+  {
+    title: 'Browser Disagreements',
+    samples: [
+      '<svg>foo</br>bar',
+      'foo</body> <!--->',
+      'foo</body> <!---></body> <!--->',
+      '<!doctype html><p>foo<dialog>bar<p>baz',
+      '<!doctype html><dialog><p>foo</dialog>bar',
+      '<select><keygen>',
+    ]
+  },
+
+  // Tests taken from the html5lib = tests
+  // -------------------------------------
+
+  {
+    title: 'tables01.dat',
+    samples: [
+      '<table><th>',
+      '<table><td>',
+      '<table><col foo=\'bar\'>',
+      '<table><colgroup></html>foo',
+      '<table></table><p>foo',
+      '<table></body></caption></col></colgroup></html></tbody></td></tfoot></th></thead></tr><td>',
+      '<table><select><option>3</select></table>',
+      '<table><select><table></table></select></table>',
+      '<table><select></table>',
+      '<table><select><option>A<tr><td>B</td></tr></table>',
+      '<table><td></body></caption></col></colgroup></html>foo',
+      '<table><td>A</table>B',
+      '<table><tr><caption>',
+      '<table><tr></body></caption></col></colgroup></html></td></th><td>foo',
+      '<table><td><tr>',
+      '<table><td><button><td>',
+      '<table><tr><td><svg><desc><td>',
+    ]
+  },
+
+  { 
+    title: 'blocks.dat',
+    samples: [
+      '<!doctype html><p>foo<address>bar<p>baz',
+      '<!doctype html><address><p>foo</address>bar',
+      '<!doctype html><p>foo<article>bar<p>baz',
+      '<!doctype html><article><p>foo</article>bar',
+      '<!doctype html><p>foo<aside>bar<p>baz',
+      '<!doctype html><aside><p>foo</aside>bar',
+      '<!doctype html><p>foo<blockquote>bar<p>baz',
+      '<!doctype html><blockquote><p>foo</blockquote>bar',
+      '<!doctype html><p>foo<center>bar<p>baz',
+      '<!doctype html><center><p>foo</center>bar',
+      '<!doctype html><p>foo<details>bar<p>baz',
+      '<!doctype html><details><p>foo</details>bar',
+      '<!doctype html><p>foo<dialog>bar<p>baz',
+      '<!doctype html><dialog><p>foo</dialog>bar',
+      '<!doctype html><p>foo<dir>bar<p>baz',
+      '<!doctype html><dir><p>foo</dir>bar',
+      '<!doctype html><p>foo<div>bar<p>baz',
+      '<!doctype html><div><p>foo</div>bar',
+      '<!doctype html><p>foo<dl>bar<p>baz',
+      '<!doctype html><dl><p>foo</dl>bar',
+      '<!doctype html><p>foo<fieldset>bar<p>baz',
+      '<!doctype html><fieldset><p>foo</fieldset>bar',
+      '<!doctype html><p>foo<figcaption>bar<p>baz',
+      '<!doctype html><figcaption><p>foo</figcaption>bar',
+      '<!doctype html><p>foo<figure>bar<p>baz',
+      '<!doctype html><figure><p>foo</figure>bar',
+      '<!doctype html><p>foo<footer>bar<p>baz',
+      '<!doctype html><footer><p>foo</footer>bar',
+      '<!doctype html><p>foo<header>bar<p>baz',
+      '<!doctype html><header><p>foo</header>bar',
+      '<!doctype html><p>foo<hgroup>bar<p>baz',
+      '<!doctype html><hgroup><p>foo</hgroup>bar',
+      '<!doctype html><p>foo<listing>bar<p>baz',
+      '<!doctype html><listing><p>foo</listing>bar',
+      '<!doctype html><p>foo<menu>bar<p>baz',
+      '<!doctype html><menu><p>foo</menu>bar',
+      '<!doctype html><p>foo<nav>bar<p>baz',
+      '<!doctype html><nav><p>foo</nav>bar',
+      '<!doctype html><p>foo<ol>bar<p>baz',
+      '<!doctype html><ol><p>foo</ol>bar',
+      '<!doctype html><p>foo<pre>bar<p>baz',
+      '<!doctype html><pre><p>foo</pre>bar',
+      '<!doctype html><p>foo<section>bar<p>baz',
+      '<!doctype html><section><p>foo</section>bar',
+      '<!doctype html><p>foo<summary>bar<p>baz',
+      '<!doctype html><summary><p>foo</summary>bar',
+      '<!doctype html><p>foo<ul>bar<p>baz',
+      '<!doctype html><ul><p>foo</ul>bar',
+    ]
+  },
+  
+  {
+    title: 'tests6.dat',
+    samples: [
+      '<!doctype html></head> <head>',
+      '<!doctype html><form><div></form><div>',
+      '<!doctype html><title>&amp;</title>',
+      '<!doctype html><title><!--&amp;--></title>',
+      '<!doctype>',
+      '<!---x',
+      '<body>',
+      '<frameset></frameset>\nfoo',
+      '<frameset></frameset>\n<noframes>',
+      '<frameset></frameset>\n<div>',
+      '<frameset></frameset>\n</html>',
+      '<frameset></frameset>\n</div>',
+      '<form><form>',
+      '<button><button>',
+      '<table><tr><td></th>',
+      '<table><caption><td>',
+      '<table><caption><div>',
+      '</caption><div>',
+      '<table><caption><div></caption>',
+      '<table><caption></table>',
+      '</table><div>',
+      '<table><caption></body></col></colgroup></html></tbody></td></tfoot></th></thead></tr>',
+      '<table><caption><div></div>',
+      '<table><tr><td></body></caption></col></colgroup></html>',
+      '</table></tbody></tfoot></thead></tr><div>',
+      '<table><colgroup>foo',
+      'foo<col>',
+      '<table><colgroup></col>',
+      '<frameset><div>',
+      '</frameset><frame>',
+      '<frameset></div>',
+      '</body><div>',
+      '<table><tr><div>',
+      '</tr><td>',
+      '</tbody></tfoot></thead><td>',
+      '<table><tr><div><td>',
+      '<caption><col><colgroup><tbody><tfoot><thead><tr>',
+      '<table><tbody></thead>',
+      '</table><tr>',
+      '<table><tbody></body></caption></col></colgroup></html></td></th></tr>',
+      '<table><tbody></div>',
+      '<table><table>',
+      '<table></body></caption></col></colgroup></html></tbody></td></tfoot></th></thead></tr>',
+      '</table><tr>',
+      '<body></body></html>',
+      '<html><frameset></frameset></html> ',
+      '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"><html></html>',
+      '<param><frameset></frameset>',
+      '<source><frameset></frameset>',
+      '<track><frameset></frameset>',
+      '</html><frameset></frameset>',
+      '</body><frameset></frameset>',
+    ]
+  },
+
+  {
+    title: 'tests7.dat',
+    samples: [
+      '<!doctype html><body><title>X</title>',
+      '<!doctype html><table><title>X</title></table>',
+      '<!doctype html><head></head><title>X</title>',
+      '<!doctype html></head><title>X</title>',
+      '<!doctype html><table><meta></table>',
+      '<!doctype html><table>X<tr><td><table> <meta></table></table>',
+      '<!doctype html><html> <head>',
+      '<!doctype html> <head>',
+      '<!doctype html><table><style> <tr>x </style> </table>',
+      '<!doctype html><table><TBODY><script> <tr>x </script> </table>',
+      '<!doctype html><p><applet><p>X</p></applet>',
+      '<!doctype html><p><object type="application/x-non-existant-plugin"><p>X</p></object>',
+      '<!doctype html><listing>',
+      '<!doctype html><select><input>X',
+      '<!doctype html><select><select>X',
+      '<!doctype html><table><select>X<tr>',
+      '<!doctype html><select>X</select>',
+      '<!DOCTYPE hTmL><html></html>',
+      '<!DOCTYPE HTML><html></html>',
+      '<body>X</body></body>',
+      '<div><p>a</x> b',
+      '<table><tr><td><code></code> </table>',
+      '<table><b><tr><td>aaa</td></tr>bbb</table>ccc',
+      'A<table><tr> B</tr> B</table>',
+      'A<table><tr> B</tr> </em>C</table>',
+      '<select><keygen>',
+    ]
+  },
+
+  {
+    title: 'tests8.dat',
+    samples: [
+      '<div>',
+      '<div>x<div></div>',
+      '<div>x<div></div>x</span>x',
+      '<div>x<div></div>y</span>z',
+      '<table><div>x<div></div>x</span>x',
+      '<table><li><li></table>',
+      'x<table>x',
+      'x<table><table>x',
+      '<b>a<div></div><div></b>y',
+      '<a><div><p></a>',
+      '<div>',
+      '<div>x<div></div>',
+      '<div>x<div></div>x</span>x',
+      '<div>x<div></div>y</span>z',
+    ]
+  },
+
+  {
+    title: 'tests9.dat',
+    samples: [
+      '<!DOCTYPE html><math></math>',
+      '<!DOCTYPE html><body><math></math>',
+      '<!DOCTYPE html><math><mi>',
+      '<!DOCTYPE html><math><annotation-xml><svg><u>',
+      '<!DOCTYPE html><body><select><math></math></select>',
+      '<!DOCTYPE html><body><select><option><math></math></option></select>',
+      '<!DOCTYPE html><body><table><math></math></table>',
+      '<!DOCTYPE html><body><table><math><mi>foo</mi></math></table>',
+      '<!DOCTYPE html><body><table><math><mi>foo</mi><mi>bar</mi></math></table>',
+      '<!DOCTYPE html><body><table><tbody><math><mi>foo</mi><mi>bar</mi></math></tbody></table>',
+      '<!DOCTYPE html><body><table><tbody><tr><math><mi>foo</mi><mi>bar</mi></math></tr></tbody></table>',
+      '<!DOCTYPE html><body><table><tbody><tr><td><math><mi>foo</mi><mi>bar</mi></math></td></tr></tbody></table>',
+      '<!DOCTYPE html><body><table><tbody><tr><td><math><mi>foo</mi><mi>bar</mi></math><p>baz</td></tr></tbody></table>',
+      '<!DOCTYPE html><body><table><caption><math><mi>foo</mi><mi>bar</mi></math><p>baz</caption></table>',
+      '<!DOCTYPE html><body><table><caption><math><mi>foo</mi><mi>bar</mi><p>baz</table><p>quux',
+      '<!DOCTYPE html><body><table><caption><math><mi>foo</mi><mi>bar</mi>baz</table><p>quux',
+      '<!DOCTYPE html><body><table><colgroup><math><mi>foo</mi><mi>bar</mi><p>baz</table><p>quux',
+      '<!DOCTYPE html><body><table><tr><td><select><math><mi>foo</mi><mi>bar</mi><p>baz</table><p>quux',
+      '<!DOCTYPE html><body><table><select><math><mi>foo</mi><mi>bar</mi><p>baz</table><p>quux',
+      '<!DOCTYPE html><body></body></html><math><mi>foo</mi><mi>bar</mi><p>baz',
+      '<!DOCTYPE html><body></body><math><mi>foo</mi><mi>bar</mi><p>baz',
+      '<!DOCTYPE html><frameset><math><mi></mi><mi></mi><p><span>',
+      '<!DOCTYPE html><frameset></frameset><math><mi></mi><mi></mi><p><span>',
+      '<!DOCTYPE html><body xlink:href=foo><math xlink:href=foo></math>',
+      '<!DOCTYPE html><body xlink:href=foo xml:lang=en><math><mi xml:lang=en xlink:href=foo></mi></math>',
+      '<!DOCTYPE html><body xlink:href=foo xml:lang=en><math><mi xml:lang=en xlink:href=foo /></math>',
+      '<!DOCTYPE html><body xlink:href=foo xml:lang=en><math><mi xml:lang=en xlink:href=foo />bar</math>',
+    ]
+  },
+
+  {
+    title: 'tests10.dat',
+    samples: [
+      '<!DOCTYPE html><svg></svg>',
+      '<!DOCTYPE html><svg></svg><![CDATA[a]]>',
+      '<!DOCTYPE html><body><svg></svg>',
+      '<!DOCTYPE html><body><select><svg></svg></select>',
+      '<!DOCTYPE html><body><select><option><svg></svg></option></select>',
+      '<!DOCTYPE html><body><table><svg></svg></table>',
+      '<!DOCTYPE html><body><table><svg><g>foo</g></svg></table>',
+      '<!DOCTYPE html><body><table><svg><g>foo</g><g>bar</g></svg></table>',
+      '<!DOCTYPE html><body><table><tbody><svg><g>foo</g><g>bar</g></svg></tbody></table>',
+      '<!DOCTYPE html><body><table><tbody><tr><svg><g>foo</g><g>bar</g></svg></tr></tbody></table>',
+      '<!DOCTYPE html><body><table><tbody><tr><td><svg><g>foo</g><g>bar</g></svg></td></tr></tbody></table>',
+      '<!DOCTYPE html><body><table><tbody><tr><td><svg><g>foo</g><g>bar</g></svg><p>baz</td></tr></tbody></table>',
+      '<!DOCTYPE html><body><table><caption><svg><g>foo</g><g>bar</g></svg><p>baz</caption></table>',
+      '<!DOCTYPE html><body><table><caption><svg><g>foo</g><g>bar</g><p>baz</table><p>quux',
+      '<!DOCTYPE html><body><table><caption><svg><g>foo</g><g>bar</g>baz</table><p>quux',
+      '<!DOCTYPE html><body><table><colgroup><svg><g>foo</g><g>bar</g><p>baz</table><p>quux',
+      '<!DOCTYPE html><body><table><tr><td><select><svg><g>foo</g><g>bar</g><p>baz</table><p>quux',
+      '<!DOCTYPE html><body><table><select><svg><g>foo</g><g>bar</g><p>baz</table><p>quux',
+      '<!DOCTYPE html><body></body></html><svg><g>foo</g><g>bar</g><p>baz',
+      '<!DOCTYPE html><body></body><svg><g>foo</g><g>bar</g><p>baz',
+      '<!DOCTYPE html><frameset><svg><g></g><g></g><p><span>',
+      '<!DOCTYPE html><frameset></frameset><svg><g></g><g></g><p><span>',
+      '<!DOCTYPE html><body xlink:href=foo><svg xlink:href=foo></svg>',
+      '<!DOCTYPE html><body xlink:href=foo xml:lang=en><svg><g xml:lang=en xlink:href=foo></g></svg>',
+      '<!DOCTYPE html><body xlink:href=foo xml:lang=en><svg><g xml:lang=en xlink:href=foo /></svg>',
+      '<!DOCTYPE html><body xlink:href=foo xml:lang=en><svg><g xml:lang=en xlink:href=foo />bar</svg>',
+      '<svg></path>',
+      '<div><svg></div>a',
+      '<div><svg><path></div>a',
+      '<div><svg><path></svg><path>',
+      '<div><svg><path><foreignObject><math></div>a',
+      '<div><svg><path><foreignObject><p></div>a',
+      '<!DOCTYPE html><svg><desc><div><svg><ul>a',
+      '<!DOCTYPE html><svg><desc><svg><ul>a',
+      '<!DOCTYPE html><p><svg><desc><p>',
+      '<!DOCTYPE html><p><svg><title><p>',
+      '<div><svg><path><foreignObject><p></foreignObject><p>',
+      '<math><mi><div><object><div><span></span></div></object></div></mi><mi>',
+      '<math><mi><svg><foreignObject><div><div></div></div></foreignObject></svg></mi><mi>',
+      '<svg><script></script><path>',
+      '<table><svg></svg><tr>',
+      '<math><mi><mglyph>',
+      '<math><mi><malignmark>',
+      '<math><mo><mglyph>',
+      '<math><mo><malignmark>',
+      '<math><mn><mglyph>',
+      '<math><mn><malignmark>',
+      '<math><ms><mglyph>',
+      '<math><ms><malignmark>',
+      '<math><mtext><mglyph>',
+      '<math><mtext><malignmark>',
+      '<math><annotation-xml><svg></svg></annotation-xml><mi>',
+      '<math><annotation-xml><svg><foreignObject><div><math><mi></mi></math><span></span></div></foreignObject><path></path></svg></annotation-xml><mi>',
+      '<math><annotation-xml><svg><foreignObject><math><mi><svg></svg></mi><mo></mo></math><span></span></foreignObject><path></path></svg></annotation-xml><mi>',
+    ]
+  },
+
+  {
+    title: 'tests15.dat',
+    samples: [
+      '<!DOCTYPE html><p><b><i><u></p> <p>X',
+      '<p><b><i><u></p>',
+      '<!doctype html></html> <head>',
+      '<!doctype html></body><meta>',
+      '<html></html><!-- foo -->',
+      '<!doctype html></body><title>X</title>',
+      '<!doctype html><table> X<meta></table>',
+      '<!doctype html><table> x</table>',
+      '<!doctype html><table> x </table>',
+      '<!doctype html><table><tr> x</table>',
+      '<!doctype html><table>X<style> <tr>x </style> </table>',
+      '<!doctype html><div><table><a>foo</a> <tr><td>bar</td> </tr></table></div>',
+      '<frame></frame></frame><frameset><frame><frameset><frame></frameset><noframes></frameset><noframes>',
+      '<!DOCTYPE html><object></html>',
+    ]
+  },
+
+  {
+    title: 'tests17.dat',
+    samples: [
+      '<!doctype html><table><tbody><select><tr>',
+      '<!doctype html><table><tr><select><td>',
+      '<!doctype html><table><tr><td><select><td>',
+      '<!doctype html><table><tr><th><select><td>',
+      '<!doctype html><table><caption><select><tr>',
+      '<!doctype html><select><tr>',
+      '<!doctype html><select><td>',
+      '<!doctype html><select><th>',
+      '<!doctype html><select><tbody>',
+      '<!doctype html><select><thead>',
+      '<!doctype html><select><tfoot>',
+      '<!doctype html><select><caption>',
+      '<!doctype html><table><tr></table>a',
+    ]
+  },
+
+  {
+    title: 'tests20.dat',
+    samples: [
+      '<!doctype html><p><button><button>',
+      '<!doctype html><p><button><address>',
+      '<!doctype html><p><button><blockquote>',
+      '<!doctype html><p><button><menu>',
+      '<!doctype html><p><button><p>',
+      '<!doctype html><p><button><ul>',
+      '<!doctype html><p><button><h1>',
+      '<!doctype html><p><button><h6>',
+      '<!doctype html><p><button><listing>',
+      '<!doctype html><p><button><pre>',
+      '<!doctype html><p><button><form>',
+      '<!doctype html><p><button><li>',
+      '<!doctype html><p><button><dd>',
+      '<!doctype html><p><button><dt>',
+      '<!doctype html><p><button><plaintext>',
+      '<!doctype html><p><button><table>',
+      '<!doctype html><p><button><hr>',
+      '<!doctype html><p><button><xmp>',
+      '<!doctype html><p><button></p>',
+      '<!doctype html><address><button></address>a',
+      '<!doctype html><address><button></address>a',
+      '<p><table></p>',
+      '<!doctype html><svg>',
+      '<!doctype html><p><figcaption>',
+      '<!doctype html><p><summary>',
+      '<!doctype html><form><table><form>',
+      '<!doctype html><table><form><form>',
+      '<!doctype html><table><form></table><form>',
+      '<!doctype html><svg><foreignObject><p>',
+      '<!doctype html><svg><title>abc',
+      '<option><span><option>',
+      '<option><option>',
+      '<math><annotation-xml><div>',
+      '<math><annotation-xml encoding="application/svg+xml"><div>',
+      '<math><annotation-xml encoding="application/xhtml+xml"><div>',
+      '<math><annotation-xml encoding="aPPlication/xhtmL+xMl"><div>',
+      '<math><annotation-xml encoding="text/html"><div>',
+      '<math><annotation-xml encoding="Text/htmL"><div>',
+      '<math><annotation-xml encoding=" text/html "><div>',
+      '<math><annotation-xml> </annotation-xml>',
+      '<math><annotation-xml>c</annotation-xml>',
+      '<math><annotation-xml><!--foo-->',
+      '<math><annotation-xml></svg>x',
+      '<math><annotation-xml><svg>x',
+    ]
+  },
+
+  //*
+  {
+    title: 'webkit01.dat',
+    samples: [
+      'Test',
+      '<div></div>',
+      '<div>Test</div>',
+      '<di',
+      '<div>Hello</div>',
+      '<div foo="bar">Hello</div>',
+      '<div>Hello</div>',
+      '<foo bar="baz"></foo><potato quack="duck"></potato>',
+      '<foo bar="baz"><potato quack="duck"></potato></foo>',
+      '<foo></foo bar="baz"><potato></potato quack="duck">',
+      '</ tttt>',
+      '<div FOO ><img><img></div>',
+      '<p>Test</p<p>Test2</p>',
+      '<rdar://problem/6869687>',
+      '<A>test< /A>',
+      '&lt;',
+      '<body foo=\'bar\'><body foo=\'baz\' yo=\'mama\'>',
+      '<body></br foo="bar"></body>',
+      '<bdy><br foo="bar"></body>',
+      '<body></body></br foo="bar">',
+      '<bdy></body><br foo="bar">',
+      '<html><body></body></html><!-- Hi there -->',
+      '<html><body></body></html><!-- Comment A --><!-- Comment B --><!-- Comment C --><!-- Comment D --><!-- Comment E -->',
+      '<html><body></body></html>x<!-- Hi there -->',
+      '<html><body></body></html>x<!-- Hi there --></html><!-- Again -->',
+      '<html><body></body></html>x<!-- Hi there --></body></html><!-- Again -->',
+      '<html><body><ruby><div><rp>xx</rp></div></ruby></body></html>',
+      '<html><body><ruby><div><rt>xx</rt></div></ruby></body></html>',
+      '<html><frameset><!--1--><noframes>A</noframes><!--2--></frameset><!--3--><noframes>B</noframes><!--4--></html><!--5--><noframes>C</noframes><!--6-->',
+      '<select><option>A<select><option>B<select><option>C<select><option>D<select><option>E<select><option>F<select><option>G<select>',
+      '<dd><dd><dt><dt><dd><li><li>',
+      '<div><b></div><div><nobr>a<nobr>',
+      '<head></head>',
+      '<head></head> <style></style>ddd',
+      '<kbd><table></kbd><col><select><tr>',
+      '<kbd><table></kbd><col><select><tr></table><div>',
+      '<a><li><style></style><title></title></a>',
+      '<font></p><p><meta><title></title></font>',
+      '<a><center><title></title><a>',
+      '<svg><title><div>',
+      '<svg><title><rect><div>',
+      '<svg><title><svg><div>',
+      '<img <="" FAIL>',
+      '<ul><li><div id=\'foo\'/>A</li><li>B<div>C</div></li></ul>',
+      '<svg><em><desc></em>',
+      '<table><tr><td><svg><desc><td></desc><circle>',
+      '<svg><tfoot></mi><td>',
+      '<math><mrow><mrow><mn>1</mn></mrow><mi>a</mi></mrow></math>',
+    ]
+  },//*/
+  
+  {
+    title: 'webkit02.dat',
+    samples: [
+      '<foo bar=qux/>',
+      '<p id="status"><noscript><strong>A</strong></noscript><span>B</span></p>',
+      '<p id="status"><noscript><strong>A</strong></noscript><span>B</span></p>',
+      '<div><sarcasm><div></div></sarcasm></div>',
+      '<html><body><img src="" border="0" alt="><div>A</div></body></html>',
+      '<table><td></tbody>A',
+      '<table><td></thead>A',
+      '<table><td></tfoot>A',
+      '<table><thead><td></tbody>A',
+      '<legend>test</legend>',
+      '<table><input>',
+      '<b><em><foo><foo><aside></b>',
+      '<b><em><foo><foo><aside></b></em>',
+      '<b><em><foo><foo><foo><aside></b>',
+      '<b><em><foo><foo><foo><aside></b></em>',
+      '<b><em><foo><foo><foo><foo><foo><foo><foo><foo><foo><foo><aside></b></em>',
+      '<b><em><foo><foob><foob><foob><foob><fooc><fooc><fooc><fooc><food><aside></b></em>',
+      '<option><XH<optgroup></optgroup>',
+      '<svg><foreignObject><div>foo</div><plaintext></foreignObject></svg><div>bar</div>',
+      '<svg><foreignObject></foreignObject><title></svg>foo',
+      '</foreignObject><plaintext><div>foo</div>',
+    ]
+  },
+  
+]
 

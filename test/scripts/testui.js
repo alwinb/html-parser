@@ -1,11 +1,13 @@
 
 // Imports
-const { html, domex: { domex, DomEx, Domex } } = modules
+
+import { parse, dom, version } from '../../lib/index.js'
+import { printTree } from '../../lib/traversal.js'
+import { domex, Domex } from '../../dist/domex.min.js'
 const log = console.log.bind (console)
-const T = modules.html.Lexer.tokenTypes
 
 // DOM tools
-const htmlns = 'http://www.w3.org/1999/xhtml'
+
 const byId = document.getElementById.bind (document)
 const $ = name => document.createElement (name)
 const setProps = (el, props) => {
@@ -18,6 +20,7 @@ function nativeParse (input) {
 }
 
 
+
 // Test UI
 // -------
 
@@ -28,51 +31,96 @@ class TestUI {
   static get domex () {
 
     return domex `
-      li@tab.-button [data-key=$]
+
+      ul.scrolly @samples
+        > @tab.nowrap.link*;
+
+      li @tab [data-key=$]
         > "Sample " + $;
 
-      ul@tabs
-        > @tab*;
+      ul.scrolly @suites
+        > li.link.nowrap [data-suite=$]* %title;
 
-      ul@suites
-        > li.-button [data-suite=$]* %title;
+      div.Input @input
+        > textarea #input.m0
+        + button #submit "Run";
+        
+      div.Output @output
+        > (div.pp #view2 > h3 "html-parser" + div)
+        + (div.pp #view1 > h3 "browser"     + div)
+        + (div.pp #view3 .Inspector [style="display:none"] > h3 "inspector"   + div);
+
+      span @results #results
+        > (a [href="javascript:void(runAllTests())"] "Run all tests")
+        + ".";
 
       main@main
         > h1 "HTML Parser"
-        + p "This is a test page for the HTML parser, version " %version
-        + @suites#suites ~suites
-        + @tabs#tabs ~samples
-        + textarea#input + button#submit "Run"
-        + div#view1 "Browser"
-        + div#view2 "Html Parser";
+        + (p > "Version " + %version + ". " + @results)
+        + div.hstack.nowrap
+          > @suites.vstack.xx18 #suites ~suites
+          + @samples.vstack.xx18 #tabs ~samples
+          + (div.DomTree > @input.layers + @output.scrolly.hstack.nowrap);
   
       @main
+    `
+  }
+  
+  static get inspectorDx () {
+    return domex `
+      div > (hgroup.br:name
+        > h4 "<" %name ">"
+        + i %kind)
+      + @default.vstack.vsep.hlines
     `
   }
 
   // Init
 
-  constructor () {
-    const suites = window ['html-suites']
-    const samples = suites[0].samples
-
-    this.elem = TestUI.domex.render ({ suites, samples, version:html.version }) .elem
+  constructor (suites) {
+    this.elem = $('div')
     document.body.append (this.elem)
-
-    const [input, tabs, view1, view2] = 
-      ['input', 'tabs', 'view1', 'view2'] .map (byId)
-    this.dom = { tabs, input, view1, view2 }
-
-    this.suite = {}
-    this.sampleIndex = 0
+    this.sample = suites[0].samples[0]
+    this.update (suites) .showSuite (0)
   }
-  
+
+  update (suites) {
+    this.suites = suites
+    this.elem.innerHTML = ''
+    // this.suite = suites[0]
+    // this.sampleIndex = 0
+    const samples = this.samples = this.suites[0].samples
+    const sample = this.sample // = samples[0]
+
+    const elem_ = TestUI.domex.render ({ suites, samples, version }) .elem
+    this.elem.replaceWith (elem_)
+    this.elem = elem_
+
+    const [results, tabs, input, view1, view2, view3, submit] =
+      ['results', 'tabs', 'input', 'view1', 'view2', 'view3', 'submit'] .map (byId)
+
+    this.dom = { results, tabs, input, view1, view2, view3, submit }
+    submit.addEventListener ('click', evt => this.showSampleValue (input.value))
+    
+    this.showSampleValue (this.sample)
+    return this
+  }
+
+  showResults ({time, nativeTime}) {
+    const ratio = Math.round (100*time / nativeTime)
+    this.dom.results.innerHTML = ''
+    this.dom.results.append (domex `
+      span "Parsing took " %nativeTime "ms (native)"
+        " vs " %time "ms (html-parser) – " %ratio "%."`
+      .render ({time, nativeTime, ratio}).elems)
+  }
+
   showSuite (index) {
-    this.suite = window ['html-suites'] [index]
+    this.suite = this.suites [index]
     log ('suite', this.suite.title)
     const el = domex `
-      li@tab.-button [data-key=$] > "Sample " + $;
-      ul#tabs > @tab*`
+      li [data-key=$] @tab > "Sample " + $;
+      ul #tabs .vstack.xx18.scrolly > @tab.link.nowrap*`
       .render (this.suite.samples) .elem
     this.dom.tabs.replaceWith (el)
     this.dom.tabs = el
@@ -81,15 +129,14 @@ class TestUI {
   }
   
   showSampleValue (sample) {
-    window.console.clear ()
+    // window.console.clear ()
     this.dom.input.value = sample
-    this.dom.view1.innerHTML = view2.innerHTML = ''
   
     const nativeResult = nativeParse (sample)
-    const result = html.parse (sample)
+    const result = parse (sample)
 
-    this.dom.view1.append ('native', showTree (nativeResult))
-    this.dom.view2.append ('parser', showTree (result))
+    this.dom.view1.lastChild.replaceWith (showTree (nativeResult))
+    this.dom.view2.lastChild.replaceWith (showTree (result))
   
     const p1 = printTree (nativeResult)
     const p2 = printTree (result)
@@ -101,10 +148,22 @@ class TestUI {
   }
 
   showSample (index) {
-    return this.showSampleValue (this.suite.samples [index])
-    
+    this.sample = this.suite.samples [index]
+    return this.showSampleValue (this.sample)
   }
   
+  inspect (obj) {
+    if (obj != null) {
+      this.dom.view3.lastChild.replaceWith (TestUI.inspectorDx.render (obj).elems)
+      this.dom.view3.style.display = null
+      this.dom.view1.style.display = 'none'
+    }
+    else {
+      this.dom.view3.style.display = 'none'
+      this.dom.view1.style.display = null
+    }
+  }
+
   focus () {
     this.dom.input.focus ()
     return this
@@ -122,141 +181,93 @@ class TestUI {
 
 // domNode may either be a browser DOM node or a light-weight html-parser 'DOM' node. 
 
+// let decode = new TextDecoder ()
+// decode = decode.decode.bind (decode)
+
 function showTree (domNode) {
-  let elem, label, clss
+  let elem, label, className
 
   if (domNode instanceof Text) {
-    clss = (/^\s*$/.test (domNode.data)) ? 'space' : 'text'
+    className = (/^\s*$/.test (domNode.data)) ? 'space' : 'text'
     elem = $('span')
     elem.append (domNode.data)
-    elem.className = clss
-    elem[objectKey] = domNode
+    elem.className = className
+    // elem[objectKey] = domNode
     return elem
   }
-  if (typeof domNode === 'string' || domNode instanceof String) {
-    clss = (/^\s*$/.test (domNode)) ? 'space' : 'text'
+
+  if (typeof domNode === 'string') {
     elem = $('span')
+    className = (domNode[0] === ' ' || domNode[0] === '\t') ? 'space' : 'text'
+    elem.className = className
     elem.append (domNode)
-    elem.className = clss
-    elem[objectKey] = domNode
     return elem
   }
+
+  if (domNode instanceof Uint8Array) {
+    elem = $('span')
+    className = (domNode[0] === 0x20 || domNode[0] === 0x9) ? 'space' : 'text'
+    elem.className = className
+    elem.append ( decode (domNode))
+    return elem
+  }
+  // if (typeof domNode === 'string') {
+  //   className = (/^\s*$/.test (domNode)) ? 'space' : 'text'
+  //   elem = $('span')
+  //   elem.append (domNode)
+  //   elem.className = className
+  //   elem[objectKey] = domNode
+  //   return elem
+  // }
 
   elem = $('div')
-  if (domNode instanceof Document || domNode instanceof html.TreeBuilder.Document)
+  elem.className = 'node'
+
+  if (domNode instanceof Document || domNode instanceof dom.Document)
     label = '#document'
 
-  else if (domNode instanceof Comment || domNode[0] === T.Comment)
-    label = '<!-->'
+  else if (domNode instanceof DocumentType || domNode instanceof dom.Doctype)
+    label = '<!doctype>'
 
-  else if (domNode instanceof Element || domNode instanceof html.TreeBuilder.Node || domNode instanceof html.TreeBuilder.Leaf) {
-    label = (domNode.tagName||domNode.name)
-    if (domNode.namespaceURI && domNode.namespaceURI !== htmlns)
-      label = domNode.namespaceURI.split('/').pop () + ':' + label
-    else label = label.toLowerCase ()
+  else if (domNode instanceof Comment)
+    label = `<!--${domNode.data}-->`
+
+  else if (domNode instanceof dom.MDecl || domNode instanceof dom.Comment) // && domNode.name === '#comment')
+    label = `<!--${(domNode.data) .map (_ =>  (_)) .join ('') }-->`
+
+  else if (domNode instanceof Element) {
+    if (domNode.namespaceURI && domNode.namespaceURI !== dom.htmlns)
+      label = domNode.namespaceURI.split ('/') .pop () + ':' + domNode.tagName
+    else label = domNode.tagName.toLowerCase ()
+  }
+
+  else if (domNode instanceof dom.Element) {
+    label = domNode.name
   }
 
   // log (domNode.__proto__)
-  elem.append (label)
-  elem[objectKey] = domNode.frame ? html.TreeBuilder.frameInfo (domNode.frame) : domNode
-  
-  if (clss) elem.classList.add(clss)
+  var elel = $('span')
+  elel.className = 'label'
+  elel.append (label)
+  elem.append (elel)
+  elem[objectKey] = domNode.frame ? domNode.frame.info : domNode
+
+  if (className) elem.classList.add (className)
   let ul; elem.append ((ul = $('div')))
   ul.className = 'children'
 
-  const children = domNode instanceof HTMLTemplateElement ?
-    domNode.content.childNodes : domNode.childNodes || domNode.children || []
+  const children = domNode instanceof HTMLTemplateElement
+    ? domNode.content.childNodes
+    : domNode.name === '#comment' ? []
+    : domNode.childNodes || domNode.children || []
+
   for (let x of children) {
     ul.append (showTree (x))
   }
   return elem
 }
 
+// Exports
+// -------
 
-// Tree Serialisation
-// ------------------
-
-function printTree (node) {
-  const toks = _coalesce (_traverse (node))
-  return [..._print (toks)] .join ('')
-}
-
-function* _coalesce (stream) {
-  let last
-  for (const x of stream) {
-    
-    if (typeof x === 'string' || x instanceof String) {
-      if (last != null) last += x
-      else last = x
-    }
-    else {
-      if (last) { yield last; last = null }
-      yield x
-    }
-  }
-  if (last) yield last
-}
-
-
-function* _traverse (node) {
-  const T = modules.html.Lexer.tokenTypes
-
-  if (typeof node === 'string' || node instanceof String)
-    yield node
-
-  else if (node instanceof Text)
-    yield node.data
-
-  else if (node instanceof html.TreeBuilder.Node) {
-    yield [T.StartTag, node.name] // TODO also yield attrs
-    for (let child of node.children) yield* _traverse (child)
-    yield [T.EndTag, node.name]
-  }
-
-  else if (node instanceof HTMLTemplateElement) {
-    const tagName = 'template'
-    yield [T.StartTag, tagName] // TODO also yield attrs
-    for (let child of node.content.childNodes) yield* _traverse (child)
-    yield [T.EndTag, tagName]
-  }
-
-  else if (node instanceof Element) {
-    let tagName = node.tagName
-    if (node.namespaceURI && node.namespaceURI === htmlns)
-      tagName = tagName.toLowerCase ()
-    yield [T.StartTag, tagName] // TODO also yield attrs
-    for (let child of node.childNodes) yield* _traverse (child)
-    yield [T.EndTag, tagName]
-  }
-
-  else if (node instanceof html.TreeBuilder.Leaf) {
-    yield [T.StartTag, node.name] // TODO also print attrs
-    yield [T.EndTag, node.name]
-  }
-
-  else if (node instanceof html.TreeBuilder.Document)
-    for (let child of node.children) yield* _traverse (child)
-
-  else if (node instanceof Document)
-    for (let child of node.childNodes) yield* _traverse (child)
-}
-
-
-function* _print (stream, depth = 0) {
-  for (const token of stream) {
-    let indent = ''
-    for (let i=0; i<depth; i++) indent += '  '
-
-    if (typeof token === 'string' || token instanceof String)
-      yield `| ${indent}"${token}"\n`
-
-    else if (token[0] === T.StartTag) {
-      yield `| ${indent}<${token[1]}>\n`
-      depth++
-    }
-
-    else if (token[0] === T.EndTag) {
-      depth--
-    }
-  }
-}
+export { TestUI, nativeParse, objectKey, showTree }
