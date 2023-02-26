@@ -1105,6 +1105,7 @@ export default [
       '<table><td><applet><td>',
       '<table><td><menu><td>',
       '<table><td><menu><td>',
+      '<table><td><form>foo',
       // Captions
       '<form><table><caption><form>foo',
       '<button><table><caption><button>foo',
@@ -1248,6 +1249,7 @@ export default [
       '<svg><desc><frameset>',
       '<math><mi><frameset>',
 
+      '<math><annotation-xml><mi><frameset>',
       '<svg><desc><frameset id=1><frame><frameset id=2>',
     ]
   },

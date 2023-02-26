@@ -70,7 +70,7 @@ class TestUI {
     return domex `
       div > (hgroup.br:name
         > h4 "<" %name ">"
-        + i %kind)
+        + i %kind + " ›› " + i %name~rule)
       + @default.vstack.vsep.hlines
     `
   }
