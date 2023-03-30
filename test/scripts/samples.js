@@ -166,6 +166,25 @@ export default [
       '<a><i><b>foo</i><sdiv>one',
       '<a><i><b>\0</i><nobr>\0',
       '<a><i><b>\0</i><a>\0',
+      
+      // Closing
+      '<b><li>foo</b>bar',
+      '<b><dd>foo</b>bar',
+      '<b><ul>foo</b>bar',
+      '<b><dl>foo</b>bar',
+      '<b><center>foo</b>bar',
+      '<b><option>foo</b>bar',
+      '<b><p>foo</b>bar',
+
+      '<li><b>foo</li>bar',
+      '<dd><b>foo</dd>bar',
+      '<ul><b>foo</ul>bar',
+      '<dl><b>foo</dl>bar',
+      '<option><b>foo</option>bar',
+      '<p><b>foo</p>bar',
+      '<button><b>foo</button>bar',
+      '<form><b>foo</form>bar',
+      
     ]
   },
 
@@ -1161,6 +1180,7 @@ export default [
   {
     title: 'Others',
     samples: [
+      '<form><svg><title><form>foo',
       '<form><h1><object><form>foo',
       '<form><ul><li></form>foo',
       '<form><table><tr><form>',
