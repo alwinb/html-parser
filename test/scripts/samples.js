@@ -1180,6 +1180,11 @@ export default [
   {
     title: 'Others',
     samples: [
+
+      // Nesting Restrictions
+
+      '<dd><center><dt>',
+      '<option><x><option>',
       '<form><svg><title><form>foo',
       '<form><h1><object><form>foo',
       '<form><ul><li></form>foo',
