@@ -58,7 +58,7 @@ var samples = [
 
 var samples = [
 // '</foreignObject><plaintext><div>foo</div>',
-'<svg><title>s<x></title>s',
+'<object><svg><title></object>foo',
 ]
 
 // Test

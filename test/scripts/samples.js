@@ -1190,6 +1190,13 @@ export default [
       '<form><ul><li></form>foo',
       '<form><table><tr><form>',
 
+      // Closing
+
+      '<h1><svg><foreignObject></h1>foo',
+      '<button><svg><foreignObject></button>foo',
+      '<object><svg><foreignObject></object>foo',
+
+      
       '<table><caption><p><option><tr>',
       '<button><li><button>bar<li>',
       '<other><li></other>bar<li>bee',
