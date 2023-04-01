@@ -1,4 +1,4 @@
-import { E, C, otherKind, printKind } from '../lib/categories.js'
+import { E, C, printKind } from '../lib/categories.js'
 const { entries } = Object
 const log = console.log.bind (console)
 
