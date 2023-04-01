@@ -698,6 +698,8 @@ export default [
       '<svg>foo<foreignobject><close/>bar',
       '<svg>foo<foreignObject><close/>bar',
       '<svg>foo<close/>bar',
+      '<svg/>foo',
+      '<math/>foo',
 
       '<svg>foo<mi><close/>bar',
       '<svg>foo<mo><close/>bar',
