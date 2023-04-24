@@ -54,7 +54,7 @@ class TestUI {
         > (a [href="javascript:void(runAllTests())"] "Run all tests")
         + ".";
 
-      main@main
+      main @main
         > h1 "HTML Parser"
         + (p > "Version " + %version + ". " + @results)
         + div.hstack.nowrap
