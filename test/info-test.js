@@ -3,7 +3,8 @@ const { entries } = Object
 const log = console.log.bind (console)
 
 
-// TODO also list default
+// REVIEW this is outdated, may be removed anyway as the
+// way in which I model element equivalence classes has changed.
 
 for (let k in E)
   log ((k+':').padEnd (12), printKind (E[k]))

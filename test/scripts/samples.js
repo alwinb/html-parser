@@ -113,7 +113,6 @@ export default [
   {
     title: 'Attributes',
     samples: [
-      // FIXME implement test comparison of attribute lists
       '<span foo=bar>Buzz</span>',
       `<span "" \n = \n foo "= &bee &bar />`,
       `<a b=&ampa>`,
@@ -123,7 +122,6 @@ export default [
   {
     title: 'Comments',
     samples: [
-      // FIXME implement test comparison of comments
       '<!--foo bar\nbaz bee-->',
       '<!--foo bar &amp; baz bee-->',
       // Invalid comment tags

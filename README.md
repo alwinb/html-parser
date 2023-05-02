@@ -56,17 +56,15 @@ The built-in bitwise operations can be used as boolean algebra operations on ele
 As of version 0.10.0 the general architecture is that of a modular push parser. The parsing pipleline is set up as follows, with input flowing from right-to-left:
 
 
-TreeBuilder  ⥦  Parser  ⥦  Preprocessor  ⥦  Tokeniser  ⟵  input
+TreeBuilder  ⥦  Parser  ⥦  Tokeniser  ⟵  input
 
 
-The Parser and the Preprocessor share a common _TokenHandler_ interface
-for handling a stream of input tokens, with one method for each token-type:
-
+The Parser has a TokenHandler interface for handling a stream of input tokens.
+It has distinct methdos for handling each token-type:
 
 { writeTag, writeEndTag, writeDoctype, writeComment, writeData, writeSpace, writeEOF }
 
-
-The return value of each of the write* methods is used as feedback to the caller. This is used to pass a small amount of contextual information from the TreeBuilder back into the Preprocessor and the Tokeniser. 
+The return value of each of the write* methods is used as feedback to the caller. This is used to pass a small amount of contextual information from the TreeBuilder back into the Tokeniser. 
 
 The TreeBuilder is derived from a declarative schema. It implements a well-behaved formalism that specifies invariants on the resulting DOM-tree and _in addition_ also specifies how misplaced and mismatched tokens in the token stream should be handled.
 
@@ -86,14 +84,6 @@ The TreeBuilder is derived from a declarative schema. It implements a well-behav
 - write (buffer)
 - end  ()
 - parse (buffer)
-
-### class Preprocessor
-
-implements _TokenHandler_
-
-The Preprocessor makes slight adjustments to the token stream. Inconsistent behaviour that cannot be expressed by the Parser or the TreeBuilder is taken care of at this level. 
-
-- construtor (delegate: TokenHandler)
 
 ### class Parser
 
@@ -210,7 +200,7 @@ Remaining work
   - The tree construction rules for template tags.
   - Include attributes check in the implementation of 'Noah's Ark'.
   - There may be a few remaining exceptions that are not covered yet. 
-  - I've not reimplemented the 'Adoption Agency' yet in the rewrite for 0.9.0.
+  - I've not reimplemented the 'Adoption Agency' yet since the rewrite for 0.9.0.
 
 
 License
