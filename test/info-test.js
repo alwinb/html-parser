@@ -1,29 +1,11 @@
-import { E, C, printKind } from '../lib/categories.js'
+import { C, printKind } from '../lib/categories.js'
 const { entries } = Object
 const log = console.log.bind (console)
 
 
-// REVIEW this is outdated, may be removed anyway as the
-// way in which I model element equivalence classes has changed.
+log ('\n\n// Element info\n// ------------------\n')
 
-for (let k in E)
-  log ((k+':').padEnd (12), printKind (E[k]))
-
-
-log ('\n// Elements\n// --------\n')
-
-log ('const elements = {', )
-for (let [k,v] of entries (E)) {
-  const r = []
-  for (let x in E)
-    if (E[x] & v) r.push (x)
-  log ('  ' + k + ': `' + r.sort () .join (' ') + '`,')
-}
-log ('}')
-
-log ('\n\n// Element Categories\n// ------------------\n')
-
-log ('const categories = {', )
+log ('{', )
 for (let [k,v] of entries (C)) if (k[0] !== '_') {
   const r = []
   for (let x in C)
