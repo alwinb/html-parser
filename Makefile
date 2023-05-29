@@ -5,7 +5,7 @@ sources = $(addprefix lib/, $(files))
 
 all: dist/domex.min.js dist/html.min.js Makefile
 
-dist/domex.min.js: test/domex-browser.js Makefile
+dist/domex.min.js: Makefile
 	@ echo "Making domex browser module"
 	@ esbuild node_modules/domex/src/browser.js --bundle --format=esm --minify --outfile=dist/domex.min.js
 

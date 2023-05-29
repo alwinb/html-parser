@@ -18,6 +18,119 @@ export default [
   //   samples:['</html><!--5--><noframes>C</noframes><!--6-->']
   // },
 
+
+  {
+    title: 'Numeric Character References',
+    samples: [
+      `Hex lowercase &#x1f332;`,
+      `Hex uppercase &#x1F332;`,
+      `Hex leading zeroes &#x0001F332;`,
+      `Hex incomplete &#x1f332`,
+      `Hex non-terminated &#x1f332g`,
+      `Hex amp-terminated &#x1f332&foo`,
+
+      `Decimal lowercase &#127794;`,
+      `Decimal uppercase &#127794;`,
+      `Decimal leading zeroes &#000127794;`,
+      `Decimal incomplete &#127794`,
+      `Decimal non-terminated &#127794g`,
+      `Decimal amp-terminated &#127794&foo`,
+
+      `Hex replaced NUL &#x0;`,
+      `Hex replaced NUL &#x00;`,
+      `Decimal replaced NUL &#0;`,
+      `Decimal replaced NUL &#00;`,
+
+      `Hex replaced surrogate &#xD800;`,
+      `Hex replaced surrogate &#55296;`,
+
+      `Hex out of range &#x110000;`,
+      `Decimal out of range &#1114112;`,
+      
+      `Unquoted hex lowercase <span a=&#x1f332; >`,
+      `Unquoted hex uppercase <span a=&#x1F332; >`,
+      `Unquoted hex leading zeroes <span a=&#x0001F332; >`,
+      `Unquoted hex incomplete <span a=&#x1f332 >`,
+      `Unquoted hex non-terminated <span a=&#x1f332g >`,
+      `Unquoted hex amp-terminated <span a=&#x1f332&foo >`,
+      `Unquoted decimal lowercase <span a=&#127794; >`,
+      `Unquoted decimal uppercase <span a=&#127794; >`,
+      `Unquoted decimal leading zeroes <span a=&#000127794; >`,
+      `Unquoted decimal incomplete <span a=&#127794 >`,
+      `Unquoted decimal non-terminated <span a=&#127794g >`,
+      `Unquoted decimal amp-terminated <span a=&#127794&foo >`,
+      `Unquoted decimal amp-terminated <span a=&#127794&foo >`,
+
+      `Double-quoted hex lowercase <span a="&#x1f332;" >`,
+      `Double-quoted hex uppercase <span a="&#x1F332;" >`,
+      `Double-quoted hex leading zeroes <span a="&#x0001F332;" >`,
+      `Double-quoted hex incomplete <span a="&#x1f332" >`,
+      `Double-quoted hex non-terminated <span a="&#x1f332g" >`,
+      `Double-quoted hex amp-terminated <span a="&#x1f332&foo" >`,
+      `Double-quoted decimal lowercase <span a="&#127794;" >`,
+      `Double-quoted decimal uppercase <span a="&#127794;" >`,
+      `Double-quoted decimal leading zeroes <span a="&#000127794;" >`,
+      `Double-quoted decimal incomplete <span a="&#127794" >`,
+      `Double-quoted decimal non-terminated <span a="&#127794g" >`,
+      `Double-quoted decimal amp-terminated <span a="&#127794&foo" >`,
+
+      `Single-quoted hex lowercase <span a='&#x1f332;' >`,
+      `Single-quoted hex uppercase <span a='&#x1F332;' >`,
+      `Single-quoted hex leading zeroes <span a='&#x0001f332;' >`,
+      `Single-quoted hex incomplete <span a='&#x1f332' >`,
+      `Single-quoted hex non-terminated <span a='&#x1f332g' >`,
+      `Single-quoted hex amp-terminated <span a='&#x1f332&foo' >`,
+      `Single-quoted decimal lowercase <span a='&#127794;' >`,
+      `Single-quoted decimal uppercase <span a='&#127794;' >`,
+      `Single-quoted decimal leading zeroes <span a='&#000127794;' >`,
+      `Single-quoted decimal incomplete <span a='&#127794' >`,
+      `Single-quoted decimal non-terminated <span a='&#127794g' >`,
+      `Single-quoted decimal amp-terminated <span a='&#127794&foo' >`,
+    ]
+  },
+
+  {
+    title: 'Windows 1252 References',
+    samples: [
+      `Hex win1252 &#x80;`,
+      `Hex win1252 &#x87;`,
+      `Hex win1252 &#x8D;`,
+      `Hex win1252 &#x95;`,
+      `Hex win1252 &#x9F;`,
+      `Hex <i>not</i> win1252 &#x7F;`,
+      `Hex <i>not</i> win1252 &#xF0;`,
+
+      `Decimal win1252 &#128;`,
+      `Decimal win1252 &#135;`,
+      `Decimal win1252 &#141;`,
+      `Decimal win1252 &#149;`,
+      `Decimal win1252 &#159;`,
+      `Decimal <i>not</i> win1252 &#127;`,
+      `Decimal <i>not</i> win1252 &#240;`,
+    ]
+  },
+
+  {
+    title: 'Attributes',
+    samples: [
+      '<span foo=bar>Buzz</span>',
+      `<span "" \n = \n foo "= &bee &bar />`,
+      `<a b=&ampa>`,
+    ]
+  },
+
+  {
+    title: 'Comments',
+    samples: [
+      '<!--foo bar\nbaz bee-->',
+      '<!--foo bar &amp; baz bee-->',
+      // Invalid comment tags
+      '<!-foo bar\nbaz bee-->',
+      `<!--foo bar\n\n\t baz bee-->`,
+      '<? foo >',
+    ]
+  },
+
   {
     title: 'Reopen Formatting Tags',
     samples: [
@@ -51,6 +164,15 @@ export default [
       '<a><i><b>foo</i><sdiv>one',
       '<a><i><b>\0</i><nobr>\0',
       '<a><i><b>\0</i><a>\0',
+      '<li><b>foo</li>bar',
+      '<dd><b>foo</dd>bar',
+      '<ul><b>foo</ul>bar',
+      '<dl><b>foo</dl>bar',
+      '<option><b>foo</option>bar',
+      '<p><b>foo</p>bar',
+      '<button><b>foo</button>bar',
+      '<form><b>foo</form>bar',
+      
     ]
   },
 
@@ -95,6 +217,15 @@ export default [
       '<i><b><i>1<aside>bar</b>3',
       '<i><b><i>1<other>bar</b>3',
 
+      // Closing
+      '<b><li>foo</b>bar',
+      '<b><dd>foo</b>bar',
+      '<b><ul>foo</b>bar',
+      '<b><dl>foo</b>bar',
+      '<b><center>foo</b>bar',
+      '<b><option>foo</b>bar',
+      '<b><p>foo</b>bar',
+
       '<i><b><s>foo<p>bar</b>bee',
       '<b>foo<p>bar</b>bee',
       '<a>foo<p>bar<a>bee',
@@ -133,6 +264,39 @@ export default [
       '<button>text<table>foo<button>bar<p>bee<td>baz<tr></table>γαμμα',
       '<main><table><caption><ul><li>text<table><p>foo<td>bar<tr></table>γαμμα',
       '<!doctype html><p>Test<h1>Head1<table>foo<div></h2>Text',
+
+      // Nesting
+      '<dl><table>',
+      '<ul><table>',
+      '<li><table>',
+      '<object><table>',
+      '<button><table>',
+      '<form><table>',
+      '<address><table>',
+      '<main><table>',
+      '<p><table>',
+      '<h1><table>',
+      '<dd><table>',
+      '<option><table>',
+      '<optgroup><table>',
+      '<x><table>',
+      '<table><dl><table>',
+      '<table><ul><table>',
+      '<table><li><table>',
+      '<table><object><table>',
+      '<table><button><table>',
+      '<table><form><table>',
+      '<table><address><table>',
+      '<table><main><table>',
+      '<table><p><table>',
+      '<table><h1><table>',
+      '<table><dd><table>',
+      '<table><option><table>',
+      '<table><optgroup><table>',
+      '<table><x><table>',
+      '<p><table><x><table>',
+      '<table><p><x><table>',
+      '<table><p><option><table>',
     ]
   },
 
@@ -141,6 +305,27 @@ export default [
     samples: [
       '<table><b><td><s>bee<td>bar</table>buzz',
       '<table><caption><b>text<table>foo<b>bar<p>bee<td>baz<tr></table>γαμμα', 
+    ]
+  },
+
+  {
+    title: 'Foster parenting and ForeignElement Content',
+    samples: [
+      // '<table><svg>foo<td>bar',
+      // '<table><td><svg>foo<td>bar',
+      // '<table><svg>foo<tr>bar',
+      // '<table><td><svg>foo<tr>bar',
+      '<table><tr><td><svg><desc><td>',
+      '<table><tr><td><svg><desc></svg><td>',
+      '<table><svg>foo<td>bar',
+      '<div><table><svg><desc><td>',
+      '<div><table></svg><desc><td>',
+      '<div><table><td><svg><desc><td>',
+
+      '<table><math>a<annotation-xml encoding=text/html>b<td>c<foo>',
+      '<table><math>a<mi>b<td>c<foo>',
+      '<table><math><svg><mi>foo<td>', // <math:svg>
+      '<table><svg><math><mi>foo<td>', // <svg:math>
     ]
   },
 
@@ -203,6 +388,16 @@ export default [
       '<h1>foo<button>bar<h1>bee',
       '<h1>foo<button>bar</h2>bee',
       '<h1>foo<button>bar<h2>bee',
+      '<ul>foo<button>bar',
+      '<ul><li>foo<button>bar',
+      '<dl>foo<button>bar',
+      '<button>foo<dl>bee<button>bar',
+      '<button>foo<ul>bee<button>bar',
+      '<button>foo<h1>bee<button>bar',
+      '<button><object><h1><button>',
+      '<p><button><form>',
+      '<form><button><form>',
+      '<p><form>',
     ]
   },
 
@@ -211,6 +406,8 @@ export default [
     samples: [
       `text<h1>s<div>b<h2>`,
       `text<h1>b<h2>`,
+      '<button>text<h1>b<h2>',
+      '<button><p>Test<h1>Head<h2><h2>',
       `<p>Test<h1>Head1<div><h2>Head2`,
       `<p>Test<h1>Head1<sdiv><h2>Head2`,
       `<p>Test<h1>Head1<div></h2>Text`,
@@ -227,6 +424,15 @@ export default [
       '<li><h1>asd<li>asd',
       '<p><h1>asd<p>asd',
       '<div><h1>asd<div>asd',
+      '<p><option><h1><p>',
+      '<li><option><h1><li>',
+      '<h3><x>asd<h1>',
+      '<h3><i>asd<h1>',
+      '<h3><p><x>asd<h1>',
+      //
+      '<h1><option><h2>bar<option>',
+      '<h1><p><option><h2>bar<option>',
+      '<p><option><h1>bar<option>',
     ]
   },
 
@@ -239,6 +445,72 @@ export default [
       '<p><other><p><div><p>',
       '<h1><other><h2><div><h3>',
       '<h1><s><h2><s><h3>',
+
+      // closing
+      '<button><div></button>foo',
+      '<other><div></other>foo',
+      '<li><div></li>foo',
+      '<ul><div></ul>foo',
+      '<option><div></option>foo',
+      '<optgroup><div></optgroup>foo',
+      '<span><div></span>foo',
+      '<object><div></object>foo',
+      '<pre><div></pre>foo',
+      '<area><div></area>foo',
+      '<param><div></param>foo',
+      '<h1><div></h1>foo',
+      '<address><div></address>foo',
+      '<center><div></center>foo',
+      '<button><center><button>foo',
+      '<button><address><button>foo',
+      '<object><svg><title>s<x></title>',
+      '<table><td><math><annotation-xml></td>foo',
+
+      // Form closing
+      '<form><object></form>foo',
+      '<form><option></form>foo',
+      '<form><optgtoup></form>foo',
+      '<form><dl></form>foo',
+      '<form><dd></form>foo',
+      '<form><div></form>foo',
+      '<form><main></form>foo',
+      '<form><table></form>foo',
+      '<form><button></form>foo',
+      '<form><form></form>foo',
+      '<form><h1></form>foo',
+      '<form><ul></form>foo',
+      '<form><li></form>foo',
+      '<form><address></form>foo',
+      '<form><svg></form>foo',
+      '<form><math></form>foo',
+
+      // Object closing
+      '<object><form></object>foo',
+      '<object><option></object>foo',
+      '<object><optgtoup></object>foo',
+      '<object><dl></object>foo',
+      '<object><dd></object>foo',
+      '<object><div></object>foo',
+      '<object><main></object>foo',
+      '<object><table></object>foo',
+      '<object><button></object>foo',
+      '<object><form></object>foo',
+      '<object><h1></object>foo',
+      '<object><ul></object>foo',
+      '<object><li></object>foo',
+      '<object><address></object>foo',
+      '<object><svg></object>foo',
+      '<object><math></object>foo',
+
+      // '<code><div></code>foo', // AAA
+      '<table id=1><svg><desc><table id=2>',
+      '<p><svg><desc><p>',
+      '<button><svg><desc><button>',
+      '<li><svg><desc><li>',
+      '<dl><svg><desc><dl>',
+      '<h1><svg><desc><h1>',
+      '<option><svg><desc><option>',
+      '<form><svg><desc><form>',
     ]
   },
 
@@ -265,6 +537,40 @@ export default [
       '<select><div><option>foo<b>bar<option>sd',
       '<div><option>foo<b>bar</option>sd',
       '<div><option>foo<b>bar<option>sd',
+      
+      // closable
+      '<optgroup><x></optgroup>foo',
+      '<optgroup><b></optgroup>foo',
+      '<optgroup><div></optgroup>foo',
+      '<option><x></option>foo',
+      '<option><b></option>foo',
+      '<option><div></option>foo',
+      '<optgroup><option><x></optgroup>foo',
+      '<optgroup><option><b></optgroup>foo',
+      '<optgroup><option><div></optgroup>foo',
+
+      '<p><optgroup><x></optgroup>foo',
+      '<p><optgroup><b></optgroup>foo',
+      '<p><optgroup><div></optgroup>foo',
+      '<p><option><x></option>foo',
+      '<p><option><b></option>foo',
+      '<p><option><div></option>foo',
+      '<p><optgroup><option><x></optgroup>foo',
+      '<p><optgroup><option><b></optgroup>foo',
+      '<p><optgroup><option><div></optgroup>foo',
+
+      //
+      '<x><option></x>foo',
+      '<form><optgroup></form>foo',
+
+      // In paragraph
+      '<p><option><x><option>',
+      '<p><optgroup><x><optgroup>',
+      '<p><option><x><optgroup>',
+      '<p><optgroup><x><option>',
+      '<p><option><form>',
+      '<p><option><optgroup>',
+      '<p><option><option>',
     ]
   },
 
@@ -286,6 +592,9 @@ export default [
         <select>Baz<optgroup>Item<li>item<optgroup>g<di>Di</select>`,
       `<option>Item<li>item<di><option><select><option>Item<li>item<di><option><select>`,
       `<option>Item<li>item<di><option>Item2<li>item<di><option><select><option>Item<li>item<di><option><option>Item2<li><optgroup>item<di>`,
+      '<table><caption><select><optgroup><tr>',
+      '<table><caption><select><optgroup><!--foo-->s',
+      '<select><optgroup><!--foo-->s',
     ]
   },
 
@@ -312,6 +621,7 @@ export default [
       '<table><select>foo<tbody>bar',
       '<table><select>foo<tr>bar',
       '<table><select>foo<td>bar',
+      '<table><caption><select><!--foo-->',
     ]
   },
 
@@ -336,6 +646,8 @@ export default [
       '<p>Test<li>Head<address></li>foo',
       '<p>Test<li>Head<center><li>foo',
       '<p>Test<li>Head<center></li>foo',
+      '<button><li>foo<p>bar<button>bee',
+      '<li>foo<p>bar<li>bee',
     ]
   },
 
@@ -364,7 +676,7 @@ export default [
   },
 
   {
-    title: 'Foreign content',
+    title: 'ForeignElement content',
     samples: [
       '<svg><b>foo',
       '<svg>foo<sub>bar',
@@ -383,6 +695,8 @@ export default [
       '<svg>foo<foreignobject><close/>bar',
       '<svg>foo<foreignObject><close/>bar',
       '<svg>foo<close/>bar',
+      '<svg/>foo',
+      '<math/>foo',
 
       '<svg>foo<mi><close/>bar',
       '<svg>foo<mo><close/>bar',
@@ -400,11 +714,6 @@ export default [
       '<math>foo<mn><close/>bar',
       '<math>foo<ms><close/>bar',
 
-      // In tables...
-      
-      '<div><table><svg><desc><td>',
-      '<div><table></svg><desc><td>',
-      '<div><table><td><svg><desc><td>',
       '<div><other><svg><desc><td>',
 
       // Breakout tags
@@ -412,23 +721,49 @@ export default [
       '<svg><font color>foo',
       '<svg><font face>foo',
 
+      '<svg><math><annotation-xml><span><foo>',
+      '<svg><math><annotation-xml><body><foo>',
+      
+      // Self closing...
+      '<svg><font size/>foo',
+      '<svg><div/>asd',
+      '<svg><span/>asd',
+      
       // Yet more
       '<svg></body>foo<!-->bar',
       '<svg><body></body>foo<!-->bar',
       '<svg><body></body>foo<!-->bar',
       '<svg><html></html>',
       '<svg><html></html>',
+      '<table><caption><svg><title><object></table>foo',
 
-      // Non-breakout
+      // Breakout tags (NB) due to
+      // attribute-name normalisaton
       '<svg><font Size>foo',
       '<svg><font cOlor>foo',
       '<svg><font faCe>foo',
       '<svg><font>foo',
       '<svg><font other>foo',
+      
+      // Annotation XML
+      '<math><annotation-xml><svg><table>',
+      '<math><annotation-xml><svg><tbody>',
+      '<math><annotation-xml><svg><tr>',
+      '<math><annotation-xml><svg><caption>',
+      '<math><annotation-xml><svg><colgroup>',
+      '<table><td><math><annotation-xml><svg><table>',
+      '<table><td><math><annotation-xml><svg><tbody>',
+      '<table><td><math><annotation-xml><svg><tr>',
+      '<table><td><math><annotation-xml><svg><caption>',
+      '<table><td><math><annotation-xml><svg><colgroup>',
+      '<table><td><math><annotation-xml></table>foo',
+      
+      '<math><annotation-xml><svg><foreignObject><div><math><mi></mi></math><span></span></div></foreignObject><path></path></svg></annotation-xml><mi>',
 
-      //
-      '<table><tr><td><svg><desc><td>',
-      '<table><tr><td><svg><desc></svg><td>',
+      // TODO
+      // '<math><annotation-xml><x><svg><foreignobject>',
+      // '<math><annotation-xml><svg><foreignobject>',
+      
     ]
   },
 
@@ -450,6 +785,9 @@ export default [
       '<math><G>foo</g>bar',
       '<math><g>foo</G>bar',
       '<svg><forEignObJect>foo</foreignobject>bar',
+      '<svg><forEignObJect/><foo>',
+      '<svg><foreignObject><math><foreignObject></foreignobject><foo>',
+      '<svg><image><foreignObject><image><math><image><mi><image>',
     ]
   },
 
@@ -542,9 +880,6 @@ export default [
       '<annotation-xml><other>',
       '<annotation-xml encoding=TeXt/Html><p><p>',
       '<annotation-xml encoding=TeXt/Html><other>',
-      
-      // Others
-      '<table><svg>foo<td>bar',
     ]
   },
 
@@ -667,6 +1002,8 @@ export default [
       `Foo</body><!--><!-->foo`,
       `<frameset></body><!-->a`,
       `<head></head>After head</body>After body`,
+      //
+      '<math>foo</body><!-->bar',
     ]
   },
   {
@@ -694,6 +1031,9 @@ export default [
       `<body></html><!--><div><g>foo</g>`,
       `<body></html><!--><div><g>foo</g>`,
       `<head></head>After head</html>After html`,
+
+      '<math><mi></html><!-->',
+      '<body><math><mi></html><!-->',
     ]
   },
 
@@ -722,7 +1062,7 @@ export default [
     ]
   },//*/
 
-  { 
+  {
     title: 'NULL characters',
     samples: [
       'Hello\0World',
@@ -736,6 +1076,9 @@ export default [
       '<math>Hello\0World',
       '<select>foo\0bar',
       '<select><option>foo\0bar',
+      '<select>foo\0bar',
+      '<select><optgroup>foo\0bar',
+      '<select><option><optgroup>foo\0bar',
       '<svg><select>foo\0bar',
       '<svg><select><option>foo\0bar',
       '<option>foo\0bar',
@@ -748,7 +1091,7 @@ export default [
     ]
   },
 
-  { 
+  {
     title: 'Space in Tables',
     samples: [
       '<table><colgroup>foo bar<col> <col>',
@@ -778,14 +1121,51 @@ export default [
       `<table><tr><tr><td>cell1<td>cell2`,
       `<table><td>foo<tr><td>bar<col>`, 
       '<table><td><applet><td>',
+      '<table><td><menu><td>',
+      '<table><td><menu><td>',
+      '<table><td><form>foo',
+      // Captions
+      '<form><table><caption><form>foo',
+      '<button><table><caption><button>foo',
+      // Forms
+      '<form id=1><table><caption><form id=2>',
+      '<form id=1><table><colgroup><form id=2>',
+      '<form id=1><table><tbody><form id=2>',
+      '<form id=1><table><tr><form id=2>',
+      '<form id=1><table><td><form id=2>',
     ]
   },
+
+  {
+    title: 'Colgroup',
+    samples: [
+      '<table><colgroup> ',
+      '<table><colgroup><!--1-->',
+      '<table><colgroup><!doctype>',
+      '<table><colgroup><html>',
+      '<table><colgroup><head>',
+      '<table><colgroup><frameset>',
+      '<table><colgroup><frame>',
+      '<table><colgroup><div>',
+      '<table><colgroup><table>',
+      '<table><colgroup><colgroup>',
+      '<table><colgroup><col>',
+      '<table><colgroup><tbody>',
+      '<table><colgroup><tr>',
+      '<table><colgroup><td>',
+      '<table><colgroup><input type=hidden>',
+      '<table><colgroup><input>',
+    ]
+  },
+
 
   {
     title: 'Hidden input',
     samples: [
       '<table><input type=hiddenfoo',
       '<table><input type=hidden type=still-hidden>foo',
+      '<table><colgroup><input type=not-hidden>',
+      '<table><colgroup><input type=hidden>',
       '<!doctype html><table><input type=hidDEN></table>',
       '<!doctype html><table>X<input type=hidDEN></table>',
       '<!doctype html><table>  <input type=hidDEN></table>',
@@ -799,9 +1179,24 @@ export default [
   {
     title: 'Others',
     samples: [
+
+      // Nesting Restrictions
+
+      '<dd><center><dt>',
+      '<option><x><option>',
+      '<form><svg><title><form>foo',
+      '<form><h1><object><form>foo',
+      '<form><ul><li></form>foo',
+      '<form><table><tr><form>',
+
+      // Closing
+
+      '<h1><svg><foreignObject></h1>foo',
+      '<button><svg><foreignObject></button>foo',
+      '<object><svg><foreignObject></object>foo',
+
+      
       '<table><caption><p><option><tr>',
-      '<h1><option><h2>bar<option>',
-      '<p><option><h1>bar<option>',
       '<button><li><button>bar<li>',
       '<other><li></other>bar<li>bee',
       '<dd><li></dd>bar<li>bee',
@@ -812,7 +1207,7 @@ export default [
       '<li><applet>a </li>test <li>test',
       '<ul><li>one<ul></li>text',
       `<ul><li><applet><as></li>test</ul>
-      <ul><li><p><as></li>test`,
+        <ul><li><p><as></li>test`,
       `<p>para<object>and<p>para`,
       `<p>Test<li>li<blockquote>Foo<p>bar<p>`,
       `<p><foo><li>`,
@@ -824,10 +1219,10 @@ export default [
       '<svg><a>Not closed by<a>',
       '<svg><nobr>Not closed by<nobr>',
       '<svg><img>',
+      '<nobr><svg><nobr>',
       '<svg><select>not closed by<select>',
       
       '<svg>foo<br>bar',
-      '<svg>foo</br>bar',
     ]
   },
   
@@ -843,13 +1238,50 @@ export default [
       '<head> </head> <menu> <source> <frameset>',
       '<head> </head> <main> <source> <frameset>',
 
+      '<object><frameset>foo',
+      '<option><frameset>foo',
+      '<optgtoup><frameset>foo',
+      '<dl><frameset>foo',
+      '<dd><frameset>foo',
+      '<div><frameset>foo',
+      '<main><frameset>foo',
+      '<table><frameset>foo',
+      '<button><frameset>foo',
+      '<form><frameset>foo',
+      '<h1><frameset>foo',
+      '<ul><frameset>foo',
+      '<li><frameset>foo',
+      '<address><frameset>foo',
       '<svg><frameset>foo',
       '<math><frameset>foo',
-      '<div><frameset>foo',
 
+      '<p><object><frameset>foo',
+      '<p><option><frameset>foo',
+      '<p><optgtoup><frameset>foo',
+      '<p><dl><frameset>foo',
+      '<p><dd><frameset>foo',
+      '<p><div><frameset>foo',
+      '<p><main><frameset>foo',
+      '<p><table><frameset>foo',
+      '<p><button><frameset>foo',
+      '<p><form><frameset>foo',
+      '<p><h1><frameset>foo',
+      '<p><ul><frameset>foo',
+      '<p><li><frameset>foo',
+      '<p><address><frameset>foo',
+      //
       '<svg></svg><frameset>',
       '<math></math><frameset>',
       '<div></div><frameset>',
+      
+      '<svg><foreignObject><frameset>',
+      '<math><annotation-xml encoding=text/html><frameset>',
+      '<svg><title><frameset>',
+      '<svg><desc><frameset>',
+      '<math><mi><frameset>',
+
+      '<math><annotation-xml><mi><frameset>',
+      '<svg><desc><frameset id=1><frame><frameset id=2>',
     ]
   },
 
@@ -867,6 +1299,87 @@ export default [
 
   // Tests taken from the html5lib = tests
   // -------------------------------------
+
+  {
+    title: 'entities01.dat',
+    samples: [
+      '&ammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmp;',
+      '&ammmp;',
+      'FOO& BAR',
+      'FOO&#1111111111',
+      'FOO&#11111111111',
+      'FOO&#111111111111',
+      'FOO&#111111111111ZOO',
+      'FOO&#11111111111ZOO',
+      'FOO&#1111111111ZOO',
+      'FOO&#41;BAR',
+      'FOO&#41BAR',
+      'FOO&#BAR',
+      'FOO&#X41;BAR',
+      'FOO&#XZOO',
+      'FOO&#ZOO',
+      'FOO&#x0000;ZOO',
+      'FOO&#x0078;ZOO',
+      'FOO&#x0079;ZOO',
+      'FOO&#x0080;ZOO',
+      'FOO&#x0081;ZOO',
+      'FOO&#x0082;ZOO',
+      'FOO&#x0083;ZOO',
+      'FOO&#x0084;ZOO',
+      'FOO&#x0085;ZOO',
+      'FOO&#x0086;ZOO',
+      'FOO&#x0087;ZOO',
+      'FOO&#x0088;ZOO',
+      'FOO&#x0089;ZOO',
+      'FOO&#x008A;ZOO',
+      'FOO&#x008B;ZOO',
+      'FOO&#x008C;ZOO',
+      'FOO&#x008D;ZOO',
+      'FOO&#x008E;ZOO',
+      'FOO&#x008F;ZOO',
+      'FOO&#x0090;ZOO',
+      'FOO&#x0091;ZOO',
+      'FOO&#x0092;ZOO',
+      'FOO&#x0093;ZOO',
+      'FOO&#x0094;ZOO',
+      'FOO&#x0095;ZOO',
+      'FOO&#x0096;ZOO',
+      'FOO&#x0097;ZOO',
+      'FOO&#x0098;ZOO',
+      'FOO&#x0099;ZOO',
+      'FOO&#x009A;ZOO',
+      'FOO&#x009B;ZOO',
+      'FOO&#x009C;ZOO',
+      'FOO&#x009D;ZOO',
+      'FOO&#x009E;ZOO',
+      'FOO&#x009F;ZOO',
+      'FOO&#x00A0;ZOO',
+      'FOO&#x1087D4;ZOO',
+      'FOO&#x10FFFE;ZOO',
+      'FOO&#x10FFFF;ZOO',
+      'FOO&#x110000;ZOO',
+      'FOO&#x41;BAR',
+      'FOO&#x41BAR',
+      'FOO&#x41ZOO',
+      'FOO&#xBAR',
+      'FOO&#xD7FF;ZOO',
+      'FOO&#xD800;ZOO',
+      'FOO&#xD801;ZOO',
+      'FOO&#xDFFE;ZOO',
+      'FOO&#xDFFF;ZOO',
+      'FOO&#xE000;ZOO',
+      'FOO&#xFFFFFF;ZOO',
+      'FOO&#xZOO',
+      'FOO&&&&gt;BAR',
+      'FOO&<BAR>',
+      'FOO&gt BAR',
+      'FOO&gt;;;BAR',
+      'FOO&gt;BAR',
+      'FOO&gtBAR',
+      'I\'m &notin; I tell you',
+      'I\'m &notit; I tell you',
+    ]
+  },
 
   {
     title: 'tables01.dat',
@@ -891,7 +1404,7 @@ export default [
     ]
   },
 
-  { 
+  {
     title: 'blocks.dat',
     samples: [
       '<!doctype html><p>foo<address>bar<p>baz',

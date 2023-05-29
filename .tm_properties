@@ -1,6 +1,6 @@
 
 excludeInFolderSearch = "{$exclude,dist,node_modules,private}"
-excludeInFileChooser = "{$exclude,dist,node_modules.private}"
+excludeInFileChooser = "{$exclude,dist,node_modules,private}"
 
 [ lexer.js ]
 TM_RUN_TARGET = "${TM_PROJECT_DIRECTORY}/test/tokenizer-test.js"
