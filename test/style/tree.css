@@ -66,6 +66,62 @@ body { font-size:14px; }
   font-family:Hack, Mono;
 }
 
+
+/* DomTree AttributeLists */
+
+.DomTree .atts {
+  display:inline !important;
+  line-height:1rem;
+}
+
+.DomTree .atts::before {
+  content:' [';
+  display:inline;
+}
+
+.DomTree .atts::after {
+  content:']';
+  display:inline;
+}
+
+.DomTree .atts > di > dt:after {
+  content:'=';
+  color:#888;
+  display:inline;
+  font-weight:normal;
+}
+
+.DomTree .atts di {
+  border-radius:.1rem;
+  display:inline !important;
+}
+.DomTree .atts di:not(:last-child) {
+  margin-right:.75ch;
+}
+.DomTree .atts dd {
+  background:var(--screen);
+  font-style:italic;
+  line-height:1rem;
+}
+.DomTree .atts:empty {
+  display:none !important;
+}
+
+/* Comments */
+
+.DomTree .comment {
+}
+
+.DomTree .comment:before {
+  content:'<!--';
+  display:inline;
+  
+}
+.DomTree .comment:after {
+  content:'-->';
+  display:inline;
+}
+
 /**/
 
 html#tree main {

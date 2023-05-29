@@ -5,7 +5,10 @@ const log = console.log.bind (console)
 // Set up a dummy delegate
 // -----------------------
 
-const log_ = (...args) => log (args)
+const log_ = (...args) => (
+  log (args),
+  0n
+)
 
 const delegate = {
   write: log_,
@@ -22,5 +25,5 @@ const delegate = {
 // ----
 
 const tokeniser = new Tokeniser (delegate)
-log (tokeniser.parse ('</ tttt>'))
-log (tokeniser.write ('<table><input type=hidden type=still-hidden>foo'))
+// log (tokeniser.parse ('</ tttt>'))
+log (tokeniser.parse ('<table><input type=hidden type=still-hidden>foo</input></table>'))

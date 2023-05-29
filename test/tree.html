@@ -10,7 +10,7 @@
 <script type=module src=scripts/error-handler.js></script>
 <script type=module>
 
-  import { Tokeniser, Preprocessor, Parser, parse } from '../lib/index.js'
+  import { Tokeniser, Parser, parse } from '../lib/index.js'
   import { printTree } from '../lib/traversal.js'
 
   import { TestUI, objectKey, nativeParse } from './scripts/testui.js'
@@ -45,9 +45,8 @@
           }
         }
         catch (e) {
-          console.error ('Test threw:')
+          console.error ('Test threw:', sample)
           throw (e)
-          // console.error (sample)
           failures.push (sample)
           suiteFailures.push (sample)
         }
