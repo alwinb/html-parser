@@ -58,7 +58,8 @@ var samples = [
 
 var samples = [
 // '</foreignObject><plaintext><div>foo</div>',
-'<li><b><li>',
+// '<li><b><li>',
+'<table><input type=hidden type=still-hidden> foo bar </input> </table>'
 ]
 
 // Test

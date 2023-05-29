@@ -164,16 +164,6 @@ export default [
       '<a><i><b>foo</i><sdiv>one',
       '<a><i><b>\0</i><nobr>\0',
       '<a><i><b>\0</i><a>\0',
-      
-      // Closing
-      '<b><li>foo</b>bar',
-      '<b><dd>foo</b>bar',
-      '<b><ul>foo</b>bar',
-      '<b><dl>foo</b>bar',
-      '<b><center>foo</b>bar',
-      '<b><option>foo</b>bar',
-      '<b><p>foo</b>bar',
-
       '<li><b>foo</li>bar',
       '<dd><b>foo</dd>bar',
       '<ul><b>foo</ul>bar',
@@ -226,6 +216,15 @@ export default [
       '<i><b><i>1<h1>bar</b>3',
       '<i><b><i>1<aside>bar</b>3',
       '<i><b><i>1<other>bar</b>3',
+
+      // Closing
+      '<b><li>foo</b>bar',
+      '<b><dd>foo</b>bar',
+      '<b><ul>foo</b>bar',
+      '<b><dl>foo</b>bar',
+      '<b><center>foo</b>bar',
+      '<b><option>foo</b>bar',
+      '<b><p>foo</b>bar',
 
       '<i><b><s>foo<p>bar</b>bee',
       '<b>foo<p>bar</b>bee',
@@ -310,7 +309,7 @@ export default [
   },
 
   {
-    title: 'Foster parenting and Foreign Content',
+    title: 'Foster parenting and ForeignElement Content',
     samples: [
       // '<table><svg>foo<td>bar',
       // '<table><td><svg>foo<td>bar',
@@ -677,7 +676,7 @@ export default [
   },
 
   {
-    title: 'Foreign content',
+    title: 'ForeignElement content',
     samples: [
       '<svg><b>foo',
       '<svg>foo<sub>bar',
