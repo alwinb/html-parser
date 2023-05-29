@@ -1,82 +1,36 @@
 Html Parser
 ===========
 
-**[ Version 0.12.1 ] [ [Test Page][0] ] [ [Playground][1] ]**
+**[ Version 0.13.0 ] [ [Test Page][0] ]**
 
 This is a new HTML5 parser that I am working on.  
 The focus is on code size, speed and simplicity. 
 
-This is part of a larger project.  
-The goal is to create a concise, accurate and elegant description of the HTML5 language 'as parsed'. 
-
-Standard compliance is a goal.  
-I intend to produce, for all possible input, a parse tree that is equivalent to the one that is produced by the algorithm in the HTML5 Standard.
-
-There is a test page that I use for testing and debugging online [here][0].
+This is part of a larger project that aims to eventually create an alternative specification of the HTML language 'as parsed'; One that is easier to understand, but equivalent with the existing HTML Standard.
 
 [0]: https://alwinb.github.io/html-parser/test/tree.html
-[1]: https://alwinb.github.io/html-parser/test/tree.new.html
 [2]: ./notes/lexical-grammar.txt
 
 
 Theory and API
 --------------
 
-### Element Categories
+The information here is in flux. 
+I will work on the documentation more dilligently at a later stage.
 
-I refer to finite and/ or cofinite sets of element-names that
-trigger specific parsing behaviour as an _element category_.
+### Architecture
 
-In the implementation the categories are encoded as bitvectors,
-where the sign bit signifies a cofinite set. The remaining bits
-correspond to _mutually disjoint_ finite sets.
-
-This encoding makes it possible to use the bitwise operators for
-computing complements, unions and intersections of categories.
-
-Some of the bits correspond to singleton sets, and thus identify
-a particular single element name.
-
-#### Categories
-
-* Any
-* None
-* Kind (tagName)  —  returns the equivalence-class
-* printKind (kind)  —  maybe rename this?
-
-The built-in bitwise operations can be used as boolean algebra operations on element categories:
-
-* `~a`  —  complement
-* `a | b`  —  union
-* `a & b`  —  intersection
-
-
-### Parser
-
-As of version 0.10.0 the general architecture is that of a modular push parser. The parsing pipleline is set up as follows, with input flowing from right-to-left:
-
+The architecture is that of a modular push parser. The parsing pipleline is set up as follows, with input flowing from right-to-left:
 
 TreeBuilder  ⥦  Parser  ⥦  Tokeniser  ⟵  input
 
-
 The Parser has a TokenHandler interface for handling a stream of input tokens.
-It has distinct methdos for handling each token-type:
+It has distinct write* methods for each token-type. The return value of the write* methods is used as a feedback mechanism to to pass a small amount of contextual information from the TreeBuilder back through the Parser to the Tokeniser. 
 
-{ writeTag, writeEndTag, writeDoctype, writeComment, writeData, writeSpace, writeEOF }
+The TreeBuilder is derived from a declarative schema. It implements a well-behaved formalism that specifies invariants on the resulting DOM-tree. _In addition_, it specifies how misplaced and mismatched tokens in the token stream must be handled.
 
-The return value of each of the write* methods is used as feedback to the caller. This is used to pass a small amount of contextual information from the TreeBuilder back into the Tokeniser. 
+The Parser wraps around a TreeBuilder and takes care of some irregular parsing behaviour that cannot currently be expressed by the TreeBuilder schema alone. Examples are 'foster parenting', body to frameset switching and element tagName adjustments.
 
-The TreeBuilder is derived from a declarative schema. It implements a well-behaved formalism that specifies invariants on the resulting DOM-tree and _in addition_ also specifies how misplaced and mismatched tokens in the token stream should be handled.
-
-### interface TokenHandler
-
-- writeTag (node)
-- writeEndTag (endTag)
-- writeDoctype (doctype)
-- writeComment (mDecl)
-- writeData (buffer)
-- writeSpace (buffer)
-- writeEOF ()
 
 ### class Tokeniser
 
@@ -87,11 +41,17 @@ The TreeBuilder is derived from a declarative schema. It implements a well-behav
 
 ### class Parser
 
-implements _TokenHandler_
-
-The Parser wraps around a TreeBuilder and takes care of more complex parsing behaviour that cannot be expressed by a TreeBuilder schema. Examples are 'foster parenting' and body to frameset switching. 
-
 - constructor ()
+
+implements _TokenHandler_:
+
+- writeTag (node)
+- writeEndTag (endTag)
+- writeDoctype (doctype)
+- writeComment (mDecl)
+- writeData (buffer)
+- writeSpace (buffer)
+- writeEOF ()
 
 ### class TreeBuilder
 
@@ -115,7 +75,7 @@ The TreeBuilder class is derived from a declarative schema that specifies invari
 
 ### TreeBuilder Schema
 
-In essence the TreeBuilder Schema is a top-down tree automaton with child- and sibling-transitions, with some additional annotations for handling misplaced and mismatched tokens. 
+In essence the TreeBuilder Schema is a top-down tree automaton with child- and sibling-transitions, with additional annotations for handling misplaced and mismatched tokens. 
 
 
 Notes
@@ -123,13 +83,42 @@ Notes
 
 **Note**: These are older notes, they are not always in sync with the latest version.
 
-(There is a preliminary attempt at a lexical grammar for HTML5 in [notes][2]). 
+### Tokeniser
 
-As for the parser, I'm trying to come up with a declarative description and a more elegant algorithm than the one that is described in the standard. The algorithm is not quite compatible with the standard yet but the progress is good!
+There is a preliminary attempt at a lexical grammar for HTML5 in [notes][2].  
+However, I am using a DFA implemented using a lookup table and I quite like that representation. 
+
+### Element classes
+
+I refer to finite and/ or cofinite sets of element-names that
+trigger specific parsing behaviour as an _element category_. Element categories are boolean combinations based on a collection of (as of yet) 64 element-classes.
+
+In the implementation, element categories are encoded as bitvectors,
+The encoding is such that it allows one to use the bitwise operators
+for computing complements, unions and intersections of categories.
+
+Some of the bits correspond to singleton sets, and thus identify
+a particular single element name.
+
+#### Categories
+
+* Any
+* None
+* elementClass (node, ns_context) – returns the element-equivalence-class id as an integer.
+* Kind (node, ns_context)  —  returns the element-equivalence-class as a bitvector.
+* printKind (kind)  —  maybe rename this?
+
+The built-in bitwise operations can be used as boolean algebra operations on element categories:
+
+* `~a`  —  complement
+* `a | b`  —  union
+* `a & b`  —  intersection
+* `a &~ b` –  difference ('and not').
+
 
 ### The Algorithm
 
-Parsing HTML documents is straightforward if the input has correctly matched start- and end-tags. The complicated part is handling _mismatched end tags_ and _misplaced tags_ in a way that agrees with the standard. 
+parsing HTML documents is straightforward if the input has correctly matched start- and end-tags. The complicated part is handling _mismatched end tags_ and _misplaced tags_ in a way that agrees with the standard. 
 
 ### Mismatched end tags
 
@@ -143,13 +132,13 @@ Examples:
 
 This is always resolved in essentially one way:
 
-* For each element's name, (possibly considering some context), it is specified which end-tags may implicitly close it.
+* For each element-class it is specified which end-tags may implicitly close it.
 * **Note**: When a mismatched end-tag results in an implicit closing of _formatting elements_, then these formatting elements are 'remembered for reopening': A subsequent open tag may then result in a sequnce of implicit formatting elements being opened whilst the tag is handled. 
 
 Back to the examples:
 
-1. `<applet>` may not be implicitly closed by `</ul>`, thus the `</ul>` tag does not'see' a matching start-tag and it will be ignored. 
-2. However `<tbody>`, `<tr>` and `<td>` may be implicitly closed by `</table>`, so the `</table>` tag does'see' a matching start-tag, and the table element will be closed.
+1. `<applet>` may not be implicitly closed by `</ul>`, thus the `</ul>` tag does not'see' a matching start-tag and it will be ignored.
+2. However `<tbody>`, `<tr>` and `<td>` may be implicitly closed by `</table>`, so the `</table>` tag does 'see' a matching start-tag, and the table element will be closed.
 
 ### Misplaced tags
 
@@ -164,6 +153,10 @@ There are four ways to resolve such a situation:
 
 These options are run in a loop, until the tag is either inserted or ignored.
 
+### A schema, using element categories
+
+Rather than pointing out the behaviours mentioned above for each combination of tag-names in code, I am working on a declarative system, a kind of schema. This 'schema' determines which of the above rules are to be applied in the case of mismatched and misplaced tags. 
+
 ### The parser state
 
 The parser state consists of:
@@ -173,34 +166,28 @@ The parser state consists of:
 
 Each stack frame stores:
 
-- a 'scope'. This encodes in a single integer the set of 'visible' open elements' names. 
-- an 'allowEnd' property that encodes the set of end-tag names to which the element is transparent. 
-- an 'openFor' property that specifies per start-tag-name the elements that should be inserted; this is behaviour 1. above. 
-- a 'closeFor' property, which encodes the set of potential start-tags' names that would trigger behaviour 2. above (i.e. inserting an implicit ent-tag before it). 
-- A 'contents' property that encodes start-tags to be ignored (via its complement). This is behaviour 3. above.
-- An optional 'foster' property. This is only used with table elements, and it stores a copy of the stack (excluding the table element itself) that is used for foster parenting. This is behaviour 4 above.
-
-### A schema, using element categories
-
-Rather than pointing out the behaviours mentioned above for each combination of tag-names in code, I am working on a declarative system, a kind of schema. This 'schema' determines which of the above rules are to be applied in the case of mismatched and misplaced tags. 
-
-The schema is specified using subsets of the set of all elements. Each of these subsets is either a finite set, or it has a finite complement. I am using integer bitfields as identifiers for these subsets. This allows very fast computations on sets of elements.
+(…)
 
 ### Forthcoming...
 
 So far that's it. I will write more of it down later. 
 
 
-Remaining work
---------------
+Changelog
+---------
 
-* Lexer:
-  - CDATA tags are as of yet lexed as bogus comments.
-* Parser:
-  - The tree construction rules for template tags.
-  - Include attributes check in the implementation of 'Noah's Ark'.
-  - There may be a few remaining exceptions that are not covered yet. 
-  - I've not reimplemented the 'Adoption Agency' yet since the rewrite for 0.9.0.
+* Version 0.13.0-a – Intermediate release; Major changes.
+
+  * Uses integers as element-class–ids. They are converted to bitvectors where needed.
+  * Element-class–ids are now assigned in a namespace dependent mannar.
+  * The successor functions of the schema / the tree automaton now use lookup tables indexed by element-class–ids. 
+  * The DFA has gained a few states to track more information about tokens, reducing the need for branching in the outer loop of the Tokeniser.
+  * The schema now uses \*InPhrasing \*inFlow, PhrasingContainer and FlowContainer rules with an additional property to express 'nesting restrictions'. This makes the schema much cleaner, finally.
+ * I've finally done the little bit of work to properly add the attributes to elements.  
+ * Leading space in tables is now detected on the Tokeniser level.
+ * The rather arbitrarily named 'Preprocessor' component is gone.
+ * I've added many more examples to verify that tree construction matches the standard.
+ * Amongst other things!
 
 
 License

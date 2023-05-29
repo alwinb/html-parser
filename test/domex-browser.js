@@ -1,1 +1,0 @@
-require ('domex/src/browser')
