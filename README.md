@@ -9,7 +9,6 @@ The focus is on code size, speed and simplicity.
 This is part of a larger project that aims to eventually create an alternative specification of the HTML language 'as parsed'; One that is easier to understand, but equivalent with the existing HTML Standard.
 
 [0]: https://alwinb.github.io/html-parser/test/tree.html
-[2]: ./notes/lexical-grammar.txt
 
 
 Theory and API
@@ -57,20 +56,18 @@ implements _TokenHandler_:
 
 The TreeBuilder class is derived from a declarative schema that specifies invariants on the resuting DOM tree. It _also_ specifies how to handle misplaced and mismatched tokens.
 
-- constructor (…)
-- reset ()
-- canClose (name, kind)
-- canEscalate (name, kind)
-- canExtend (name, kind)
-- prepare (name, kind)
+- constructor ()
+- init ()
 - tryOpen (name, kind)
 - tryAppend (name, kind)
 - tryClose (name, kind)
-- _onopen (mask, hander)
-- _onclose (mask, hander)
+- tryCloseByKind (kind)
+- findClosableAncestor (name, kind)
+- findClosableAncestorByKind (name)
+- reconstructFormatting ()
+- prepare (name, kind)
 - _open ()
-- _reformat ()
-- _select ()
+- _onopen (mask, hander)
 
 
 ### TreeBuilder Schema
@@ -82,11 +79,6 @@ Notes
 -----
 
 **Note**: These are older notes, they are not always in sync with the latest version.
-
-### Tokeniser
-
-There is a preliminary attempt at a lexical grammar for HTML5 in [notes][2].  
-However, I am using a DFA implemented using a lookup table and I quite like that representation. 
 
 ### Element classes
 
@@ -137,7 +129,7 @@ This is always resolved in essentially one way:
 
 Back to the examples:
 
-1. `<applet>` may not be implicitly closed by `</ul>`, thus the `</ul>` tag does not'see' a matching start-tag and it will be ignored.
+1. `<applet>` may not be implicitly closed by `</ul>`, thus the `</ul>` tag does not 'see' a start-tag that it can close, and it will be ignored.
 2. However `<tbody>`, `<tr>` and `<td>` may be implicitly closed by `</table>`, so the `</table>` tag does 'see' a matching start-tag, and the table element will be closed.
 
 ### Misplaced tags

@@ -433,6 +433,7 @@ export default [
       '<h1><option><h2>bar<option>',
       '<h1><p><option><h2>bar<option>',
       '<p><option><h1>bar<option>',
+      '<h1><p><optgroup><h1>foo',
     ]
   },
 
@@ -595,6 +596,8 @@ export default [
       '<table><caption><select><optgroup><tr>',
       '<table><caption><select><optgroup><!--foo-->s',
       '<select><optgroup><!--foo-->s',
+      '<select>foo<option>bar<hr>bee',
+      '<select>foo<optgroup>bar<option>bee<hr>buzz',
     ]
   },
 
@@ -622,6 +625,7 @@ export default [
       '<table><select>foo<tr>bar',
       '<table><select>foo<td>bar',
       '<table><caption><select><!--foo-->',
+      '<table 1><caption><p><select><table 2>foo',
     ]
   },
 
@@ -705,8 +709,16 @@ export default [
 
       '<math>foo<close/>bar',
       '<math>foo<desc><close/>bar',
+
+      '<svg>foo<foreignobject><close/>bar',
+      '<svg>foo<foreignObject><close/>bar',
       '<math>foo<foreignobject><close/>bar',
       '<math>foo<foreignObject><close/>bar',
+
+      '<svg>foo<a><foreignobject></a>bar',
+      '<svg>foo<a><foreignObject></a>bar',
+      '<math>foo<a><foreignobject></a>bar',
+      '<math>foo<a><foreignObject></a>bar',
 
       '<math>foo<close/>bar',
       '<math>foo<mi><close/>bar',
@@ -759,11 +771,10 @@ export default [
       '<table><td><math><annotation-xml></table>foo',
       
       '<math><annotation-xml><svg><foreignObject><div><math><mi></mi></math><span></span></div></foreignObject><path></path></svg></annotation-xml><mi>',
-
+      '<math><mi><span/>foo</mi>bar',
       // TODO
       // '<math><annotation-xml><x><svg><foreignobject>',
       // '<math><annotation-xml><svg><foreignobject>',
-      
     ]
   },
 
@@ -1059,6 +1070,8 @@ export default [
       `<svg><script>foo &amp; bar</script>bee<div>buzz`,
       `<svg><textarea>foo <x> bar</textarea>bee<div>buzz`,
       `<svg><script>foo <x> bar</script>bee<div>buzz`,
+      //
+      '<svg><plaintext></svg><foo',
     ]
   },//*/
 
@@ -1071,6 +1084,8 @@ export default [
       '<textarea>Hello \0World',
       '<style>Hello\0World',
       '<style>Hello \0World',
+      '<script>Hello\0World',
+      '<script>Hello \0World',
       '<head>Hello\0World',
       '<svg>Hello\0World',
       '<math>Hello\0World',
@@ -1087,6 +1102,9 @@ export default [
       '<span>foo\0bar',
       '<table>foo\0bar',
       '<table><td>foo\0bar',
+      '<!-- comment\0bar -->',
+      '<!-- comment \0bar -->',
+      '<select>foo\0bar<option>bee\0buzz',
       // TODO add tests for \0 in other places
     ]
   },
