@@ -1,4 +1,4 @@
-import { C, ClassVecs, printKind } from '../lib/categories.js'
+import { C, ClassVecs, printKind } from '../lib/schema.js'
 const { entries } = Object
 const log = console.log.bind (console)
 

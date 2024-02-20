@@ -26,4 +26,7 @@ const delegate = {
 
 const tokeniser = new Tokeniser (delegate)
 // log (tokeniser.parse ('</ tttt>'))
-log (tokeniser.parse ('<table><input type=hidden type=still-hidden>foo</input></table>'))
+log (tokeniser.parse (`
+  <!-foo bar
+  baz bee-->
+`))
