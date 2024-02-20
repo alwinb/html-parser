@@ -137,8 +137,8 @@ class TestUI {
 
     this.dom.view1.lastChild.replaceWith (showTree (nativeResult))
     this.dom.view2.lastChild.replaceWith (showTree (result))
-  
-    const p1 = printTree (nativeResult)
+
+    const p1 = printTree (nativeResult) // TODO just do a tree comparison instead ok?
     const p2 = printTree (result)
     if (p1 !== p2) {
       console.error ('test failed', sample)

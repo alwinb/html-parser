@@ -371,3 +371,15 @@ table.hlines th, table.hlines td,
 table.vlines th, table.vlines td 
   { border-color: var(--border-color, currentColor) }
 
+
+/* Type */
+
+:root {
+  --sans:  Sans-Serif;
+  --serif: Serif;
+  --mono:  Hack, Menlo, Monaco, MonoSpace;
+}
+
+.sans { font-family: var(--sans) }
+.serif { font-family: var(--serif) }
+.mono { font-family: var(--mono) }
